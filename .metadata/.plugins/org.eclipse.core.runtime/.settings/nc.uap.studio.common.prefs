@@ -1,0 +1,5 @@
+EXCEPT_JAR_NC_HOME=nc.bs.framework.tool.config.+.jar\r\ntestbill.+.jar\r\n.*PROXY.jar
+FIELD_EX_MODULES=
+FIELD_NC_HOME=E\:\\Devlop\\projectbak\\PWLNC
+PROP_XML_TS=1537945501083
+eclipse.preferences.version=1
