@@ -1,3 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">&#x0A;<refactoring comment="Delete resource &apos;HRLocalization_hrwa&apos;" deleteContents="true" description="Delete resource &apos;HRLocalization_hrwa&apos;" element1="/HRLocalization_hrwa" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1537955000730"/>&#x0A;<refactoring comment="Delete resource &apos;HR_Localization&apos;" deleteContents="true" description="Delete resource &apos;HR_Localization&apos;" element1="/HR_Localization" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1537956188524"/>
-</session>
