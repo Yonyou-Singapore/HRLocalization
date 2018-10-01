@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+  <!-- 环境变量 -->
+  <bean id="context" class="nc.vo.uif2.LoginContext" />
+
+  <!-- 应用服务类，负责进行模型操作的处理 -->
+  <bean id="manageModelService" class="nc.ui.hr.infoset.model.InfoSetModelService" />
+
+  <!-- 对象转换器工厂，由此获取操作对象的特征信息 -->
+  <bean id="boadatorfactory" class="nc.vo.bd.meta.BDObjectAdpaterFactory" />
+
+  <!-- 管理应用模型 -->
+  <bean id="infoSetModel" class="nc.ui.hr.infoset.model.InfoSetModel">
+    <property name="context" ref="context" />
+    <property name="service" ref="manageModelService" />
+    <property name="businessObjectAdapterFactory" ref="boadatorfactory" />
+  </bean>
+
+  <!-- 模板容器，负责对模板的统一装载 -->
+  <bean id="templateContainer" class="nc.ui.hr.infoset.view.InfoSetTemplateContainer" init-method="load">
+    <property name="context" ref="context" />
+    <property name="nodeKeies">
+      <list>
+        <value>InfoSort</value>
+        <value>InfoSet</value>
+        <value>InfoItem</value>
+      </list>
+    </property>
+  </bean>
+
+  <!-- 数据模型管理器，主要负责各种方式的模型初始化 -->
+  <bean id="infoSetDataManager" class="nc.ui.hr.infoset.model.InfoSetDataManager">
+    <property name="context" ref="context" />
+    <property name="model" ref="infoSetModel" />
+    <property name="typeField" value="pk_infoset_sort" />
+    <property name="service" ref="manageModelService" />
+  </bean>
+
+  <!-- 界面元素 -->
+
+  <!-- 列表视图 -->
+  <bean id="infoSetListView" class="nc.ui.hr.infoset.view.InfoSetListView" init-method="initUI">
+    <property name="nodekey" value="InfoSet" />
+    <property name="model" ref="infoSetModel" />
+    <property name="multiSelectionEnable" value="false" />
+    <property name="templateContainer" ref="templateContainer" />
+    <property name="editInfoItemAction" ref="viewInfoItemAction" />
+  </bean>
+
+  <!--卡控件 -->
+  <bean id="infoSetFormEditor" class="nc.ui.hr.infoset.view.InfoSetFormEditor" init-method="initUI">
+    <property name="nodekey" value="InfoSet" />
+    <property name="model" ref="infoSetModel" />
+    <property name="templateContainer" ref="templateContainer" />
+    <property name="editInfoItemAction" ref="editInfoItemAction" />
+    <property name="actions">
+      <list>
+        <ref bean="firstLineAction" />
+        <ref bean="preLineAction" />
+        <ref bean="nextLineAction" />
+        <ref bean="lastLineAction" />
+      </list>
+    </property>
+    <property name="tabActions">
+      <list>
+        <ref bean="addInfoItemAction" />
+        <ref bean="editInfoItemAction" />
+        <ref bean="deleteInfoItemAction" />
+      </list>
+    </property>
+  </bean>
+
+  <bean id="toftpanelActionContributors" class="nc.ui.uif2.actions.ActionContributors">
+    <property name="contributors">
+      <list>
+        <ref bean="infoSetListViewActions" />
+        <ref bean="infoSetFormEditorActions" />
+      </list>
+    </property>
+  </bean>
+
+  <!-- Actions -->
+  <bean id="infoSetFormEditorActions" class="nc.ui.uif2.actions.StandAloneToftPanelActionContainer">
+    <constructor-arg ref="infoSetFormEditor" />
+    <property name="model" ref="infoSetModel" />
+    <property name="actions">
+      <list>
+        <ref bean="addInfoSetAction" />
+        <ref bean="editInfoSetAction" />
+        <ref bean="deleteInfoSetAction" />
+        <ref bean="separatorAction" />
+        <ref bean="refreshInfoSetAction" />
+        <ref bean="separatorAction" />
+        <ref bean="setShowOrder" />
+        <ref bean="separatorAction" />
+        <ref bean="syncMetaData" />
+        <ref bean="syncTemplet" />
+        <ref bean="separatorAction" />
+        <ref bean="setInfoItemMap" />
+      </list>
+    </property>
+    <property name="editActions">
+      <list>
+        <ref bean="saveInfoSetAction" />
+        <ref bean="separatorAction" />
+        <ref bean="cancelAction" />
+      </list>
+    </property>
+  </bean>
+
+  <bean id="infoSetListViewActions" class="nc.ui.uif2.actions.StandAloneToftPanelActionContainer">
+    <constructor-arg ref="infoSetListView" />
+    <property name="actions">
+      <list>
+        <ref bean="addInfoSetAction" />
+        <ref bean="editInfoSetAction" />
+        <ref bean="deleteInfoSetAction" />
+        <ref bean="separatorAction" />
+        <ref bean="refreshInfoSetAction" />
+        <ref bean="separatorAction" />
+        <ref bean="setShowOrder" />
+        <ref bean="separatorAction" />
+        <ref bean="syncMetaData" />
+        <ref bean="syncTemplet" />
+        <ref bean="separatorAction" />
+        <ref bean="setInfoItemMap" />
+        <ref bean="separatorAction" />
+        <ref bean="addLocalizationFields" />
+      </list>
+    </property>
+  </bean>
+
+  <bean id="billNotNullValidator" class="nc.ui.hr.uif2.validator.BillNotNullValidateService">
+    <constructor-arg ref="infoSetFormEditor" />
+  </bean>
+
+  <bean id="separatorAction" class="nc.funcnode.ui.action.SeparatorAction" />
+
+  <bean id="addInfoSortAction" class="nc.ui.hr.infoset.action.AddInfoSortAction">
+    <property name="model" ref="treeAppModel" />
+    <property name="templateContainer" ref="templateContainer" />
+  </bean>
+
+  <bean id="addInfoSetAction" class="nc.ui.hr.infoset.action.AddInfoSetAction">
+    <property name="model" ref="infoSetModel" />
+    <property name="treeModel" ref="treeAppModel" />
+    <property name="formEditor" ref="infoSetFormEditor" />
+    <property name="billListView" ref="infoSetListView" />
+    <property name="defaultValueProvider" ref="defaultValueProvider" />
+  </bean>
+
+  <bean id="addInfoItemAction" class="nc.ui.hr.infoset.action.AddInfoItemAction">
+    <property name="model" ref="infoSetModel" />
+    <property name="cardPanel" ref="infoSetFormEditor" />
+    <property name="templateContainer" ref="templateContainer" />
+  </bean>
+
+  <bean id="editInfoSortAction" class="nc.ui.hr.infoset.action.EditInfoSortAction">
+    <property name="model" ref="treeAppModel" />
+    <property name="templateContainer" ref="templateContainer" />
+  </bean>
+
+  <bean id="editInfoSetAction" class="nc.ui.hr.infoset.action.EditInfoSetAction">
+    <property name="model" ref="infoSetModel" />
+  </bean>
+
+  <bean id="editInfoItemAction" class="nc.ui.hr.infoset.action.EditInfoItemAction">
+    <property name="model" ref="infoSetModel" />
+    <property name="editor" ref="infoSetFormEditor" />
+    <property name="templateContainer" ref="templateContainer" />
+  </bean>
+
+  <bean id="viewInfoItemAction" class="nc.ui.hr.infoset.action.EditInfoItemAction">
+    <property name="model" ref="infoSetModel" />
+    <property name="editor" ref="infoSetListView" />
+    <property name="templateContainer" ref="templateContainer" />
+  </bean>
+
+  <bean id="deleteInfoSortAction" class="nc.ui.hr.infoset.action.DeleteInfoSortAction">
+    <property name="model" ref="treeAppModel" />
+  </bean>
+
+  <bean id="deleteInfoSetAction" class="nc.ui.hr.infoset.action.DeleteInfoSetAction">
+    <property name="model" ref="infoSetModel" />
+  </bean>
+
+  <bean id="firstLineAction" class="nc.ui.uif2.actions.FirstLineAction">
+    <property name="model" ref="infoSetModel" />
+  </bean>
+
+  <bean id="preLineAction" class="nc.ui.uif2.actions.PreLineAction">
+    <property name="model" ref="infoSetModel" />
+  </bean>
+
+  <bean id="nextLineAction" class="nc.ui.uif2.actions.NextLineAction">
+    <property name="model" ref="infoSetModel" />
+  </bean>
+
+  <bean id="lastLineAction" class="nc.ui.uif2.actions.LastLineAction">
+    <property name="model" ref="infoSetModel" />
+  </bean>
+
+  <bean id="deleteInfoItemAction" class="nc.ui.hr.infoset.action.DeleteInfoItemAction">
+    <property name="model" ref="infoSetModel" />
+    <property name="cardPanel" ref="infoSetFormEditor" />
+    <property name="validationService" ref="deleteInfoItemAction" />
+  </bean>
+
+  <bean id="refreshInfoSetAction" class="nc.ui.hr.infoset.action.RefreshInfoSetAction">
+    <property name="model" ref="infoSetModel" />
+    <property name="formEditor" ref="infoSetFormEditor" />
+    <property name="dataManager" ref="infoSetDataManager" />
+  </bean>
+
+  <bean id="refreshInfoTreeAction" class="nc.ui.hr.infoset.action.RefreshInfoTreeAction">
+    <property name="model" ref="infoSetModel" />
+    <property name="funcNodeInitDataListener" ref="InitDataListener" />
+  </bean>
+
+  <bean id="saveInfoSetAction" class="nc.ui.hr.infoset.action.SaveInfoSetAction">
+    <property name="model" ref="infoSetModel" />
+    <property name="editor" ref="infoSetFormEditor" />
+    <property name="validationService" ref="billNotNullValidator" />
+  </bean>
+
+  <bean id="cancelAction" class="nc.ui.hr.infoset.action.CancelInfoSetAction">
+    <property name="model" ref="infoSetModel" />
+  </bean>
+
+  <bean id="syncMetaData" class="nc.ui.hr.infoset.action.SyncMetaDataAction">
+    <property name="model" ref="infoSetModel" />
+    <property name="billListView" ref="infoSetListView" />
+    <property name="validationService" ref="syncMetaData" />
+    <property name="hierachicalDataAppModel" ref="treeAppModel" />
+  </bean>
+
+  <bean id="syncTemplet" class="nc.ui.hr.infoset.action.SyncTempletAction">
+    <property name="model" ref="infoSetModel" />
+    <property name="billListView" ref="infoSetListView" />
+    <property name="validationService" ref="syncTemplet" />
+    <property name="hierachicalDataAppModel" ref="treeAppModel" />
+  </bean>
+
+  <bean id="setShowOrder" class="nc.ui.hr.infoset.action.SetShowOrderAction">
+    <property name="model" ref="infoSetModel" />
+  </bean>
+
+  <bean id="setInfoItemMap" class="nc.ui.hr.infoset.action.SetInfoSetMapAction">
+    <property name="model" ref="treeAppModel" />
+  </bean>
+  
+  <!-- 本地化开发需求：根据当前系统参数预置字段 -->
+  <bean id="addLocalizationFields" class="nc.ui.hr.infoset.action.AddLocalizationFieldsAction">
+  	<property name="model" ref="infoSetModel" />
+  </bean>
+
+  <bean id="ClosingListener" class="nc.ui.uif2.FunNodeClosingHandler">
+    <property name="model" ref="infoSetModel" />
+    <property name="saveaction" ref="saveInfoSetAction" />
+    <property name="cancelaction" ref="cancelAction" />
+  </bean>
+
+  <!-- 界面布局总装 -->
+  <bean id="container" class="nc.ui.uif2.TangramContainer" init-method="initUI">
+    <property name="tangramLayoutRoot">
+      <bean class="nc.ui.uif2.tangramlayout.node.VSNode">
+        <property name="showMode" value="NoDivider" />
+        <property name="up">
+          <bean class="nc.ui.uif2.tangramlayout.node.CNode">
+            <property name="component" ref="primaryOrgPanel" />
+          </bean>
+        </property>
+        <property name="down">
+          <bean class="nc.ui.uif2.tangramlayout.node.HSNode">
+            <property name="left">
+              <bean class="nc.ui.uif2.tangramlayout.node.VSNode">
+                <property name="showMode" value="NoDivider" />
+                <property name="up">
+                  <bean class="nc.ui.uif2.tangramlayout.node.CNode">
+                    <property name="component" ref="treeToolBar" />
+                  </bean>
+                </property>
+                <property name="down">
+                  <bean class="nc.ui.uif2.tangramlayout.node.CNode">
+                    <property name="name">
+                      <bean class='nc.ui.uif2.I18nFB'>
+                        <property name="resDir" value="6001infset" />
+                        <property name="defaultValue" value="信息集分类" />
+                        <property name="resId" value="X6001infoset01" />
+                      </bean>
+                    </property>
+                    <property name="component" ref="treePanel" />
+                  </bean>
+                </property>
+                <property name="dividerLocation" value="28f" />
+              </bean>
+            </property>
+            <property name="right">
+              <bean class="nc.ui.uif2.tangramlayout.node.TBNode">
+                <property name="showMode" value="CardLayout" />
+                <property name="tabs">
+                  <list>
+                    <bean class="nc.ui.uif2.tangramlayout.node.CNode">
+                      <property name="component" ref="infoSetListView" />
+                    </bean>
+                    <bean class="nc.ui.uif2.tangramlayout.node.VSNode">
+                      <property name="showMode" value="NoDivider" />
+                      <property name="up">
+                        <bean class="nc.ui.uif2.tangramlayout.node.CNode">
+                          <property name="component" ref="editorToolBarPanel" />
+                        </bean>
+                      </property>
+                      <property name="down">
+                        <bean class="nc.ui.uif2.tangramlayout.node.CNode">
+                          <property name="component" ref="infoSetFormEditor" />
+                        </bean>
+                      </property>
+                      <property name="dividerLocation" value="30f" />
+                    </bean>
+                  </list>
+                </property>
+              </bean>
+            </property>
+            <property name="dividerLocation" value="0.2f" />
+          </bean>
+        </property>
+        <property name="dividerLocation" value="0.4f" />
+      </bean>
+    </property>
+  </bean>
+
+  <!-- 卡片工具栏 -->
+  <bean id="editorToolBarPanel" class="nc.ui.uif2.tangramlayout.CardLayoutToolbarPanel">
+    <property name="model" ref="infoSetModel" />
+    <property name="titleAction" ref="editorReturnAction" />
+    <property name="actions">
+      <list>
+        <ref bean="firstLineAction" />
+        <ref bean="preLineAction" />
+        <ref bean="nextLineAction" />
+        <ref bean="lastLineAction" />
+      </list>
+    </property>
+  </bean>
+
+  <!-- 返回按钮 -->
+  <bean id="editorReturnAction" class="nc.ui.uif2.actions.ShowMeUpAction">
+    <property name="goComponent" ref="infoSetListView" />
+  </bean>
+
+  <!-- 界面零件 -->
+  <bean id="primaryOrgPanel" class="nc.ui.hr.uif2.view.PrimaryOrgPanel" init-method="initUI">
+    <property name="model" ref="infoSetModel" />
+    <property name="dataManager" ref="infoSetDataManager" />
+    <property name="pk_orgtype" value="HRORGTYPE00000000000" />
+  </bean>
+
+  <bean id="treeModelService" class="nc.ui.hr.infoset.model.InfoSortAppModelService">
+    <property name="beanId" value="25d22505-69cf-48da-93fb-ea1dcdca1251" />
+  </bean>
+
+  <!-- 层次结构构造策略 -->
+  <bean id="treeCreateStrategy" class="nc.ui.hr.infoset.view.InfoSortTreeCreateStrategy">
+    <!-- <property name="rootName" value="信息集分类" /> -->
+    <property name="rootName">
+      <bean class='nc.ui.uif2.I18nFB'>
+        <property name="resDir" value="6001infset" />
+        <property name="defaultValue" value="信息集分类" />
+        <property name="resId" value="X6001infoset01" />
+      </bean>
+    </property>
+    <property name="factory" ref="boadatorfactory" />
+    <property name="className" value="nc.vo.hr.infoset.InfoSortVO" />
+  </bean>
+
+  <bean id="InitDataListener" class="nc.ui.hr.infoset.model.InfoSetInitDataListener">
+    <property name="model" ref="treeAppModel" />
+  </bean>
+
+  <!-- 层次应用模型 -->
+  <bean id="treeAppModel" class="nc.ui.uif2.model.HierachicalDataAppModel">
+    <property name="context" ref="context" />
+    <property name="service" ref="treeModelService" />
+    <property name="treeCreateStrategy" ref="treeCreateStrategy" />
+    <property name="businessObjectAdapterFactory" ref="boadatorfactory" />
+  </bean>
+
+  <bean id="treePanel" class="nc.ui.hr.infoset.view.InfoSortTreePanel" init-method="initUI">
+    <property name="model" ref="treeAppModel" />
+    <property name="rootvisibleflag" value="true" />
+  </bean>
+
+  <bean id="treeToolBar" class="nc.ui.pub.beans.toolbar.ToolBarPanel">
+    <property name="actions">
+      <list>
+        <ref bean="addInfoSortAction" />
+        <ref bean="editInfoSortAction" />
+        <ref bean="deleteInfoSortAction" />
+        <ref bean="refreshInfoTreeAction" />
+      </list>
+    </property>
+  </bean>
+
+  <bean id="typeAndDocMediator" class="nc.ui.hr.infoset.model.InfoSetTypeAndDocMediator">
+    <property name="typeModel" ref="treeAppModel" />
+    <property name="docModel" ref="infoSetModel" />
+    <property name="docModelDataManager" ref="infoSetDataManager" />
+  </bean>
+
+  <bean id="defaultValueProvider" class="nc.ui.hr.infoset.model.InfoSetDefaultValueProvider">
+    <property name="dataManager" ref="infoSetDataManager" />
+  </bean>
+
+  <bean id="hyperLinkClickMediator" class="nc.ui.hr.uif2.mediator.HyperLinkClickMediator">
+    <property name="model" ref="infoSetModel" />
+    <property name="showUpComponent" ref="infoSetFormEditor" />
+    <property name="hyperLinkColumn" value="infoset_name" />
+  </bean>
+
+</beans>
