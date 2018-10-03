@@ -28,19 +28,6 @@ public abstract class AddFieldAbstractStrategy {
 	 * HR本地化：添加字段方法，选定了一些必输的属性<br>
 	 * Created on 2018-10-02 18:40:09pm 
 	 * @author Ethan Wu
-	 * @param code
-	 * @param name
-	 * @param name2
-	 * @param dataType
-	 * @param maxLength
-	 * @param resid
-	 * @param respath
-	 * @param unique
-	 * @param nullable
-	 * @param showOrder
-	 * @param precision
-	 * @param refmodel
-	 * @return
 	 */
 	protected static InfoItemVO addField(Object[] newField, int showOrder, String refmodel) {
 		InfoItemVO ret = new InfoItemVO();

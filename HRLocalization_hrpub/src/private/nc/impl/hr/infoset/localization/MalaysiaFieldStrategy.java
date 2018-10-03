@@ -17,6 +17,8 @@ import nc.vo.pub.lang.UFBoolean;
 
 public class MalaysiaFieldStrategy extends AddFieldAbstractStrategy implements IAddLocalizationFieldStrategy {
 
+	private static final String COUNTRY_CODE = "MY";
+	
 	public MalaysiaFieldStrategy() throws BusinessException {
 		defdocMap = getDefdocList();
 	}
@@ -31,9 +33,9 @@ public class MalaysiaFieldStrategy extends AddFieldAbstractStrategy implements I
 					.equals(IAddLocalizationFieldStrategy.PERSONAL_INFO_TABLE)) {
 				InfoItemVO[] bodyVOs = infoSet.getInfo_item();
 				
-				ArrayList<Object[]> templateList = getTemplateTable("MY");
+				ArrayList<Object[]> templateList = getTemplateTable(COUNTRY_CODE);
 				
-				// 这个查重实现应该可以放进抽象类里
+				// TODO: 这个查重实现应该可以放进抽象类里
 				for (int i = templateList.size() - 1; i >= 0; i--) {
 					for (InfoItemVO item : bodyVOs) {
 						if (templateList.get(i)[1].toString().equals(item.getItem_code())) {
@@ -50,7 +52,8 @@ public class MalaysiaFieldStrategy extends AddFieldAbstractStrategy implements I
 					return vos;
 				} else {
 					for (Object[] newField : templateList) {
-						newBodyVOsList.add(addField(newField, newBodyVOsList.size(), newField[9] != null ? defdocMap.get(newField[9].toString()) : ""));
+						newBodyVOsList.add(addField(newField, newBodyVOsList.size(), newField[9] != null && defdocMap.containsKey(newField[9].toString())
+								? defdocMap.get(newField[9].toString()) : null));
 					}
 				}
 				
