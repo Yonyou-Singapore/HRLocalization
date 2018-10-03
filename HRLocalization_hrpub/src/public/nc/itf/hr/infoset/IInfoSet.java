@@ -214,8 +214,8 @@ public interface IInfoSet
      * 添加东南亚本地化字段<br>
      * Created on 2018-10-02 02:16:35<br>
      * @author Ethan Wu
+     * @param country
      * @throws BusinessException
      ***************************************************************************/
-    //TODO: 想一想这边到底需不需要参数
-    void addLocalizationFields() throws BusinessException;
+    void addLocalizationFields(String country) throws BusinessException;
 }

@@ -42,12 +42,14 @@ import nc.hr.utils.MultiLangHelper;
 import nc.hr.utils.PubEnv;
 import nc.hr.utils.ResHelper;
 import nc.hr.utils.SQLHelper;
+import nc.impl.hr.infoset.localization.AddLocalFieldStrategyFactory;
 import nc.impl.hr.tools.formconfig.FormConfigCompiler;
 import nc.itf.bd.pub.IBDMetaDataIDConst;
 import nc.itf.hr.infoset.DefaultHookPrivate;
 import nc.itf.hr.infoset.IHookPrivate;
 import nc.itf.hr.infoset.IInfoSet;
 import nc.itf.hr.infoset.IInfoSetQry;
+import nc.itf.hr.infoset.localization.IAddLocalizationFieldStrategy;
 import nc.itf.uap.billtemplate.IBillTemplateBase;
 import nc.itf.uap.billtemplate.IBillTemplateQry;
 import nc.itf.uap.billtemplate.IBillTemplateUpgrade;
@@ -3791,13 +3793,27 @@ public class InfoSetImpl implements IInfoSet, IInfoSetQry
     }
 
     /**************************************************************
-     * <br>
+     * 添加预置字段的接口实现方法<br>
      * Created on 2018-10-02 02:18:32<br>
      * @author Ethan Wu
      **************************************************************/
 	@Override
-	public void addLocalizationFields() throws BusinessException {
-		// TODO 写实现。。。
+	public void addLocalizationFields(String country) throws BusinessException {
+		// TODO 试一下到底可不可以全查
+		// 获取信息集 这边没有指定哪一个是为了以后其他信息集也需要本地化字段
+		String whereSql = " infoset_code = 'bd_psndoc' ";
+		InfoSetVO[] bd_psndocInfoSet = queryInfoSet(whereSql);
+		InfoItemVO[] bodyVOs = bd_psndocInfoSet[0].getInfo_item();
 		
+		IAddLocalizationFieldStrategy strategy = 
+				AddLocalFieldStrategyFactory.getStrategy(country);
+		bd_psndocInfoSet = strategy.addLocalField(bd_psndocInfoSet);
+		
+		InfoSetVO[] bills = updateInfoSet(true, true, bd_psndocInfoSet);
+		if (bills != null && bills.length > 0) {
+			return;
+		} else {
+			throw new BusinessException("Insertion failed");
+		}
 	}
 }
