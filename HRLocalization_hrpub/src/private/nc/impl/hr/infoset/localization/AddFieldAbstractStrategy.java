@@ -42,22 +42,27 @@ public abstract class AddFieldAbstractStrategy {
 	 * @param refmodel
 	 * @return
 	 */
-	protected static InfoItemVO addField(String code, String name, String name2, int dataType, 
-			int maxLength, String resid, String respath, UFBoolean unique, UFBoolean nullable,
-			int showOrder, int precision, String refmodel) {
+	protected static InfoItemVO addField(Object[] newField, int showOrder, String refmodel) {
 		InfoItemVO ret = new InfoItemVO();
-		ret.setItem_code(code);
-		ret.setItem_name(name);
-		ret.setItem_name2(name2);
-		ret.setData_type(dataType);
-		ret.setMax_length(maxLength);
-		ret.setResid(resid);
-		ret.setRespath(respath);
-		ret.setUnique_flag(unique);
-		ret.setNullable(nullable);
+		ret.setItem_code(newField[1].toString());
+		ret.setItem_name(newField[2].toString());
+		ret.setItem_name2(newField[3] == null ? null : newField[3].toString());
+		ret.setItem_name3(newField[4] == null ? null : newField[4].toString());
+		ret.setItem_name4(newField[5] == null ? null : newField[5].toString());
+		ret.setItem_name5(newField[6] == null ? null : newField[6].toString());
+		ret.setItem_name6(newField[7] == null ? null : newField[7].toString());
+		ret.setData_type((int) newField[8]);
+		ret.setMax_length((int) newField[10]);
+		ret.setResid(newField[12].toString());
+		ret.setRespath(newField[13].toString());
+		ret.setUnique_flag(new UFBoolean(newField[15].toString()));
+		ret.setNullable(new UFBoolean(newField[14].toString()));
 		ret.setShoworder(showOrder);
-		ret.setPrecise(precision);
+		ret.setPrecise((int) newField[11]);
 		ret.setRef_model_name(refmodel);
+		// 默认全局属性和自定义项 供后续修改删除
+		ret.setCustom_attr(UFBoolean.TRUE);
+		ret.setPk_org("GLOBLE00000000000000");
 		ret.setStatus(VOStatus.NEW);
 		return ret;
 	}
@@ -67,8 +72,9 @@ public abstract class AddFieldAbstractStrategy {
 	 * Created on 2018-10-02 23:25:10pm
 	 * @author Ethan Wu
 	 * @return Map<String, String>
+	 * @throws BusinessException 
 	 */
-	protected static Map<String, String> getDefdocList() {
+	protected static Map<String, String> getDefdocList() throws BusinessException {
 		IUAPQueryBS queryBS = (IUAPQueryBS) NCLocator.getInstance().lookup(IUAPQueryBS.class.getName());
 		StringBuilder sb = new StringBuilder();
 		sb.append(" select reserv3, pk_refinfo from bd_refinfo where reserv3 like 'SEALOCAL%' ");
@@ -77,7 +83,7 @@ public abstract class AddFieldAbstractStrategy {
 			obj = (ArrayList<Object>) queryBS.executeQuery(sb.toString(), new ArrayListProcessor());
 		} catch (BusinessException e) {
 			Logger.error(e);
-			ExceptionUtils.wrappBusinessException("Localization user-define files query fails");
+			throw new BusinessException("User define file loading failure! Please check database connectivity.");
 		}
 		Map<String, String> ret = new HashMap<String, String>();
 		for (Object defdoc : obj) {
@@ -86,9 +92,21 @@ public abstract class AddFieldAbstractStrategy {
 		return ret;
 	}
 	
-	protected static Map<String, String> getAddedFields(InfoItemVO[] bodyVOs) {
-		Map<String, String> ret = new HashMap<String, String>();
-		
+	protected static ArrayList<Object[]> getTemplateTable(String countryCode) throws BusinessException {
+		IUAPQueryBS queryBS = (IUAPQueryBS) NCLocator.getInstance().lookup(IUAPQueryBS.class.getName());
+		StringBuilder sb = new StringBuilder();
+		sb.append(" select * from hr_infoset_item_sealocal where country in ('GLOBAL','" + countryCode + "') ");
+		ArrayList<Object> obj = null;
+		try {
+			obj = (ArrayList<Object>) queryBS.executeQuery(sb.toString(), new ArrayListProcessor());
+		} catch (BusinessException e) {
+			Logger.error(e);
+			throw new BusinessException("Localization pre-set template table loading failure! Please check database connectivity");
+		}
+		ArrayList<Object[]> ret = new ArrayList<Object[]>();
+		for (Object o : obj) {
+			ret.add((Object[]) o);
+		}
 		return ret;
 	}
 }

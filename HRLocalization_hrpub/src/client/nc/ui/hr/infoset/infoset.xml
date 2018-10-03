@@ -150,7 +150,6 @@
 		<property name="actions">
 			<list>
 				<ref bean="addLocalizationFieldsMY" />
-				<ref bean="addLocalizationFieldsGlobal" />
 			</list>
 		</property>
   </bean>
@@ -160,10 +159,6 @@
   	<property name="model" ref="infoSetModel" />
   </bean>
 
-  <!-- HR本地化开发需求：添加全局预置字段 -->
-  <bean id="addLocalizationFieldsGlobal" class="nc.ui.hr.infoset.action.AddGlobalFieldsAction">
-  	<property name="model" ref="infoSetModel" />
-  </bean>
 
   <bean id="separatorAction" class="nc.funcnode.ui.action.SeparatorAction" />
 
