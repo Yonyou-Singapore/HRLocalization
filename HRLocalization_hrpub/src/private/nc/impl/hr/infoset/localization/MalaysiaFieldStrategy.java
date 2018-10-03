@@ -6,6 +6,7 @@ import java.util.Arrays;
 import nc.itf.hr.infoset.localization.IAddLocalizationFieldStrategy;
 import nc.vo.hr.infoset.InfoItemVO;
 import nc.vo.hr.infoset.InfoSetVO;
+import nc.vo.pub.BusinessException;
 import nc.vo.pub.lang.UFBoolean;
 
 /***************************************************************************
@@ -21,7 +22,7 @@ public class MalaysiaFieldStrategy extends AddFieldAbstractStrategy implements I
 	}
 	
 	@Override
-	public InfoSetVO[] addLocalField(InfoSetVO[] vos) {
+	public InfoSetVO[] addLocalField(InfoSetVO[] vos) throws BusinessException {
 		if (vos == null || vos.length == 0) {
 			return null;
 		}
@@ -29,6 +30,14 @@ public class MalaysiaFieldStrategy extends AddFieldAbstractStrategy implements I
 			if (infoSet.getInfoset_code()
 					.equals(IAddLocalizationFieldStrategy.PERSONAL_INFO_TABLE)) {
 				InfoItemVO[] bodyVOs = infoSet.getInfo_item();
+				
+				// 校验看是否字段已经加过，判断条件：判断编码是否以m_开头
+				for (InfoItemVO bvo : bodyVOs) {
+					if (bvo.getItem_code().startsWith("m_")) {
+						throw new BusinessException("Malaysia field already synced. If you face any discrepancy, please contact support.");
+					}
+				}
+				
 				ArrayList<InfoItemVO> newBodyVOsList = 
 						new ArrayList<InfoItemVO>(Arrays.asList(bodyVOs));
 				
