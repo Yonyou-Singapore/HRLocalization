@@ -19,7 +19,7 @@ import nc.vo.pubapp.pattern.exception.ExceptionUtils;
  * Created on 2018-10-02 18:38:41pm
  * @author Ethan Wu
  ***************************************************************************/
-public abstract class AddFieldAbstractStrategy {
+public abstract class AbstractAddFieldStrategy {
 	
 	// 用来加载HR本地化相关的自定义档案
 	protected Map<String, String> defdocMap;
@@ -50,6 +50,10 @@ public abstract class AddFieldAbstractStrategy {
 		// 默认全局属性和自定义项 供后续修改删除
 		ret.setCustom_attr(UFBoolean.TRUE);
 		ret.setPk_org("GLOBLE00000000000000");
+		ret.setPk_group("GLOBLE00000000000000");
+		// 默认非隐藏 不只读
+		ret.setHided(UFBoolean.FALSE);
+		ret.setRead_only(UFBoolean.FALSE);
 		ret.setStatus(VOStatus.NEW);
 		return ret;
 	}

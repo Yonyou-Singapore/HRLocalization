@@ -15,7 +15,7 @@ import nc.vo.pub.lang.UFBoolean;
  * @author Ethan Wu
  ***************************************************************************/
 
-public class MalaysiaFieldStrategy extends AddFieldAbstractStrategy implements IAddLocalizationFieldStrategy {
+public class MalaysiaFieldStrategy extends AbstractAddFieldStrategy implements IAddLocalizationFieldStrategy {
 
 	private static final String COUNTRY_CODE = "MY";
 	
