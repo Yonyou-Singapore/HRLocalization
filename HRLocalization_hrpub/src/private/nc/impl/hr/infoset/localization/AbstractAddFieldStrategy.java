@@ -83,6 +83,9 @@ public abstract class AbstractAddFieldStrategy {
 		return ret;
 	}
 	
+	// TODO: 这个方法有两个需要refactor的地方：
+	// 1. 实现带参与查询
+	// 2. 将临时表定义成一个VO对象然后用BeanListProcessor查询
 	protected static ArrayList<Object[]> getTemplateTable(String countryCode) throws BusinessException {
 		IUAPQueryBS queryBS = (IUAPQueryBS) NCLocator.getInstance().lookup(IUAPQueryBS.class.getName());
 		StringBuilder sb = new StringBuilder();
@@ -92,7 +95,7 @@ public abstract class AbstractAddFieldStrategy {
 			obj = (ArrayList<Object>) queryBS.executeQuery(sb.toString(), new ArrayListProcessor());
 		} catch (BusinessException e) {
 			Logger.error(e);
-			throw new BusinessException("Localization pre-set template table loading failure! Please check database connectivity");
+			throw new BusinessException("Localization pre-set template table loading failure! Please check database connectivity.\n " + e.getMessage());
 		}
 		ArrayList<Object[]> ret = new ArrayList<Object[]>();
 		for (Object o : obj) {
