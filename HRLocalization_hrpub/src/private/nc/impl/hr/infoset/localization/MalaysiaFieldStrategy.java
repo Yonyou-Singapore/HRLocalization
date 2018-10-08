@@ -19,7 +19,6 @@ import nc.vo.pub.lang.UFBoolean;
 public class MalaysiaFieldStrategy extends AbstractAddFieldStrategy implements IAddLocalizationFieldStrategy {
 	
 	public MalaysiaFieldStrategy() throws BusinessException {
-		defdocMap = getDefdocList();
 		countryCode = "MY";
 	}
 }

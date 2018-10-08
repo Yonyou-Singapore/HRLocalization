@@ -12,7 +12,6 @@ import nc.vo.pub.BusinessException;
 public class SingaporeFieldStrategy extends AbstractAddFieldStrategy implements IAddLocalizationFieldStrategy {
 	
 	public SingaporeFieldStrategy() throws BusinessException {
-		defdocMap = getDefdocList();
 		countryCode = "SG";
 	}
 }
