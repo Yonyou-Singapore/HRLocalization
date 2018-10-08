@@ -77,7 +77,7 @@ public abstract class AbstractAddFieldStrategy {
 			obj = (ArrayList<Object>) queryBS.executeQuery(sb.toString(), new ArrayListProcessor());
 		} catch (BusinessException e) {
 			Logger.error(e);
-			throw new BusinessException("User define file loading failure! Please check database connectivity.");
+			throw new BusinessException("User define file loading failure! Please check database connectivity.\n" + e.getMessage());
 		}
 		Map<String, String> ret = new HashMap<String, String>();
 		for (Object defdoc : obj) {
@@ -86,9 +86,6 @@ public abstract class AbstractAddFieldStrategy {
 		return ret;
 	}
 	
-	// TODO: 这个方法有两个需要refactor的地方：
-	// 1. 实现带参与查询
-	// 2. 将临时表定义成一个VO对象然后用BeanListProcessor查询
 	protected static ArrayList<PresetPsndocFieldVO> getTemplateTable(String countryCode) throws BusinessException {
 		IUAPQueryBS queryBS = (IUAPQueryBS) NCLocator.getInstance().lookup(IUAPQueryBS.class.getName());
 		StringBuilder sb = new StringBuilder();
@@ -98,11 +95,17 @@ public abstract class AbstractAddFieldStrategy {
 		sw.bind("country_code", countryCode);
 		ArrayList<PresetPsndocFieldVO> obj = null;
 		try {
-			obj = (ArrayList<PresetPsndocFieldVO>) queryBS.executeQuery(sql, sw.getSqlParameter(), new BeanListProcessor(PresetPsndocFieldVO.class));
+			obj = (ArrayList<PresetPsndocFieldVO>) queryBS.executeQuery(sw.getSql(), sw.getSqlParameter(), new BeanListProcessor(PresetPsndocFieldVO.class));
 		} catch (BusinessException e) {
 			Logger.error(e);
 			throw new BusinessException("Localization pre-set template table loading failure! Please check database connectivity.\n " + e.getMessage());
 		}
 		return obj;
+	}
+	
+	protected static ArrayList<InfoItemVO> removeDuplicate(InfoItemVO[] oldItems, ArrayList<PresetPsndocFieldVO> newItems) {
+		// TODO: to implement
+		
+		return null;
 	}
 }

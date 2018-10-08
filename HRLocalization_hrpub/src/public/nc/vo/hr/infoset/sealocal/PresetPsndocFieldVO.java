@@ -4,7 +4,7 @@ import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
 
 /**
- * HR本地化需求：
+ * HR本地化需求：根据设定好的模板字段表创建的VO<br>
  * @author Ethan Wu
  *
  */

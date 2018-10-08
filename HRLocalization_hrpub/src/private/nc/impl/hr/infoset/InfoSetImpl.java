@@ -3803,7 +3803,6 @@ public class InfoSetImpl implements IInfoSet, IInfoSetQry
 		// 获取信息集 这边没有指定哪一个是为了以后其他信息集也需要本地化字段
 		String whereSql = " infoset_code = 'bd_psndoc' ";
 		InfoSetVO[] bd_psndocInfoSet = queryInfoSet(whereSql);
-		InfoItemVO[] bodyVOs = bd_psndocInfoSet[0].getInfo_item();
 		
 		IAddLocalizationFieldStrategy strategy = 
 				AddLocalFieldStrategyFactory.getStrategy(country);
