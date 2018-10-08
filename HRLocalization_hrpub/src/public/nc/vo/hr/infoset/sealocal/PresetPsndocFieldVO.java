@@ -3,6 +3,11 @@ package nc.vo.hr.infoset.sealocal;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
 
+/**
+ * HR本地化需求：
+ * @author Ethan Wu
+ *
+ */
 public class PresetPsndocFieldVO extends SuperVO {
 	
 	/**
@@ -141,6 +146,4 @@ public class PresetPsndocFieldVO extends SuperVO {
 	public void setUnique_flag(UFBoolean unique_flag) {
 		this.unique_flag = unique_flag;
 	}
-	
-	
 }

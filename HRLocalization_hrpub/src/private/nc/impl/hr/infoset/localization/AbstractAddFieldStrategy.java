@@ -8,7 +8,9 @@ import nc.bs.framework.common.NCLocator;
 import nc.bs.logging.Logger;
 import nc.itf.uap.IUAPQueryBS;
 import nc.jdbc.framework.processor.ArrayListProcessor;
+import nc.jdbc.framework.processor.BeanListProcessor;
 import nc.vo.hr.infoset.InfoItemVO;
+import nc.vo.hr.infoset.sealocal.PresetPsndocFieldVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFBoolean;
@@ -30,23 +32,23 @@ public abstract class AbstractAddFieldStrategy {
 	 * Created on 2018-10-02 18:40:09pm 
 	 * @author Ethan Wu
 	 */
-	protected static InfoItemVO addField(Object[] newField, int showOrder, String refmodel) {
+	protected static InfoItemVO addField(PresetPsndocFieldVO newField, int showOrder, String refmodel) {
 		InfoItemVO ret = new InfoItemVO();
-		ret.setItem_code(newField[1].toString());
-		ret.setItem_name(newField[2].toString());
-		ret.setItem_name2(newField[3] == null ? null : newField[3].toString());
-		ret.setItem_name3(newField[4] == null ? null : newField[4].toString());
-		ret.setItem_name4(newField[5] == null ? null : newField[5].toString());
-		ret.setItem_name5(newField[6] == null ? null : newField[6].toString());
-		ret.setItem_name6(newField[7] == null ? null : newField[7].toString());
-		ret.setData_type((int) newField[8]);
-		ret.setMax_length((int) newField[10]);
-		ret.setResid(newField[12].toString());
-		ret.setRespath(newField[13].toString());
-		ret.setUnique_flag(new UFBoolean(newField[15].toString()));
-		ret.setNullable(new UFBoolean(newField[14].toString()));
+		ret.setItem_code(newField.getItem_code());
+		ret.setItem_name(newField.getItem_name());
+		ret.setItem_name2(newField.getItem_name2());
+		ret.setItem_name3(newField.getItem_name3());
+		ret.setItem_name4(newField.getItem_name4());
+		ret.setItem_name5(newField.getItem_name5());
+		ret.setItem_name6(newField.getItem_name6());
+		ret.setData_type(newField.getData_type());
+		ret.setMax_length(newField.getMax_length());
+		ret.setResid(newField.getResid());
+		ret.setRespath(newField.getRespath());
+		ret.setUnique_flag(newField.getUnique_flag());
+		ret.setNullable(newField.getNullable());
 		ret.setShoworder(showOrder);
-		ret.setPrecise((int) newField[11]);
+		ret.setPrecise(newField.getPrecise());
 		ret.setRef_model_name(refmodel);
 		// 默认全局属性和自定义项 供后续修改删除
 		ret.setCustom_attr(UFBoolean.TRUE);
@@ -87,24 +89,20 @@ public abstract class AbstractAddFieldStrategy {
 	// TODO: 这个方法有两个需要refactor的地方：
 	// 1. 实现带参与查询
 	// 2. 将临时表定义成一个VO对象然后用BeanListProcessor查询
-	protected static ArrayList<Object[]> getTemplateTable(String countryCode) throws BusinessException {
+	protected static ArrayList<PresetPsndocFieldVO> getTemplateTable(String countryCode) throws BusinessException {
 		IUAPQueryBS queryBS = (IUAPQueryBS) NCLocator.getInstance().lookup(IUAPQueryBS.class.getName());
 		StringBuilder sb = new StringBuilder();
 		sb.append(" select * from hr_infoset_item_sealocal where country in ('GLOBAL',{country_code?}) ");
 		String sql = sb.toString();
 		SqlWrapper sw = new SqlWrapper(sql);
 		sw.bind("country_code", countryCode);
-		ArrayList<Object> obj = null;
+		ArrayList<PresetPsndocFieldVO> obj = null;
 		try {
-			obj = (ArrayList<Object>) queryBS.executeQuery(sql, sw.getSqlParameter(), new ArrayListProcessor());
+			obj = (ArrayList<PresetPsndocFieldVO>) queryBS.executeQuery(sql, sw.getSqlParameter(), new BeanListProcessor(PresetPsndocFieldVO.class));
 		} catch (BusinessException e) {
 			Logger.error(e);
 			throw new BusinessException("Localization pre-set template table loading failure! Please check database connectivity.\n " + e.getMessage());
 		}
-		ArrayList<Object[]> ret = new ArrayList<Object[]>();
-		for (Object o : obj) {
-			ret.add((Object[]) o);
-		}
-		return ret;
+		return obj;
 	}
 }
