@@ -13,6 +13,7 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.VOStatus;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.pubapp.pattern.exception.ExceptionUtils;
+import nc.vo.util.SqlWrapper;
 
 /***************************************************************************
  * HR本地化添加字段抽象类，主要写了一些公共方法<br>
@@ -89,10 +90,13 @@ public abstract class AbstractAddFieldStrategy {
 	protected static ArrayList<Object[]> getTemplateTable(String countryCode) throws BusinessException {
 		IUAPQueryBS queryBS = (IUAPQueryBS) NCLocator.getInstance().lookup(IUAPQueryBS.class.getName());
 		StringBuilder sb = new StringBuilder();
-		sb.append(" select * from hr_infoset_item_sealocal where country in ('GLOBAL','" + countryCode + "') ");
+		sb.append(" select * from hr_infoset_item_sealocal where country in ('GLOBAL',{country_code?}) ");
+		String sql = sb.toString();
+		SqlWrapper sw = new SqlWrapper(sql);
+		sw.bind("country_code", countryCode);
 		ArrayList<Object> obj = null;
 		try {
-			obj = (ArrayList<Object>) queryBS.executeQuery(sb.toString(), new ArrayListProcessor());
+			obj = (ArrayList<Object>) queryBS.executeQuery(sql, sw.getSqlParameter(), new ArrayListProcessor());
 		} catch (BusinessException e) {
 			Logger.error(e);
 			throw new BusinessException("Localization pre-set template table loading failure! Please check database connectivity.\n " + e.getMessage());
