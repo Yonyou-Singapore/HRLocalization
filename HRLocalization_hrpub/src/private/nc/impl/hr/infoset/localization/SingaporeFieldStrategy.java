@@ -10,17 +10,9 @@ import nc.vo.pub.BusinessException;
  * @author Ethan Wu
  ***************************************************************************/
 public class SingaporeFieldStrategy extends AbstractAddFieldStrategy implements IAddLocalizationFieldStrategy {
-
-	private static final String COUNTRY_CODE = "SG";
 	
 	public SingaporeFieldStrategy() throws BusinessException {
 		defdocMap = getDefdocList();
+		countryCode = "SG";
 	}
-	
-	@Override
-	public InfoSetVO[] addLocalField(InfoSetVO[] vos) {
-		// TODO To add Singapore implementation for the fields
-		return vos;
-	}
-
 }

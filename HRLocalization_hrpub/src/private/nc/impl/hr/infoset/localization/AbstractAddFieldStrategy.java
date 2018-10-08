@@ -1,15 +1,18 @@
 package nc.impl.hr.infoset.localization;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import nc.bs.framework.common.NCLocator;
 import nc.bs.logging.Logger;
+import nc.itf.hr.infoset.localization.IAddLocalizationFieldStrategy;
 import nc.itf.uap.IUAPQueryBS;
 import nc.jdbc.framework.processor.ArrayListProcessor;
 import nc.jdbc.framework.processor.BeanListProcessor;
 import nc.vo.hr.infoset.InfoItemVO;
+import nc.vo.hr.infoset.InfoSetVO;
 import nc.vo.hr.infoset.sealocal.PresetPsndocFieldVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.VOStatus;
@@ -22,10 +25,11 @@ import nc.vo.util.SqlWrapper;
  * Created on 2018-10-02 18:38:41pm
  * @author Ethan Wu
  ***************************************************************************/
-public abstract class AbstractAddFieldStrategy {
+public abstract class AbstractAddFieldStrategy implements IAddLocalizationFieldStrategy {
 	
 	// 用来加载HR本地化相关的自定义档案
 	protected Map<String, String> defdocMap;
+	protected String countryCode;
 	
 	/**
 	 * HR本地化：添加字段方法，选定了一些必输的属性<br>
@@ -102,10 +106,46 @@ public abstract class AbstractAddFieldStrategy {
 		}
 		return obj;
 	}
-	
-	protected static ArrayList<InfoItemVO> removeDuplicate(InfoItemVO[] oldItems, ArrayList<PresetPsndocFieldVO> newItems) {
-		// TODO: to implement
-		
-		return null;
+
+	@Override
+	public InfoSetVO[] addLocalField(InfoSetVO[] vos) throws BusinessException {
+		defdocMap = getDefdocList();
+		if (vos == null || vos.length == 0) {
+			return null;
+		}
+		for (InfoSetVO infoSet : vos) {
+			if (infoSet.getInfoset_code()
+					.equals(IAddLocalizationFieldStrategy.PERSONAL_INFO_TABLE)) {
+				InfoItemVO[] bodyVOs = infoSet.getInfo_item();
+				
+				ArrayList<PresetPsndocFieldVO> templateList = getTemplateTable(countryCode);
+				
+				for (int i = templateList.size() - 1; i >= 0; i--) {
+					for (InfoItemVO item : bodyVOs) {
+						if (templateList.get(i).getItem_code().equals(item.getItem_code())) {
+							templateList.remove(i);
+							break;
+						}
+					}
+				}
+				
+				ArrayList<InfoItemVO> newBodyVOsList = 
+						new ArrayList<InfoItemVO>(Arrays.asList(bodyVOs));
+				
+				if (templateList.size() == 0) {
+					return vos;
+				} else {
+					for (PresetPsndocFieldVO newField : templateList) {
+						newBodyVOsList.add(addField(newField, newBodyVOsList.size(), newField.getRef_model_name() != null 
+								&& defdocMap.containsKey(newField.getRef_model_name())
+								? defdocMap.get(newField.getRef_model_name()) : null));
+					}
+				}
+				
+				infoSet.setInfo_item(newBodyVOsList.toArray(new InfoItemVO[0]));
+			}
+		}
+		return vos;
 	}
+
 }
