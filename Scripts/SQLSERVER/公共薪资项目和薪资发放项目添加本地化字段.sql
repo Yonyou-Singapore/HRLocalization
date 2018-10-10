@@ -15,6 +15,3 @@ alter table wa_classitem add my_issocso CHAR(1) NULL;
 alter table wa_classitem add my_ispcb CHAR(1) NULL;
 alter table wa_classitem add my_isnplrate CHAR(1) NULL;
 alter table wa_classitem add my_isotrate CHAR(1) NULL;
-
-select * from md_property order by ts desc
-select * from md_class order by ts desc

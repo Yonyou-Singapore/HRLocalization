@@ -94,7 +94,7 @@ public class WaItemVO extends SuperVO
 	private java.lang.String def40;
 	
 	// 添加本地化/马来西亚字段 2018-10-09
-	private java.lang.Integer g_iproperty;
+	private java.lang.Integer g_iproperty = 0;
 	private nc.vo.pub.lang.UFBoolean my_isepf;
 	private nc.vo.pub.lang.UFBoolean my_iseis;
 	private nc.vo.pub.lang.UFBoolean my_issocso;
@@ -1144,13 +1144,13 @@ public class WaItemVO extends SuperVO
 		return MDEnum.valueOf(PropertyEnumVO.class, getIproperty());
 	}
 	
-	public SeaLocalEnum getSeaLocalEnum() {
-		return MDEnum.valueOf(SeaLocalEnum.class, getG_iproperty());
-	}
-	
-	public void setSeaLocalEnum(SeaLocalEnum property) {
-		setG_iproperty(property.value());
-	}
+//	public SeaLocalEnum getSeaLocalEnum() {
+//		return MDEnum.valueOf(SeaLocalEnum.class, getG_iproperty());
+//	}
+//	
+//	public void setSeaLocalEnum(SeaLocalEnum property) {
+//		setG_iproperty(property.value());
+//	}
 
 	@Override
 	public String toString()
