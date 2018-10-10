@@ -1144,13 +1144,13 @@ public class WaItemVO extends SuperVO
 		return MDEnum.valueOf(PropertyEnumVO.class, getIproperty());
 	}
 	
-//	public SeaLocalEnum getSeaLocalEnum() {
-//		return MDEnum.valueOf(SeaLocalEnum.class, getG_iproperty());
-//	}
-//	
-//	public void setSeaLocalEnum(SeaLocalEnum property) {
-//		setG_iproperty(property.value());
-//	}
+	public SeaLocalEnum getSeaLocalEnum() {
+		return MDEnum.valueOf(SeaLocalEnum.class, getG_iproperty());
+	}
+	
+	public void setSeaLocalEnum(SeaLocalEnum property) {
+		setG_iproperty(property.value());
+	}
 
 	@Override
 	public String toString()
