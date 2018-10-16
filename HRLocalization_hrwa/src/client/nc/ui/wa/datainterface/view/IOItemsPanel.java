@@ -44,6 +44,7 @@ import nc.vo.hr.datainterface.FieldTypeEnum;
 import nc.vo.hr.datainterface.FormatItemVO;
 import nc.vo.hr.datainterface.HrIntfaceVO;
 import nc.vo.hr.datainterface.IfsettopVO;
+import nc.vo.hr.datainterface.LineTopPositionEnum;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.bill.BillTempletVO;
 import nc.vo.uif2.LoginContext;
@@ -346,6 +347,8 @@ public class IOItemsPanel extends UIPanel implements BillEditListener, INavigate
 		{
 			getSignLinePanel().setAggVO(getAggVO());
 			getSignLinePanel().initValue();
+			getSignLinePanel2().setAggVO(getAggVO());
+			getSignLinePanel2().initValue();
 		}
 	}
 
@@ -506,11 +509,14 @@ public class IOItemsPanel extends UIPanel implements BillEditListener, INavigate
 
 	}
 
+	// 标志行添加标题：强制配置首尾行
+	// TODO：首尾行多语资源字段待抽取配置
 	public SignLinePanel getSignLinePanel()
 	{
 		if (signLinePanel == null)
 		{
-			signLinePanel = new SignLinePanel();
+			signLinePanel = new SignLinePanel(LineTopPositionEnum.HEAD.toIntValue());
+			signLinePanel.setBorder(new UITitledBorder("Head flag line setup"));
 		}
 		return signLinePanel;
 	}
@@ -520,7 +526,8 @@ public class IOItemsPanel extends UIPanel implements BillEditListener, INavigate
 	{
 		if (signLinePanel2 == null)
 		{
-			signLinePanel2 = new SignLinePanel();
+			signLinePanel2 = new SignLinePanel(LineTopPositionEnum.TAIL.toIntValue());
+			signLinePanel2.setBorder(new UITitledBorder("Tail flag line setup"));
 		}
 		return signLinePanel2;
 	}

@@ -41,6 +41,7 @@ import nc.vo.hr.datainterface.FormatItemVO;
 import nc.vo.hr.datainterface.HrIntfaceVO;
 import nc.vo.hr.datainterface.IfsettopVO;
 import nc.vo.hr.datainterface.ItfTypeEnum;
+import nc.vo.hr.datainterface.LineTopPositionEnum;
 import nc.vo.hr.datainterface.RelatedItemEnum;
 import nc.vo.hr.itemsource.ItemPropertyConst;
 import nc.vo.hr.itemsource.TypeEnumVO;
@@ -84,6 +85,7 @@ public class DataIOWizard
 		this.aggVO = aggVO;
 	}
 
+	@SuppressWarnings("restriction")
 	public WizardDialog createWizardDialog()
 	{
 
@@ -130,13 +132,35 @@ public class DataIOWizard
 					aggVO.setTableVO(DataIOconstant.HR_DATAINTFACE_B,itemVOs);
 					if (ioItemsPanel.getSignLinePanel().getBillListPanel() != null)
 					{
-						CircularlyAccessibleValueObject[] lineVOs = ioItemsPanel.getSignLinePanel().getBillListPanel().getBodyBillModel().getBodyValueChangeVOs(IfsettopVO.class.getName());
-						for (int i = 0; lineVOs != null && i < lineVOs.length; i++)
+						
+						// 之前系统只截取了UI发生变化的行，但是为了顺序正常工作，要把所有VO重新整理一遍
+						// 这边是首行
+						CircularlyAccessibleValueObject[] headLines = ioItemsPanel.getSignLinePanel().getBillListPanel().getBodyBillModel().getBodyValueVOs(IfsettopVO.class.getName());
+						for (int i = 0; headLines != null && i < headLines.length; i++)
 						{
-							((IfsettopVO) lineVOs[i]).setIseq(i + 1);
-							((IfsettopVO) lineVOs[i]).setIifsum((Integer) BooleanEnum.NO.value());
+							((IfsettopVO) headLines[i]).setIseq(i + 1);
+							((IfsettopVO) headLines[i]).setIifsum((Integer) BooleanEnum.NO.value());
+							((IfsettopVO) headLines[i]).setItoplineposition(LineTopPositionEnum.HEAD.toIntValue());
+							((IfsettopVO) headLines[i]).setStatus(VOStatus.UPDATED);
 						}
-						aggVO.setTableVO(DataIOconstant.HR_IFSETTOP, lineVOs);
+						
+						// 这边是尾行
+						CircularlyAccessibleValueObject[] tailLines = ioItemsPanel.getSignLinePanel2().getBillListPanel().getBodyBillModel().getBodyValueVOs(IfsettopVO.class.getName());
+						for (int i = 0; tailLines != null && i < tailLines.length; i++) {
+							((IfsettopVO) tailLines[i]).setIseq(i + 1);
+							((IfsettopVO) tailLines[i]).setIifsum((Integer) BooleanEnum.NO.value());
+							((IfsettopVO) tailLines[i]).setItoplineposition(LineTopPositionEnum.TAIL.toIntValue());
+							((IfsettopVO) tailLines[i]).setStatus(VOStatus.UPDATED);
+						}
+						
+						ArrayList<CircularlyAccessibleValueObject> lineVOs = new ArrayList<CircularlyAccessibleValueObject>();
+						for (CircularlyAccessibleValueObject obj : headLines) {
+							lineVOs.add(obj);
+						}
+						for (CircularlyAccessibleValueObject obj : tailLines) {
+							lineVOs.add(obj);
+						}
+						aggVO.setTableVO(DataIOconstant.HR_IFSETTOP, lineVOs.toArray(new CircularlyAccessibleValueObject[0]));
 					}
 
 					// 保存

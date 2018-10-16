@@ -3,6 +3,7 @@ package nc.ui.wa.datainterface.view;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.ListSelectionModel;
@@ -35,6 +36,7 @@ import nc.vo.hr.datainterface.AggHrIntfaceVO;
 import nc.vo.hr.datainterface.DataIOItemVO;
 import nc.vo.hr.datainterface.IfsettopVO;
 import nc.vo.hr.datainterface.ItemSeprtorEnum;
+import nc.vo.hr.datainterface.LineTopPositionEnum;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.bill.BillTempletVO;
 import nc.vo.pub.lang.UFLiteralDate;
@@ -65,7 +67,20 @@ public class SignLinePanel extends UIPanel implements BillEditListener, BillEdit
 	private ModuleItemStrategy drawItemsCreator = null;
 	// vos 对应 nameOfFldName
 	private DataIOItemVO[] vos = null;
-
+	
+	private int flagLinePosition;
+	
+	// HR本地化需求：重载了构造器 这样标志行可以用来分开收尾 start
+	public SignLinePanel() {
+		super();
+	}
+	
+	public SignLinePanel(int flagLinePosition) {
+		super();
+		this.flagLinePosition = flagLinePosition;
+	}
+	// HR本地化需求：重载了构造器 这样标志行可以用来分开收尾 end
+	
 	public String getNodekey()
 	{
 		return nodekey;
@@ -106,7 +121,17 @@ public class SignLinePanel extends UIPanel implements BillEditListener, BillEdit
 		setDrawItemsCreator();
 		getBillListPanel().setHeaderValueVO(new CircularlyAccessibleValueObject[]
 		{ getAggVO().getParentVO() });
-		getBillListPanel().setBodyValueVO(getAggVO().getTableVO(DataIOconstant.HR_IFSETTOP));
+		
+		// HR本地化改动：根据是否为首尾行将表体拆开
+		CircularlyAccessibleValueObject[] bvos = getAggVO().getTableVO(DataIOconstant.HR_IFSETTOP);
+		ArrayList<IfsettopVO> tempList = new ArrayList<IfsettopVO>(); 
+		for (CircularlyAccessibleValueObject bvo : bvos) {
+			IfsettopVO flagLineVO = (IfsettopVO) bvo;
+			if (flagLineVO.getItoplineposition().equals(this.flagLinePosition)) {
+				tempList.add(flagLineVO);
+			}
+		}
+		getBillListPanel().setBodyValueVO(tempList.toArray(new CircularlyAccessibleValueObject[0]));
 		getBillListPanel().getBodyBillModel().updateValue();
 		convertDrawItem();
 	}
