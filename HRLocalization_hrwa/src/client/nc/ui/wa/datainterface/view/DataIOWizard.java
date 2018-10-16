@@ -41,6 +41,7 @@ import nc.vo.hr.datainterface.FormatItemVO;
 import nc.vo.hr.datainterface.HrIntfaceVO;
 import nc.vo.hr.datainterface.IfsettopVO;
 import nc.vo.hr.datainterface.ItfTypeEnum;
+import nc.vo.hr.datainterface.LineTopEnum;
 import nc.vo.hr.datainterface.LineTopPositionEnum;
 import nc.vo.hr.datainterface.RelatedItemEnum;
 import nc.vo.hr.itemsource.ItemPropertyConst;
@@ -141,7 +142,11 @@ public class DataIOWizard
 							((IfsettopVO) headLines[i]).setIseq(i + 1);
 							((IfsettopVO) headLines[i]).setIifsum((Integer) BooleanEnum.NO.value());
 							((IfsettopVO) headLines[i]).setItoplineposition(LineTopPositionEnum.HEAD.toIntValue());
-							((IfsettopVO) headLines[i]).setStatus(VOStatus.UPDATED);
+							if (((IfsettopVO) headLines[i]).getPk_hr_ifsettop() != null) {
+								((IfsettopVO) headLines[i]).setStatus(VOStatus.UPDATED);
+							} else {
+								((IfsettopVO) headLines[i]).setStatus(VOStatus.NEW);
+							}
 						}
 						
 						// 这边是尾行
@@ -150,7 +155,11 @@ public class DataIOWizard
 							((IfsettopVO) tailLines[i]).setIseq(i + 1);
 							((IfsettopVO) tailLines[i]).setIifsum((Integer) BooleanEnum.NO.value());
 							((IfsettopVO) tailLines[i]).setItoplineposition(LineTopPositionEnum.TAIL.toIntValue());
-							((IfsettopVO) tailLines[i]).setStatus(VOStatus.UPDATED);
+							if (((IfsettopVO) tailLines[i]).getPk_hr_ifsettop() != null) {
+								((IfsettopVO) tailLines[i]).setStatus(VOStatus.UPDATED);
+							} else {
+								((IfsettopVO) tailLines[i]).setStatus(VOStatus.NEW);
+							}
 						}
 						
 						ArrayList<CircularlyAccessibleValueObject> lineVOs = new ArrayList<CircularlyAccessibleValueObject>();
@@ -849,17 +858,18 @@ public class DataIOWizard
 		((HrIntfaceVO) aggVO.getParentVO()).setIheadadjustbody(same);
 
 		// HR本地化：添加了第二个标志行的同步，这样就可以同时配置首行和尾行
+		// 两个标志行写死一首一尾 通过checkbox去判定到底用不用
 		// 标志行1
 		Integer linetop = paraPanel.getLinetopSetChb().isSelected() ? (Integer) BooleanEnum.YES.value() : (Integer) BooleanEnum.NO.value();
 		((HrIntfaceVO) aggVO.getParentVO()).setIiftop(linetop);
-		((HrIntfaceVO) aggVO.getParentVO()).setToplinenum((Integer) paraPanel.getLinetopSetComb().getSelectdItemValue());
-		((HrIntfaceVO) aggVO.getParentVO()).setToplineposition((Integer) paraPanel.getLinetopPosiComb().getSelectdItemValue());
+		((HrIntfaceVO) aggVO.getParentVO()).setToplinenum(LineTopEnum.MLINE.toIntValue());
+		((HrIntfaceVO) aggVO.getParentVO()).setToplineposition(LineTopPositionEnum.HEAD.toIntValue());
 		
 		// 标志行2
 		Integer linetop2 = paraPanel.getLinetopSetChb2().isSelected() ? (Integer) BooleanEnum.YES.value() : (Integer) BooleanEnum.NO.value();
 		((HrIntfaceVO) aggVO.getParentVO()).setIiftop2(linetop2);
-		((HrIntfaceVO) aggVO.getParentVO()).setToplinenum2((Integer) paraPanel.getLinetopSetComb2().getSelectdItemValue());
-		((HrIntfaceVO) aggVO.getParentVO()).setToplineposition2((Integer) paraPanel.getLinetopPosiComb2().getSelectdItemValue());
+		((HrIntfaceVO) aggVO.getParentVO()).setToplinenum2(LineTopEnum.MLINE.toIntValue());
+		((HrIntfaceVO) aggVO.getParentVO()).setToplineposition2(LineTopPositionEnum.TAIL.toIntValue());
 
 		return aggVO;
 	}

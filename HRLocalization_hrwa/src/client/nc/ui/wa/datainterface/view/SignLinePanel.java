@@ -125,6 +125,9 @@ public class SignLinePanel extends UIPanel implements BillEditListener, BillEdit
 		// HR本地化改动：根据是否为首尾行将表体拆开
 		CircularlyAccessibleValueObject[] bvos = getAggVO().getTableVO(DataIOconstant.HR_IFSETTOP);
 		ArrayList<IfsettopVO> tempList = new ArrayList<IfsettopVO>(); 
+		if (bvos == null) {
+			return;
+		}
 		for (CircularlyAccessibleValueObject bvo : bvos) {
 			IfsettopVO flagLineVO = (IfsettopVO) bvo;
 			if (flagLineVO.getItoplineposition().equals(this.flagLinePosition)) {

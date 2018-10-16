@@ -316,6 +316,7 @@ public class ParaInfPanel extends UIPanel
 			linetopSetComb.addItem(new DefaultConstEnum(LineTopEnum.SLINE.value(), LineTopEnum.SLINE.getName()));
 			linetopSetComb.addItem(new DefaultConstEnum(LineTopEnum.MLINE.value(), LineTopEnum.MLINE.getName()));
 			linetopSetComb.setPreferredSize(new Dimension(200, 20));
+			linetopSetComb.setEnabled(false);
 		}
 		return linetopSetComb;
 	}
@@ -329,6 +330,7 @@ public class ParaInfPanel extends UIPanel
 			linetopSetComb2.addItem(new DefaultConstEnum(LineTopEnum.SLINE.value(), LineTopEnum.SLINE.getName()));
 			linetopSetComb2.addItem(new DefaultConstEnum(LineTopEnum.MLINE.value(), LineTopEnum.MLINE.getName()));
 			linetopSetComb2.setPreferredSize(new Dimension(200, 20));
+			linetopSetComb2.setEnabled(false);
 		}
 		return linetopSetComb2;
 	}
@@ -342,7 +344,8 @@ public class ParaInfPanel extends UIPanel
 			linetopPosiComb.addItem(new DefaultConstEnum(LineTopPositionEnum.HEAD.value(), LineTopPositionEnum.HEAD.getName()));
 			linetopPosiComb.addItem(new DefaultConstEnum(LineTopPositionEnum.TAIL.value(), LineTopPositionEnum.TAIL.getName()));
 			linetopPosiComb.setPreferredSize(new Dimension(200, 20));
-		}
+			linetopPosiComb.setEnabled(false);
+		} 
 		return linetopPosiComb;
 	}
 	
@@ -355,6 +358,7 @@ public class ParaInfPanel extends UIPanel
 			linetopPosiComb2.addItem(new DefaultConstEnum(LineTopPositionEnum.HEAD.value(), LineTopPositionEnum.HEAD.getName()));
 			linetopPosiComb2.addItem(new DefaultConstEnum(LineTopPositionEnum.TAIL.value(), LineTopPositionEnum.TAIL.getName()));
 			linetopPosiComb2.setPreferredSize(new Dimension(200, 20));
+			linetopPosiComb2.setEnabled(false);
 		}
 		return linetopPosiComb2;
 	}
