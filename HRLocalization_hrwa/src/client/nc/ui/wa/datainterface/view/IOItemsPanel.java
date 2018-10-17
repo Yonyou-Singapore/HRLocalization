@@ -14,12 +14,14 @@ import javax.swing.table.TableColumn;
 
 import nc.bs.logging.Logger;
 import nc.hr.utils.ResHelper;
+import nc.ui.bd.ref.model.PsndocDefaultNCRefModel;
 import nc.ui.hr.datainterface.itf.IDisplayColumns;
 import nc.ui.hr.datainterface.itf.INavigatee;
 import nc.ui.hr.frame.util.BillPanelUtils;
 import nc.ui.pub.beans.UIButton;
 import nc.ui.pub.beans.UIComboBox;
 import nc.ui.pub.beans.UIPanel;
+import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.beans.UITable;
 import nc.ui.pub.beans.UITextField;
 import nc.ui.pub.beans.border.UITitledBorder;
@@ -35,6 +37,7 @@ import nc.ui.pub.bill.BillScrollPane;
 import nc.ui.pub.bill.IBillItem;
 import nc.ui.uif2.model.BillManageModel;
 import nc.ui.wa.datainterface.model.WaDrawItemsStrategy;
+import nc.ui.wa.item.model.HRWADefdocGridRefModel;
 import nc.vo.hr.datainterface.AggHrIntfaceVO;
 import nc.vo.hr.datainterface.BooleanEnum;
 import nc.vo.hr.datainterface.CaretposEnum;
@@ -945,6 +948,16 @@ public class IOItemsPanel extends UIPanel implements BillEditListener, INavigate
 				tablecolumn.setCellEditor(new BillCellEditor(box));
 				getBillListPanel().getBodyItem(DataIOconstant.IFIELDTYPE).setEdit(false);
 			}
+			else if (dataFrom.equals(DataFromEnum.BD_PSNDOC.value()))
+			{
+				// 假如选择了人员信息，把信息集中的字段显示
+				UIRefPane ref = new UIRefPane();
+				ref.setEnabled(true);
+				ref.setBounds(170, 69, 100, 20);
+				ref.setButtonFireEvent(true);
+				ref.setRefModel(new PsndocDefaultNCRefModel());
+				tablecolumn.setCellEditor(new BillCellEditor(ref));
+			}
 			else
 			{
 				tablecolumn.setCellEditor(new BillCellEditor(new UITextField()));
@@ -1025,6 +1038,16 @@ public class IOItemsPanel extends UIPanel implements BillEditListener, INavigate
 				box.addItems(vos);
 				tablecolumn.setCellEditor(new BillCellEditor(box));
 				getBillListPanel().getBodyItem(DataIOconstant.IFIELDTYPE).setEdit(false);
+			}
+			else if (isourcetype.equals(DataFromEnum.BD_PSNDOC.value()))
+			{
+				// 假如选择了人员信息，把信息集中的字段显示
+				UIRefPane ref = new UIRefPane();
+				ref.setEnabled(true);
+				ref.setBounds(170, 69, 100, 20);
+				ref.setButtonFireEvent(true);
+				ref.setRefModel(new PsndocDefaultNCRefModel());
+				tablecolumn.setCellEditor(new BillCellEditor(ref));
 			}
 			else
 			{
