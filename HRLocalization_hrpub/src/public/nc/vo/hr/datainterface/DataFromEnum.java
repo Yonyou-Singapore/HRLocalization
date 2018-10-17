@@ -22,6 +22,10 @@ public class DataFromEnum extends MDEnum
     
     public static final DataFromEnum FORMULAR = MDEnum.valueOf(DataFromEnum.class, 1);
     
+    public static final DataFromEnum BD_PSNDOC = MDEnum.valueOf(DataFromEnum.class, 2);
+    
+    public static final DataFromEnum WA_ITEM = MDEnum.valueOf(DataFromEnum.class, 3);
+    
     public DataFromEnum(IEnumValue enumvalue)
     {
         super(enumvalue);
