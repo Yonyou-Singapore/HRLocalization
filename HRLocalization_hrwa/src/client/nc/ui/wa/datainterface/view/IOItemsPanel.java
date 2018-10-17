@@ -14,10 +14,10 @@ import javax.swing.table.TableColumn;
 
 import nc.bs.logging.Logger;
 import nc.hr.utils.ResHelper;
-import nc.ui.bd.ref.model.PsndocDefaultNCRefModel;
 import nc.ui.hr.datainterface.itf.IDisplayColumns;
 import nc.ui.hr.datainterface.itf.INavigatee;
 import nc.ui.hr.frame.util.BillPanelUtils;
+import nc.ui.hr.infoset.ref.BDPsndocInfoItemRefModel;
 import nc.ui.pub.beans.UIButton;
 import nc.ui.pub.beans.UIComboBox;
 import nc.ui.pub.beans.UIPanel;
@@ -37,7 +37,6 @@ import nc.ui.pub.bill.BillScrollPane;
 import nc.ui.pub.bill.IBillItem;
 import nc.ui.uif2.model.BillManageModel;
 import nc.ui.wa.datainterface.model.WaDrawItemsStrategy;
-import nc.ui.wa.item.model.HRWADefdocGridRefModel;
 import nc.vo.hr.datainterface.AggHrIntfaceVO;
 import nc.vo.hr.datainterface.BooleanEnum;
 import nc.vo.hr.datainterface.CaretposEnum;
@@ -48,6 +47,7 @@ import nc.vo.hr.datainterface.FormatItemVO;
 import nc.vo.hr.datainterface.HrIntfaceVO;
 import nc.vo.hr.datainterface.IfsettopVO;
 import nc.vo.hr.datainterface.LineTopPositionEnum;
+import nc.vo.hr.infoset.InfoItemVO;
 import nc.vo.pub.CircularlyAccessibleValueObject;
 import nc.vo.pub.bill.BillTempletVO;
 import nc.vo.uif2.LoginContext;
@@ -955,8 +955,9 @@ public class IOItemsPanel extends UIPanel implements BillEditListener, INavigate
 				ref.setEnabled(true);
 				ref.setBounds(170, 69, 100, 20);
 				ref.setButtonFireEvent(true);
-				ref.setRefModel(new PsndocDefaultNCRefModel());
+				ref.setRefModel(new BDPsndocInfoItemRefModel());
 				tablecolumn.setCellEditor(new BillCellEditor(ref));
+				getBillListPanel().getBodyItem(DataIOconstant.IFIELDTYPE).setEdit(false);
 			}
 			else
 			{
@@ -967,6 +968,17 @@ public class IOItemsPanel extends UIPanel implements BillEditListener, INavigate
 
 			setBodyValueAt(DataIOconstant.VFIELDNAME, billEditEvent.getRow(), "");
 			setBodyValueAt(DataIOconstant.VCONTENT, billEditEvent.getRow(), "");
+		}
+		
+		// HR本地化改动：根据人员基础信息参照做出编辑后事件
+		if (billEditEvent.getKey().equals(DataIOconstant.VCONTENT))
+		{
+			Object obj = billEditEvent.getValue();
+			BillCellEditor editor = (BillCellEditor) billEditEvent.getSource();
+			UIRefPane refPane = (UIRefPane) editor.getComponent();
+			BDPsndocInfoItemRefModel model = (BDPsndocInfoItemRefModel) refPane.getRefModel();
+			setBodyValueAt(DataIOconstant.VFIELDNAME, billEditEvent.getRow(), model.getValue(InfoItemVO.ITEM_NAME));
+			
 		}
 
 		Object obj = billEditEvent.getValue();
@@ -1046,8 +1058,9 @@ public class IOItemsPanel extends UIPanel implements BillEditListener, INavigate
 				ref.setEnabled(true);
 				ref.setBounds(170, 69, 100, 20);
 				ref.setButtonFireEvent(true);
-				ref.setRefModel(new PsndocDefaultNCRefModel());
+				ref.setRefModel(new BDPsndocInfoItemRefModel());
 				tablecolumn.setCellEditor(new BillCellEditor(ref));
+				getBillListPanel().getBodyItem(DataIOconstant.IFIELDTYPE).setEdit(false);
 			}
 			else
 			{
