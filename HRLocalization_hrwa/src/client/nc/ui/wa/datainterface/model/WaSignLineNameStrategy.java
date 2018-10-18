@@ -52,6 +52,14 @@ public class WaSignLineNameStrategy implements ModuleItemStrategy{
 		tmpitem.setIitemtype((Integer)FieldTypeEnum.STR.value());
 		tmpitem.setIfldwidth(Integer.valueOf(20));
 		itms.add(tmpitem);
+		
+		tmpitem = new DataIOItemVO();
+		tmpitem.setVname("Summary Item");
+		tmpitem.setPrimaryKey(DataIOconstant.ITEMSUM);
+		tmpitem.setIflddecimal(Integer.valueOf(2));
+		tmpitem.setIitemtype((Integer)FieldTypeEnum.DEC.value());
+		tmpitem.setIfldwidth(Integer.valueOf(20));
+		itms.add(tmpitem);
 
 
 		DataIOItemVO[] allitemstmp = new DataIOItemVO[itms.size()];
