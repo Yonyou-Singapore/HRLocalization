@@ -112,6 +112,7 @@ public final class DataIOconstant
 		ITEMSEPERATOR.put((Integer) ItemSeprtorEnum.COMMA.value(), ",");
 		ITEMSEPERATOR.put((Integer) ItemSeprtorEnum.SEM.value(), ";");
 		ITEMSEPERATOR.put((Integer) ItemSeprtorEnum.ERECT.value(), "|");
+		ITEMSEPERATOR.put((Integer) ItemSeprtorEnum.NULL.value(), "");
 	}
 	public static final String BLANK = " ";
 
