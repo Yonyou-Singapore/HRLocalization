@@ -975,10 +975,13 @@ public class IOItemsPanel extends UIPanel implements BillEditListener, INavigate
 		{
 			Object obj = billEditEvent.getValue();
 			BillCellEditor editor = (BillCellEditor) billEditEvent.getSource();
-			UIRefPane refPane = (UIRefPane) editor.getComponent();
-			BDPsndocInfoItemRefModel model = (BDPsndocInfoItemRefModel) refPane.getRefModel();
-			setBodyValueAt(DataIOconstant.VFIELDNAME, billEditEvent.getRow(), model.getValue(InfoItemVO.ITEM_NAME));
-			
+			if (editor.getComponent() instanceof UIRefPane) {
+				UIRefPane refPane = (UIRefPane) editor.getComponent();
+				if (refPane.getRefModel() instanceof BDPsndocInfoItemRefModel) {
+					BDPsndocInfoItemRefModel model = (BDPsndocInfoItemRefModel) refPane.getRefModel();
+					setBodyValueAt(DataIOconstant.VFIELDNAME, billEditEvent.getRow(), model.getValue(InfoItemVO.ITEM_NAME));
+				}
+			}
 		}
 
 		Object obj = billEditEvent.getValue();
