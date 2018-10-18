@@ -25,7 +25,7 @@ import nc.vo.wa.datainterface.DataIOconstant;
 import org.apache.commons.lang.StringUtils;
 
 
-public class TxtExporter extends DefaultExporter
+public class TxtExporterForBank extends DefaultExporter
 {
 
 	public static final String crlf = System.getProperties().getProperty("line.separator"); // »»ÐÐ·û

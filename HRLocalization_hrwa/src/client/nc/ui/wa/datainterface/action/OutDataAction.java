@@ -14,6 +14,7 @@ import nc.ui.pub.beans.MessageDialog;
 import nc.ui.uif2.model.BillManageModel;
 import nc.ui.wa.datainterface.DefaultExporter;
 import nc.ui.wa.datainterface.TxtExporter;
+import nc.ui.wa.datainterface.TxtExporterForBank;
 import nc.ui.wa.datainterface.XlsExporter;
 import nc.ui.wa.datainterface.model.DataIOAppModel;
 import nc.ui.wa.datainterface.validator.FipEndValidationService;
@@ -159,11 +160,15 @@ public class OutDataAction extends HrAction {
 	}
 
 	protected DefaultExporter createExporter(AggHrIntfaceVO aggVO) {
+		// HR本地化需求改动：为银行报盘添加专门的导出策略，以免与数据接口功能发生冲突
+		WaLoginContext loginContext = (WaLoginContext) getModel().getContext();
 		DefaultExporter exporter = null;
 		HrIntfaceVO headvo = (HrIntfaceVO) aggVO.getParentVO();
-		if (headvo.getIfiletype().equals(FileTypeEnum.TXT.value())) {
+		if (headvo.getIfiletype().equals(FileTypeEnum.TXT.value()) && loginContext.getNodeCode().equals(DataIOconstant.NODE_DATAIO)) {
 			exporter = new TxtExporter();
-		} else {// excel
+		} else if (headvo.getIfiletype().equals(FileTypeEnum.TXT.value()) && loginContext.getNodeCode().equals(DataIOconstant.NODE_BANK)) { 
+			exporter = new TxtExporterForBank();
+		}else {// excel
 			exporter = new XlsExporter();
 		}
 		exporter.setParas(getIoHeadPanel().getParasConfig());
