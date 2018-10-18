@@ -858,17 +858,17 @@ public class DataIOWizard
 		((HrIntfaceVO) aggVO.getParentVO()).setIheadadjustbody(same);
 
 		// HR本地化：添加了第二个标志行的同步，这样就可以同时配置首行和尾行
-		// 两个标志行写死一首一尾 通过checkbox去判定到底用不用
+		// 两个标志行写死一首一尾 并且都是单行为防止与系统的多行逻辑冲突 通过checkbox去判定到底用不用
 		// 标志行1
 		Integer linetop = paraPanel.getLinetopSetChb().isSelected() ? (Integer) BooleanEnum.YES.value() : (Integer) BooleanEnum.NO.value();
 		((HrIntfaceVO) aggVO.getParentVO()).setIiftop(linetop);
-		((HrIntfaceVO) aggVO.getParentVO()).setToplinenum(LineTopEnum.MLINE.toIntValue());
+		((HrIntfaceVO) aggVO.getParentVO()).setToplinenum(LineTopEnum.SLINE.toIntValue());
 		((HrIntfaceVO) aggVO.getParentVO()).setToplineposition(LineTopPositionEnum.HEAD.toIntValue());
 		
 		// 标志行2
 		Integer linetop2 = paraPanel.getLinetopSetChb2().isSelected() ? (Integer) BooleanEnum.YES.value() : (Integer) BooleanEnum.NO.value();
 		((HrIntfaceVO) aggVO.getParentVO()).setIiftop2(linetop2);
-		((HrIntfaceVO) aggVO.getParentVO()).setToplinenum2(LineTopEnum.MLINE.toIntValue());
+		((HrIntfaceVO) aggVO.getParentVO()).setToplinenum2(LineTopEnum.SLINE.toIntValue());
 		((HrIntfaceVO) aggVO.getParentVO()).setToplineposition2(LineTopPositionEnum.TAIL.toIntValue());
 
 		return aggVO;
