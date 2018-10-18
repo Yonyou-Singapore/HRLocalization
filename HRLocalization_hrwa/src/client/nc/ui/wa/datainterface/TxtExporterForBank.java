@@ -3,6 +3,7 @@ package nc.ui.wa.datainterface;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import nc.hr.utils.ResHelper;
@@ -146,8 +147,8 @@ public class TxtExporterForBank extends DefaultExporter
 			return aDigit;
 		}
 
-		String temp = getStringStr(aDigit, vo);
 //		if (!StringUtils.isBlank(includeBefore))
+		String temp = getStringStr(aDigit, vo);
 //		{
 //			temp = includeBefore + temp;
 //		}
@@ -367,10 +368,10 @@ public class TxtExporterForBank extends DefaultExporter
 			return;
 		}
 		// 接口信息中是否输出行号 并且是首行
-		if (isUseTopLine() && isTheFirst())
+		if (isUseTopLine())
 		{
 			// 是，则得到所有的行号信息
-			String signline = getTopLine();
+			String signline = getFlagLine(LineTopPositionEnum.HEAD.toIntValue());
 			// 循环处理行号信息
 			signline = signline + (crlf);
 			try
@@ -392,10 +393,10 @@ public class TxtExporterForBank extends DefaultExporter
 		{
 			return;
 		}
-		if (isUseTopLine() && !isTheFirst())
+		if (isUseBottomLine())
 		{
 			// 是，则得到所有的行号信息
-			String signline = getTopLine();
+			String signline = getFlagLine(LineTopPositionEnum.TAIL.toIntValue());
 			// 循环处理行号信息
 			signline = signline + (crlf);
 			try
@@ -411,6 +412,22 @@ public class TxtExporterForBank extends DefaultExporter
 	}
 
 	private boolean isUseTopLine()
+	{
+
+		if (getIntfaceInfs() != null && (getReadIndex() + 1) <= getIntfaceInfs().length)
+		{
+			if (getIntfaceInfs()[getReadIndex()] != null)
+			{
+				HrIntfaceVO itfVO = (HrIntfaceVO) getIntfaceInfs()[getReadIndex()].getParentVO();
+				int value = itfVO.getIiftop();
+				return (value == 1) ? true : false;
+			}
+		}
+		return false;
+	}
+	
+	// HR本地化：判断标志行2是否启用
+	private boolean isUseBottomLine()
 	{
 
 		if (getIntfaceInfs() != null && (getReadIndex() + 1) <= getIntfaceInfs().length)
@@ -453,17 +470,29 @@ public class TxtExporterForBank extends DefaultExporter
 		return false;
 	}
 
-	private IfsettopVO[] getSignlineItems()
+	
+	// HR本地化改动：根据参数决定取首行项还是尾行项
+	private IfsettopVO[] getSignlineItems(int toplinePosition)
 	{
+		IfsettopVO[] ret = null;
 		if (getIntfaceInfs() != null && (getReadIndex() + 1) <= getIntfaceInfs().length)
 		{
 			if (getIntfaceInfs()[getReadIndex()] != null)
 			{
-				return (IfsettopVO[]) getIntfaceInfs()[getReadIndex()].getTableVO(DataIOconstant.HR_IFSETTOP);
+				ret = (IfsettopVO[]) getIntfaceInfs()[getReadIndex()].getTableVO(DataIOconstant.HR_IFSETTOP);
+				ArrayList<IfsettopVO> temp = new ArrayList<IfsettopVO>(Arrays.asList(ret));
+				for (int i = temp.size() - 1; i >= 0; i--) {
+					if (temp.get(i).getItoplineposition().equals(toplinePosition)) {
+						continue;
+					} else {
+						temp.remove(i);
+					}
+				}
+				ret = temp.toArray(new IfsettopVO[0]);
 			}
 		}
 
-		return null;
+		return ret;
 	}
 
 	protected String getStringDigit4TopLine(String aDigit, IfsettopVO vo, boolean ifDot, boolean ifQwfg)
@@ -652,21 +681,28 @@ public class TxtExporterForBank extends DefaultExporter
 
 	}
 
-	public String getTopLine()
+	public String getFlagLine(int lineTopPosition)
 	{
-		IfsettopVO[] data_top = getSignlineItems();
+		IfsettopVO[] data_top = getSignlineItems(lineTopPosition);
 		if (data_top == null)
 		{
 			return "";
 		}
 		boolean line = isSline();
 		StringBuilder topLine = new StringBuilder();
+		
 
 		try
 		{
 
 			for (int i = 0; i < data_top.length; i++)
 			{
+				// 新行逻辑重新写了一遍 之前尾行处理不符合新加的设置
+				if (data_top[i].getInextline().equals(BooleanEnum.YES.toIntValue()) && line) {
+					topLine.append(crlf);
+				} else if (i < data_top.length - 1 && !line && i != 0) {
+					topLine.append(crlf);
+				}
 				Object objitemSumTableAndCol = data_top[i].getVfieldname();
 				String itemSumTableAndCol = "";
 				if (objitemSumTableAndCol != null)
@@ -736,10 +772,11 @@ public class TxtExporterForBank extends DefaultExporter
 					topLine.append(topSeperater);
 				}
 				// 是否输出多行
-				if (i < data_top.length - 1 && !line)
-				{
-					topLine.append(crlf);
-				}
+				// 这边的逻辑针对本地化需求先注掉
+//				if (i < data_top.length - 1 && !line )
+//				{
+//					topLine.append(crlf);
+//				}
 			}
 
 		}
@@ -925,7 +962,10 @@ public class TxtExporterForBank extends DefaultExporter
 			for (int temp = 0; temp < vos.length; temp++)
 			{
 				FormatItemVO formatItemVO = vos[temp];
-
+				// 换行处理
+				if (formatItemVO.getInextline().equals(BooleanEnum.YES.toIntValue())) {
+					sbd.append(crlf);
+				}
 				// 获取单元值
 				Object value = appendVOs[index].getAttributeValue(formatItemVO.getVcontent().replace(".", ""));
 
