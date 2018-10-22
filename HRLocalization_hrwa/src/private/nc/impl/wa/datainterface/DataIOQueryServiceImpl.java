@@ -22,29 +22,38 @@ import nc.itf.hr.frame.IPersistenceUpdate;
 import nc.itf.hr.wa.IClassItemQueryService;
 import nc.itf.hr.wa.IHRWADataResCode;
 import nc.itf.hr.wa.WaPowerSqlHelper;
+import nc.itf.uap.IUAPQueryBS;
+import nc.jdbc.framework.processor.BeanListProcessor;
 import nc.jdbc.framework.processor.MapListProcessor;
 import nc.jdbc.framework.processor.ResultSetProcessor;
 import nc.md.persist.framework.MDPersistenceService;
+import nc.pub.templet.converter.util.helper.ExceptionUtils;
+import nc.vo.bd.psn.PsndocVO;
 import nc.vo.hi.pub.HICommonValue;
 import nc.vo.hr.datainterface.AggHrIntfaceVO;
 import nc.vo.hr.datainterface.FormatItemVO;
 import nc.vo.hr.datainterface.HrIntfaceVO;
 import nc.vo.hr.datainterface.IfsettopVO;
 import nc.vo.hr.datainterface.ItfTypeEnum;
+import nc.vo.hr.infoset.InfoItemVO;
 import nc.vo.hr.tools.pub.GeneralVO;
 import nc.vo.hr.tools.pub.HRAggVO;
 import nc.vo.jcom.lang.StringUtil;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.VOStatus;
+import nc.vo.util.SqlWrapper;
 import nc.vo.wa.classitem.WaClassItemVO;
 import nc.vo.wa.datainterface.DataIOconstant;
 import nc.vo.wa.item.WaItemVO;
+import nc.vo.wa.paydata.DataVO;
 import nc.vo.wa.period.PeriodVO;
 import nc.vo.wa.pub.WaLoginContext;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+
+import com.ctc.wstx.util.ExceptionUtil;
 
 /**
  * 批量维护 查询Service实现
@@ -320,6 +329,7 @@ public class DataIOQueryServiceImpl implements IDataIOQueryService
 				HrIntfaceVO vo = (HrIntfaceVO) aggVOs[i].getParentVO();
 				cond = " t_bank.pk_banktype = '" + vo.getPk_bankdoc() + "'";
 				datas = queryWaDataByCondBank(context, sqlBuffer.toString(), cond);
+				datas = mergeLocalTableWithWaData(datas, context);
 			}else{
 
 				datas = queryWaDataByCond(context, sqlBuffer.toString(), cond);
@@ -331,6 +341,113 @@ public class DataIOQueryServiceImpl implements IDataIOQueryService
 
 
 		return map;
+	}
+	
+	// HR本地化需求：向已经输出的map里面继续添加薪资项目和人员基本信息
+	private ArrayList<HashMap<String, Object>> mergeLocalTableWithWaData(ArrayList<HashMap<String, Object>> data, WaLoginContext context) {
+		IUAPQueryBS queryBS = (IUAPQueryBS) NCLocator.getInstance().lookup(IUAPQueryBS.class.getName());
+		StringBuffer psndocCodes = new StringBuffer();
+		
+		// 查找人员信息集的所有可用字段
+		StringBuffer infoSetQuery = new StringBuffer();
+		infoSetQuery.append(" select * from hr_infoset_item where pk_infoset in (select pk_infoset from hr_infoset where table_code = 'bd_psndoc') ");
+		ArrayList<InfoItemVO> infoItems = null;
+		try {
+			infoItems = (ArrayList<InfoItemVO>) queryBS.executeQuery(infoSetQuery.toString(), new BeanListProcessor(InfoItemVO.class));
+		} catch (BusinessException e1) {
+			Logger.error(e1);
+			ExceptionUtils.wrapException("Query Infoset Item error:\n" + e1.getMessage(), e1);
+		}
+		
+		// 查找当前组织期间的薪资发放项目（可用字段）
+		StringBuffer classItemQuery = new StringBuffer();
+		classItemQuery.append(" select * from wa_classitem where cperiod = '" + context.getCperiod() + "' and cyear = '" + context.getCyear());
+		classItemQuery.append("' and pk_org = '" + context.getPk_org() + "' and pk_wa_class = '" + context.getClassPK() + "' and dr=0 ");
+		ArrayList<WaClassItemVO> classItems = null;
+		try {
+			classItems = (ArrayList<WaClassItemVO>) queryBS.executeQuery(classItemQuery.toString(), new BeanListProcessor(WaClassItemVO.class));
+		} catch (BusinessException e1) {
+			Logger.error(e1);
+			ExceptionUtils.wrapException("Query WaClass Item error:\n" + e1.getMessage(), e1);
+		}
+		
+		// 添加人员基本信息
+		for (HashMap<String, Object> entry : data) {
+			if (entry.containsKey("bd_psndoccode") && entry.get("bd_psndoccode") != null) {
+				String code = (String) entry.get("bd_psndoccode");
+				psndocCodes.append("'" + code + "',");
+			}
+		}
+		psndocCodes.deleteCharAt(psndocCodes.length() - 1);
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append(" select * from bd_psndoc where code in (" + psndocCodes.toString() + ") and dr = 0 ");
+		ArrayList<PsndocVO> psndocVOs = null;
+		try {
+			psndocVOs = (ArrayList<PsndocVO>) queryBS.executeQuery(sb.toString(), new BeanListProcessor(PsndocVO.class));
+		} catch (BusinessException e) {
+			Logger.error(e);
+			ExceptionUtils.wrapException("Query Personal Info error:\n" + e.getMessage(), e);
+		}
+		
+		// 添加薪资发放信息
+		StringBuffer psndocPks = new StringBuffer();
+		if (psndocVOs != null && psndocVOs.size() > 0) {
+			for (PsndocVO psndoc : psndocVOs) {
+				psndocPks.append("'" + psndoc.getPk_psndoc() + "',");
+			}
+			psndocPks.deleteCharAt(psndocPks.length() - 1);
+		} 
+		
+		StringBuffer sb1 = new StringBuffer();
+		sb1.append(" select * from wa_data where checkflag = 'Y' and pk_psndoc in (" + psndocPks.toString() + ") and ");
+		sb1.append(" cperiod = '" + context.getCperiod() + "' and cyear = '" + context.getCyear());
+		sb1.append("' and pk_org = '" + context.getPk_org() + "' and pk_wa_class = '" + context.getClassPK() + "' ");
+		sb1.append(" and dr = 0");
+		ArrayList<DataVO> wadataVOs = null;
+		try {
+			wadataVOs = (ArrayList<DataVO>) queryBS.executeQuery(sb1.toString(), new BeanListProcessor(DataVO.class));
+		} catch (BusinessException e) {
+			Logger.error(e);
+			ExceptionUtils.wrapException("Query Salary Data error:\n" + e.getMessage(), e);
+		}
+		
+		// 添加两个map以便添加字段
+		HashMap<String, PsndocVO> codeToPsnMap = new HashMap<String, PsndocVO>();
+		HashMap<String, DataVO> psnpkToWaMap = new HashMap<String, DataVO>();
+		if (psndocVOs != null && psndocVOs.size() > 0) {
+			for (PsndocVO vo : psndocVOs) {
+				codeToPsnMap.put(vo.getCode(), vo);
+			}
+		}
+		if (wadataVOs != null && wadataVOs.size() > 0) {
+			for (DataVO vo : wadataVOs) {
+				psnpkToWaMap.put(vo.getPk_psndoc(), vo);
+			}
+		}
+		
+		// 为返回data添加字段
+		for (HashMap<String, Object> obj : data) {
+			// 添加人员基本信息字段
+			String psnCode = obj.get("bd_psndoccode").toString();
+			PsndocVO psndocVO = codeToPsnMap.get(psnCode);
+			if (infoItems != null && infoItems.size() > 0) {
+				for (InfoItemVO item : infoItems) {
+					obj.put("bd_psndoc" + item.getItem_code(), psndocVO.getAttributeValue(item.getItem_code()));
+				}
+			}
+			
+			// 添加薪资发放项目字段
+			String psnPk = psndocVO.getPk_psndoc();
+			if (classItems != null && classItems.size() > 0) {
+				for (WaClassItemVO item : classItems) {
+					obj.put("wa_data" + item.getItemkey(), psnpkToWaMap.get(psnPk).getAttributeValue(item.getItemkey()));
+				}
+			}
+		}
+		
+		
+		return data;
 	}
 
 	@Override
