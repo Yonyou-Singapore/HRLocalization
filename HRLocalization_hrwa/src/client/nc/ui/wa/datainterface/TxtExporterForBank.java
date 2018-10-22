@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import nc.hr.utils.ResHelper;
 import nc.ui.pub.beans.MessageDialog;
+import nc.ui.wa.pub.WADelegator;
 import nc.vo.hr.append.AppendableVO;
 import nc.vo.hr.datainterface.BooleanEnum;
 import nc.vo.hr.datainterface.CaretposEnum;
@@ -21,6 +22,7 @@ import nc.vo.hr.datainterface.LineTopEnum;
 import nc.vo.hr.datainterface.LineTopPositionEnum;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
+import nc.vo.pubapp.pattern.exception.ExceptionUtils;
 import nc.vo.wa.datainterface.DataIOconstant;
 
 import org.apache.commons.lang.StringUtils;
@@ -630,35 +632,28 @@ public class TxtExporterForBank extends DefaultExporter
 		return newTblAndCol;
 	}
 
+	// 去他妈的 有东西还注掉。。
+	
 	protected String getItemSum(String[] tabAndCol)
 	{
-		String sum = "";
+		HrIntfaceVO itfVO = (HrIntfaceVO) getIntfaceInfs()[getReadIndex()].getParentVO();
+		ArrayList<HashMap<String, Object>> datas = getAppModel().getResults().get(itfVO.getPk_dataio_intface());
+		
+		String key = tabAndCol[0] + tabAndCol[1];
+		UFDouble sum = new UFDouble(UFDouble.ZERO_DBL);
+		if (datas != null && datas.size() > 0) {
+			for (HashMap<String, Object> entry : datas) {
+				if (entry.containsKey(key)) {
+					if (entry.get(key) != null) {
+						sum = sum.add(new UFDouble(entry.get(key).toString()));
+					}
+				} else {
+					ExceptionUtils.wrappBusinessException("The total sum item key does not exist!");
+				}
+			}
+		}
 
-		// sum =
-		// WADelegator.getWaBankSheet().queryItemSum(getClassId(),getCyear(),getCperiod(),tabAndCol,getQueryConditon());
-
-		// try {
-		// if( getModuleCode().equals(WABMDataIOTemplateUI.BANKFORMATUI)){//薪资
-		// 银行报盘
-		// sum =
-		// WADelegator.getWaBankSheet().queryItemSum(getClassId(),getCyear(),getCperiod(),tabAndCol,getQueryConditon());
-		// }
-		// else if (getModuleCode().equals(WABMDataIOTemplateUI.WACORPBANKUI))
-		// {//薪资 跨公司银行报盘
-		// sum =
-		// WADelegator.getWaBankSheet().queryItemSumCorp(getCyear(),getCperiod(),tabAndCol,getQueryConditon());
-		// }
-		// else if (getModuleCode().equals(WABMDataIOTemplateUI.BMREPORTUI))
-		// {//福利 报送数据
-		// sum =
-		// WADelegator.getWaBankSheet().queryItemSum(getClassId(),getCyear(),getCperiod(),tabAndCol,getQueryConditon());
-		//
-		// }
-		// } catch (BusinessException e) {
-		// Logger.error(e);
-		// }
-
-		return sum;
+		return sum.toString();
 	}
 
 	// 根据格式来格式化日期
