@@ -632,8 +632,7 @@ public class TxtExporterForBank extends DefaultExporter
 		return newTblAndCol;
 	}
 
-	// 去他妈的 有东西还注掉。。
-	
+	// HR本地化：本来这边源码是全部注掉的 现在重新实现了一下
 	protected String getItemSum(String[] tabAndCol)
 	{
 		HrIntfaceVO itfVO = (HrIntfaceVO) getIntfaceInfs()[getReadIndex()].getParentVO();
