@@ -12,7 +12,7 @@ public interface ItemPropertyConst
 
 	public static final int Float_MIN_decimalwidth = 0;// 数值型最小小数位数
 
-	public static final int Float_MAX_width = 22;// 数值型最大宽度
+	public static final int Float_MAX_width = 1000;// 数值型最大宽度
 	public static final int Float_width = 12;// 数值型默认宽度
 
 	public static final Integer FORMULA = 0;// 数据来源是公式
