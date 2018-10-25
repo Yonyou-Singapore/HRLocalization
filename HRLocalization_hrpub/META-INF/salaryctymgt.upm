@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module name="nc.itf.hr.wa.HRWAEJB"> 
+  <public>
+    <component  priority="0" singleton="true" remote="true" tx="CMT" supportAlias="true">
+      <interface>nc.itf.hr.wa.IClassItemManageService</interface>
+      <implementation>nc.impl.wa.classitem.ClassItemManageServiceImpl</implementation>
+    </component>
+    <component name="nc.itf.hr.wa.IClassItemQueryService" priority="0" singleton="true" remote="true" tx="NONE" supportAlias="true">
+      <interface>nc.itf.hr.wa.IClassItemQueryService</interface>
+      <implementation>nc.impl.wa.classitem.ClassItemManageServiceImpl</implementation>
+    </component>  
+    <component priority="0" singleton="true" remote="true" tx="NONE" supportAlias="true">
+      <interface>nc.itf.hr.wa.IClassPowerQueryService</interface>
+      <implementation>nc.impl.wa.classpower.ClassPowerQueryServiceImpl</implementation>
+    </component>      
+    <component priority="0" singleton="true" remote="true" tx="CMT" supportAlias="true">
+      <interface>nc.itf.hr.wa.IClassPowerService</interface>
+      <implementation>nc.impl.wa.classpower.ClassPowerServiceImpl</implementation> 
+    </component>
+    <component priority="0" singleton="true" remote="true" tx="CMT" supportAlias="true">
+      <interface>nc.itf.hr.wa.IItemManageService</interface>
+      <implementation>nc.impl.wa.item.ItemServiceImpl</implementation>
+    </component>
+    <component priority="0" singleton="true" remote="true" tx="NONE" supportAlias="true">
+      <interface>nc.itf.hr.wa.IItemPowerQueryService</interface>
+      <implementation>nc.impl.wa.classitempower.ClassItemPowerQueryServiceImpl</implementation>
+    </component> 
+    <component priority="0" singleton="true" remote="true" tx="CMT" supportAlias="true">
+      <interface>nc.itf.hr.wa.IItemPowerService</interface>
+      <implementation>nc.impl.wa.classitempower.ClassItemPowerServiceImpl</implementation> 
+    </component>
+    <component priority="0" singleton="true" remote="true" tx="NONE" supportAlias="true">
+      <interface>nc.itf.hr.wa.IItemQueryService</interface>
+      <implementation>nc.impl.wa.item.ItemServiceImpl</implementation>
+    </component>
+    <component priority="0" singleton="true" remote="true" tx="CMT" supportAlias="true">
+      <interface>nc.itf.hr.wa.ITaxGroup</interface>
+      <implementation>nc.impl.wa.taxgroup.TaxGroupImpl</implementation>
+    </component>      
+    <component priority="0" singleton="true" remote="true" tx="NONE" supportAlias="true">
+      <interface>nc.itf.hr.wa.ITaxGroupQuery</interface>
+      <implementation>nc.impl.wa.taxgroup.TaxGroupQueryImpl</implementation> 
+    </component>
+    <component priority="0" singleton="true" remote="true" tx="CMT" supportAlias="true">
+      <interface>nc.itf.hr.wa.IUnitWaClass</interface>
+      <implementation>nc.impl.wa.unitclass.UnitWaClassImpl</implementation>
+    </component>      
+    <component priority="0" singleton="true" remote="true" tx="NONE" supportAlias="true">
+      <interface>nc.itf.hr.wa.IUnitWaClassQuery</interface>
+      <implementation>nc.impl.wa.unitclass.UnitWaClassQueryImpl</implementation> 
+    </component>
+    <component priority="0" singleton="true" remote="true" tx="CMT" supportAlias="true">
+      <interface>nc.itf.hr.wa.IWaClass</interface>
+      <implementation>nc.impl.wa.category.WaClassImpl</implementation>
+    </component> 
+    <component priority="0" singleton="true" remote="true" tx="NONE" supportAlias="true">
+      <interface>nc.itf.hr.wa.IWaRuleQueryService</interface>
+      <implementation>nc.impl.wa.rule.WaRuleQueryImpl</implementation> 
+    </component>
+    <component priority="0" singleton="true" remote="true" tx="CMT" supportAlias="true">
+      <interface>nc.itf.hr.wa.IWaRuleService</interface>
+      <implementation>nc.impl.wa.rule.WaRuleAppImpl</implementation>
+    </component>    
+    
+    <component  name="nc.impl.wa.classItem.datasource"  priority="0" singleton="true" remote="true" tx="CMT" supportAlias="true">
+      <interface>nc.itf.hr.datasource.IHRDatasource</interface>
+      <implementation>nc.impl.wa.classitem.HRWADatasource</implementation>
+    </component> 
+    
+  </public>
+</module>
+
+    
