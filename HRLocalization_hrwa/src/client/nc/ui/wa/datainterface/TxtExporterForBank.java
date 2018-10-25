@@ -722,7 +722,7 @@ public class TxtExporterForBank extends DefaultExporter
 					HrIntfaceVO itfVO = (HrIntfaceVO) getIntfaceInfs()[getReadIndex()].getParentVO();
 					ArrayList<HashMap<String, Object>> datas = getAppModel().getResults().get(itfVO.getPk_dataio_intface());
 
-					topLine.append(getStringDigit4TopLine(String.valueOf(datas.size()), data_top[i], false, false));
+					topLine.append(getStringDigit4TopLine(String.valueOf(datas.size()), data_top[i], isNeedDot(), false));
 				}
 				else if (data_top[i].getVcontent().equals(DataIOconstant.ITEMSUM))
 				{// 项目合计
@@ -732,7 +732,7 @@ public class TxtExporterForBank extends DefaultExporter
 					{
 						String[] stArrayTabAndCol = getTblAndCol(itemSumTableAndCol);
 						String itemSum = getItemSum(stArrayTabAndCol);
-						itemSum = getStringDigit4TopLine(itemSum, data_top[i], true, false);
+						itemSum = getStringDigit4TopLine(itemSum, data_top[i], isNeedDot(), false);
 						topLine.append(itemSum);
 					}
 				}
