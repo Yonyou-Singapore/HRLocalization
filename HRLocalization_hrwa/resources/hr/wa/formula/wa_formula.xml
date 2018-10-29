@@ -48,7 +48,23 @@
       <productCode>UPP6013func</productCode>
     </function>
   </entry>	
-	
+  
+  <entry>
+    <string>MalaysiaPCB</string>
+    <function>
+      <displayName>malaysiaPCB()</displayName>
+      <defaultName>MalaysiaPCB</defaultName>
+      <hintMsgRes>MalaysiaPCB</hintMsgRes>
+      <inputSigRes>MalaysiaPCB</inputSigRes>
+      <pattern>getMalaysiaPCB\(\w{20}\)</pattern>
+      <arguments>getMalaysiaPCB({0})</arguments>
+      <parapanel>nc.ui.hr.itemsource.view.NullParaPanel</parapanel>
+      <group>Localization</group>
+      <process>nc.impl.wa.func.MalaysiaPCB</process>
+      <productCode>UPP6013func</productCode>
+    </function>
+  </entry>	
+  	
   <entry>
     <string>OTHERSOURCE</string>
     <function>

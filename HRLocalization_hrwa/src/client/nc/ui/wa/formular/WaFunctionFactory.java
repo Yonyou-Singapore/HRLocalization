@@ -6,6 +6,7 @@ import java.util.List;
 
 import nc.bs.logging.Logger;
 import nc.ui.hr.formula.HRFormulaItem;
+import nc.ui.hr.formula.func.HrDigitFunc;
 import nc.ui.hr.formula.itf.IFunctionFactory;
 import nc.vo.hr.formula.FunctionKey;
 import nc.vo.hr.func.FunctionVO;
@@ -194,6 +195,14 @@ public class WaFunctionFactory implements IFunctionFactory {
 					fvo.getInputSig(), fvo.getHintMsg(),
 					fvo.getReturntype());
 			items.add(malaysiaEIS);
+			
+			// 马来西亚PCB
+			fvo = WaFormulaXmlHelper.getFunctionVO("MalaysiaPCB");
+			HRFormulaItem malaysiaPCB = new HRFormulaItem(
+					fvo.getDisplayName(), fvo.getDefaultName(),
+					fvo.getInputSig(), fvo.getHintMsg(),
+					fvo.getReturntype());
+			items.add(malaysiaPCB);
 			// }
 
 		} catch (Exception e) {
