@@ -16,6 +16,22 @@
       <productCode>UPP6013func</productCode>
     </function>
   </entry>	
+  
+  <entry>
+    <string>MalaysiaSOCSO</string>
+    <function>
+      <displayName>malaysiaSOCSO()</displayName>
+      <defaultName>MalaysiaSOCSO</defaultName>
+      <hintMsgRes>MalaysiaSOCSO</hintMsgRes>
+      <inputSigRes>MalaysiaSOCSO</inputSigRes>
+      <pattern>getMalaysiaSOCSO\(\w{20}\)</pattern>
+      <arguments>getMalaysiaSOCSO({0})</arguments>
+      <parapanel>nc.ui.hr.itemsource.view.NullParaPanel</parapanel>
+      <group>Localization</group>
+      <process>nc.impl.wa.func.MalaysiaSOCSO</process>
+      <productCode>UPP6013func</productCode>
+    </function>
+  </entry>	
 	
   <entry>
     <string>OTHERSOURCE</string>

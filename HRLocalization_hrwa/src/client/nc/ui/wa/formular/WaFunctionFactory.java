@@ -178,6 +178,13 @@ public class WaFunctionFactory implements IFunctionFactory {
 					fvo.getInputSig(), fvo.getHintMsg(),
 					fvo.getReturntype());
 			items.add(malaysiaEPF);
+			
+			fvo = WaFormulaXmlHelper.getFunctionVO("MalaysiaSOCSO");
+			HRFormulaItem malaysiaSOCSO = new HRFormulaItem(
+					fvo.getDisplayName(), fvo.getDefaultName(),
+					fvo.getInputSig(), fvo.getHintMsg(),
+					fvo.getReturntype());
+			items.add(malaysiaSOCSO);
 			// }
 
 		} catch (Exception e) {

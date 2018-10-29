@@ -92,5 +92,10 @@
   <functionClass>nc.ui.wa.formular.func.MalaysiaEPF</functionClass>
 </formula>
 
+<formula>
+  <customType>9</customType>
+  <functionName>MalaysiaSOCSO</functionName>
+  <functionClass>nc.ui.wa.formular.func.MalaysiaSOCSO</functionClass>
+</formula>
 
 </formula-array>
