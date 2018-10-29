@@ -98,4 +98,10 @@
   <functionClass>nc.ui.wa.formular.func.MalaysiaSOCSO</functionClass>
 </formula>
 
+<formula>
+  <customType>9</customType>
+  <functionName>MalaysiaEIS</functionName>
+  <functionClass>nc.ui.wa.formular.func.MalaysiaEIS</functionClass>
+</formula>
+
 </formula-array>

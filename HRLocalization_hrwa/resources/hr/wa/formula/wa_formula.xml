@@ -31,6 +31,22 @@
       <process>nc.impl.wa.func.MalaysiaSOCSO</process>
       <productCode>UPP6013func</productCode>
     </function>
+  </entry>
+  
+  <entry>
+    <string>MalaysiaEIS</string>
+    <function>
+      <displayName>malaysiaEIS()</displayName>
+      <defaultName>MalaysiaEIS</defaultName>
+      <hintMsgRes>MalaysiaEIS</hintMsgRes>
+      <inputSigRes>MalaysiaEIS</inputSigRes>
+      <pattern>getMalaysiaEIS\(\w{20}\)</pattern>
+      <arguments>getMalaysiaEIS({0})</arguments>
+      <parapanel>nc.ui.hr.itemsource.view.NullParaPanel</parapanel>
+      <group>Localization</group>
+      <process>nc.impl.wa.func.MalaysiaEIS</process>
+      <productCode>UPP6013func</productCode>
+    </function>
   </entry>	
 	
   <entry>
