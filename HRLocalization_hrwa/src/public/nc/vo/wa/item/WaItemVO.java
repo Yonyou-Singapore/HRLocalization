@@ -92,6 +92,15 @@ public class WaItemVO extends SuperVO
 	private java.lang.String def38;
 	private java.lang.String def39;
 	private java.lang.String def40;
+	
+	// 添加本地化/马来西亚字段 2018-10-09
+	private java.lang.Integer g_iproperty = 0;
+	private nc.vo.pub.lang.UFBoolean my_isepf;
+	private nc.vo.pub.lang.UFBoolean my_iseis;
+	private nc.vo.pub.lang.UFBoolean my_issocso;
+	private nc.vo.pub.lang.UFBoolean my_ispcb;
+	private nc.vo.pub.lang.UFBoolean my_isnplrate;
+	private nc.vo.pub.lang.UFBoolean my_isotrate;
 
 	private nc.vo.pub.lang.UFBoolean clearflag = UFBoolean.FALSE;
 
@@ -201,7 +210,14 @@ public class WaItemVO extends SuperVO
 	public static final String DEF39 = "def39";
 	public static final String DEF40 = "def40";
 	
-	
+	// 添加本地化/马来西亚字段名
+	public static final String G_IPROPERTY = "g_iproperty";
+	public static final String MY_ISEPF = "my_isepf";
+	public static final String MY_ISEIS = "my_iseis";
+	public static final String MY_ISSOCSO = "my_issocso";
+	public static final String MY_ISPCB = "my_ispcb";
+	public static final String MY_ISNPLRATE = "my_isnplrate";
+	public static final String MY_ISOTRATE = "my_isotrate";
 	
 
 	public Integer getIdisplayseq()
@@ -1127,6 +1143,14 @@ public class WaItemVO extends SuperVO
 	{
 		return MDEnum.valueOf(PropertyEnumVO.class, getIproperty());
 	}
+	
+	public SeaLocalEnum getSeaLocalEnum() {
+		return MDEnum.valueOf(SeaLocalEnum.class, getG_iproperty());
+	}
+	
+	public void setSeaLocalEnum(SeaLocalEnum property) {
+		setG_iproperty(property.value());
+	}
 
 	@Override
 	public String toString()
@@ -1486,6 +1510,62 @@ public class WaItemVO extends SuperVO
 	public void setDef40(java.lang.String def40) {
 		this.def40 = def40;
 	}
+
 	
-	
+	// 本地化和马来西亚字段的getter和setter
+	public java.lang.Integer getG_iproperty() {
+		return g_iproperty;
+	}
+
+	public void setG_iproperty(java.lang.Integer g_iproperty) {
+		this.g_iproperty = g_iproperty;
+	}
+
+	public nc.vo.pub.lang.UFBoolean getMy_isepf() {
+		return my_isepf;
+	}
+
+	public void setMy_isepf(nc.vo.pub.lang.UFBoolean my_isepf) {
+		this.my_isepf = my_isepf;
+	}
+
+	public nc.vo.pub.lang.UFBoolean getMy_iseis() {
+		return my_iseis;
+	}
+
+	public void setMy_iseis(nc.vo.pub.lang.UFBoolean my_iseis) {
+		this.my_iseis = my_iseis;
+	}
+
+	public nc.vo.pub.lang.UFBoolean getMy_issocso() {
+		return my_issocso;
+	}
+
+	public void setMy_issocso(nc.vo.pub.lang.UFBoolean my_issocso) {
+		this.my_issocso = my_issocso;
+	}
+
+	public nc.vo.pub.lang.UFBoolean getMy_ispcb() {
+		return my_ispcb;
+	}
+
+	public void setMy_ispcb(nc.vo.pub.lang.UFBoolean my_ispcb) {
+		this.my_ispcb = my_ispcb;
+	}
+
+	public nc.vo.pub.lang.UFBoolean getMy_isnplrate() {
+		return my_isnplrate;
+	}
+
+	public void setMy_isnplrate(nc.vo.pub.lang.UFBoolean my_isnplrate) {
+		this.my_isnplrate = my_isnplrate;
+	}
+
+	public nc.vo.pub.lang.UFBoolean getMy_isotrate() {
+		return my_isotrate;
+	}
+
+	public void setMy_isotrate(nc.vo.pub.lang.UFBoolean my_isotrate) {
+		this.my_isotrate = my_isotrate;
+	}
 }
