@@ -4,13 +4,14 @@
   <entry>
     <string>MalaysiaEPF</string>
     <function>
-      <displayName>malaysiaEPF()</displayName>
+      <displayName>malaysiaEPF</displayName>
       <defaultName>MalaysiaEPF</defaultName>
       <hintMsgRes>MalaysiaEPF</hintMsgRes>
       <inputSigRes>MalaysiaEPF</inputSigRes>
-      <pattern>getMalaysiaEPF\(\w{20}\)</pattern>
-      <arguments>getMalaysiaEPF({0})</arguments>
-      <parapanel>nc.ui.hr.itemsource.view.NullParaPanel</parapanel>
+      <pattern>malaysiaEPF\(\d,f_\d+,f_\d+,\w+\)</pattern>
+      <arguments>malaysiaEPF({0},{1},{2},{3})</arguments>
+       <parapanel>nc.ui.hr.func.WaParaAdjPanel</parapanel>
+       <convertor>nc.ui.hr.func.WaParaPanel_jdConvertor</convertor>
       <group>Localization</group>
       <process>nc.impl.wa.func.MalaysiaEPF</process>
       <productCode>UPP6013func</productCode>
@@ -20,12 +21,12 @@
   <entry>
     <string>MalaysiaSOCSO</string>
     <function>
-      <displayName>malaysiaSOCSO()</displayName>
+      <displayName>malaysiaSOCSO</displayName>
       <defaultName>MalaysiaSOCSO</defaultName>
       <hintMsgRes>MalaysiaSOCSO</hintMsgRes>
       <inputSigRes>MalaysiaSOCSO</inputSigRes>
-      <pattern>getMalaysiaSOCSO\(\w{20}\)</pattern>
-      <arguments>getMalaysiaSOCSO({0})</arguments>
+      <pattern>malaysiaSOCSO\(\w{20}\)</pattern>
+      <arguments>malaysiaSOCSO({0})</arguments>
       <parapanel>nc.ui.hr.itemsource.view.NullParaPanel</parapanel>
       <group>Localization</group>
       <process>nc.impl.wa.func.MalaysiaSOCSO</process>
@@ -36,12 +37,12 @@
   <entry>
     <string>MalaysiaEIS</string>
     <function>
-      <displayName>malaysiaEIS()</displayName>
+      <displayName>malaysiaEIS</displayName>
       <defaultName>MalaysiaEIS</defaultName>
       <hintMsgRes>MalaysiaEIS</hintMsgRes>
       <inputSigRes>MalaysiaEIS</inputSigRes>
-      <pattern>getMalaysiaEIS\(\w{20}\)</pattern>
-      <arguments>getMalaysiaEIS({0})</arguments>
+      <pattern>malaysiaEIS\(\w{20}\)</pattern>
+      <arguments>malaysiaEIS({0})</arguments>
       <parapanel>nc.ui.hr.itemsource.view.NullParaPanel</parapanel>
       <group>Localization</group>
       <process>nc.impl.wa.func.MalaysiaEIS</process>
@@ -52,7 +53,7 @@
   <entry>
     <string>MalaysiaPCB</string>
     <function>
-      <displayName>malaysiaPCB()</displayName>
+      <displayName>malaysiaPCB</displayName>
       <defaultName>MalaysiaPCB</defaultName>
       <hintMsgRes>MalaysiaPCB</hintMsgRes>
       <inputSigRes>MalaysiaPCB</inputSigRes>
