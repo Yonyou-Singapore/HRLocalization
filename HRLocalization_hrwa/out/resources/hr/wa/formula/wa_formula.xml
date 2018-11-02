@@ -25,8 +25,8 @@
       <defaultName>MalaysiaSOCSO</defaultName>
       <hintMsgRes>MalaysiaSOCSO</hintMsgRes>
       <inputSigRes>MalaysiaSOCSO</inputSigRes>
-      <pattern>malaysiaSOCSO\(\w{20}\)</pattern>
-      <arguments>malaysiaSOCSO({0})</arguments>
+      <pattern>malaysiaSOCSO\(\d,f_\d+,\w+\)</pattern>
+      <arguments>malaysiaSOCSO({0},{1},{2})</arguments>
       <parapanel>nc.ui.hr.itemsource.view.NullParaPanel</parapanel>
       <group>Localization</group>
       <process>nc.impl.wa.func.MalaysiaSOCSO</process>
@@ -41,8 +41,8 @@
       <defaultName>MalaysiaEIS</defaultName>
       <hintMsgRes>MalaysiaEIS</hintMsgRes>
       <inputSigRes>MalaysiaEIS</inputSigRes>
-      <pattern>malaysiaEIS\(\w{20}\)</pattern>
-      <arguments>malaysiaEIS({0})</arguments>
+      <pattern>malaysiaEIS\(\d,f_\d+\)</pattern>
+      <arguments>malaysiaEIS({0},{1})</arguments>
       <parapanel>nc.ui.hr.itemsource.view.NullParaPanel</parapanel>
       <group>Localization</group>
       <process>nc.impl.wa.func.MalaysiaEIS</process>
