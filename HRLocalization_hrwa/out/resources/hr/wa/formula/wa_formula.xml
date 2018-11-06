@@ -25,7 +25,7 @@
       <defaultName>MalaysiaSOCSO</defaultName>
       <hintMsgRes>MalaysiaSOCSO</hintMsgRes>
       <inputSigRes>MalaysiaSOCSO</inputSigRes>
-      <pattern>malaysiaSOCSO\(\d,f_\d+,\w+\)</pattern>
+      <pattern>malaysiaSOCSO\(\d,f_\d+,c_\d+\)</pattern>
       <arguments>malaysiaSOCSO({0},{1},{2})</arguments>
       <parapanel>nc.ui.hr.itemsource.view.NullParaPanel</parapanel>
       <group>Localization</group>

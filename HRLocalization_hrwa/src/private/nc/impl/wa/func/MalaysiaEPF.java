@@ -26,8 +26,6 @@ public class MalaysiaEPF extends AbstractPreExcutorFormulaParse {
 			sql = getEmployeeContribution(monthlySalary, epfGroup);
 		} else if (option.equals("1")) { // Handle employer contribution
 			sql = getEmployerContribution(monthlySalary, bonus, epfGroup);
-		} else {
-			fvo.setReplaceStr("null");
 		}
 		
 		fvo.setReplaceStr(sql);
