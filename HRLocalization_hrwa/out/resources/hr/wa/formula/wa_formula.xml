@@ -4,12 +4,12 @@
   <entry>
     <string>MalaysiaEPF</string>
     <function>
-      <displayName>malaysiaEPF</displayName>
-      <defaultName>MalaysiaEPF</defaultName>
-      <hintMsgRes>MalaysiaEPF</hintMsgRes>
-      <inputSigRes>MalaysiaEPF</inputSigRes>
-      <pattern>malaysiaEPF\(\d,f_\d+,f_\d+,\w+\)</pattern>
-      <arguments>malaysiaEPF({0},{1},{2},{3})</arguments>
+      <displayName>MalaysiaEPF</displayName>
+      <defaultName>6001formula;sealocal-000002</defaultName>
+      <hintMsgRes>6001formula;sealocal-000003</hintMsgRes>
+      <inputSigRes>6001formula;sealocal-000004</inputSigRes>
+      <pattern>MalaysiaEPF\(\d,f_\d+,f_\d+,\w+\)</pattern>
+      <arguments>MalaysiaEPF({0},{1},{2},{3})</arguments>
        <parapanel>nc.ui.hr.func.WaParaAdjPanel</parapanel>
        <convertor>nc.ui.hr.func.WaParaPanel_jdConvertor</convertor>
       <group>Localization</group>
@@ -21,12 +21,12 @@
   <entry>
     <string>MalaysiaSOCSO</string>
     <function>
-      <displayName>malaysiaSOCSO</displayName>
-      <defaultName>MalaysiaSOCSO</defaultName>
-      <hintMsgRes>MalaysiaSOCSO</hintMsgRes>
-      <inputSigRes>MalaysiaSOCSO</inputSigRes>
-      <pattern>malaysiaSOCSO\(\d,f_\d+,\w+\)</pattern>
-      <arguments>malaysiaSOCSO({0},{1},{2})</arguments>
+      <displayName>MalaysiaSOCSO</displayName>
+      <defaultName>6001formula;sealocal-000006</defaultName>
+      <hintMsgRes>6001formula;sealocal-000007</hintMsgRes>
+      <inputSigRes>6001formula;sealocal-000008</inputSigRes>
+      <pattern>MalaysiaSOCSO\(\d,f_\d+,c_\d+\)</pattern>
+      <arguments>MalaysiaSOCSO({0},{1},{2})</arguments>
       <parapanel>nc.ui.hr.itemsource.view.NullParaPanel</parapanel>
       <group>Localization</group>
       <process>nc.impl.wa.func.MalaysiaSOCSO</process>
@@ -37,12 +37,12 @@
   <entry>
     <string>MalaysiaEIS</string>
     <function>
-      <displayName>malaysiaEIS</displayName>
-      <defaultName>MalaysiaEIS</defaultName>
-      <hintMsgRes>MalaysiaEIS</hintMsgRes>
-      <inputSigRes>MalaysiaEIS</inputSigRes>
-      <pattern>malaysiaEIS\(\d,f_\d+\)</pattern>
-      <arguments>malaysiaEIS({0},{1})</arguments>
+      <displayName>MalaysiaEIS</displayName>
+      <defaultName>6001formula;sealocal-000010</defaultName>
+      <hintMsgRes>6001formula;sealocal-000011</hintMsgRes>
+      <inputSigRes>6001formula;sealocal-000012</inputSigRes>
+      <pattern>MalaysiaEIS\(\d,f_\d+\)</pattern>
+      <arguments>MalaysiaEIS({0},{1})</arguments>
       <parapanel>nc.ui.hr.itemsource.view.NullParaPanel</parapanel>
       <group>Localization</group>
       <process>nc.impl.wa.func.MalaysiaEIS</process>
