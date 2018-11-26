@@ -405,6 +405,7 @@ public class SignLinePanel extends UIPanel implements BillEditListener, BillEdit
 		int row = getBillListPanel().getBodyTable(DataIOconstant.HR_IFSETTOP).getSelectedRow();
 		setBodyValueAt(DataIOconstant.ISEQ, row, row + 1);
 		setBodyValueAt(IfsettopVO.VSEPARATOR, row, ItemSeprtorEnum.COMMA.value());//
+		setBodyValueAt(IfsettopVO.ITOPLINEPOSITION, row, this.flagLinePosition);
 		// setBodyValueAt(DataIOconstant.VFIELDNAME,row,getDrawItemsCreator().getCorrespondingItems()[0]);//
 		// setBodyValueAt(DataIOconstant.IFLDWIDTHTOP,row,20);
 		// setBodyValueAt(DataIOconstant.IFLDDECIMALTOP,row,0);

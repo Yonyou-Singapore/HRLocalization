@@ -136,30 +136,30 @@ public class DataIOWizard
 						
 						// 之前系统只截取了UI发生变化的行，但是为了顺序正常工作，要把所有VO重新整理一遍
 						// 这边是首行
-						CircularlyAccessibleValueObject[] headLines = ioItemsPanel.getSignLinePanel().getBillListPanel().getBodyBillModel().getBodyValueVOs(IfsettopVO.class.getName());
+						CircularlyAccessibleValueObject[] headLines = ioItemsPanel.getSignLinePanel().getBillListPanel().getBodyBillModel().getBodyValueChangeVOs(IfsettopVO.class.getName());
 						for (int i = 0; headLines != null && i < headLines.length; i++)
 						{
 							((IfsettopVO) headLines[i]).setIseq(i + 1);
 							((IfsettopVO) headLines[i]).setIifsum((Integer) BooleanEnum.NO.value());
-							((IfsettopVO) headLines[i]).setItoplineposition(LineTopPositionEnum.HEAD.toIntValue());
-							if (((IfsettopVO) headLines[i]).getPk_hr_ifsettop() != null) {
-								((IfsettopVO) headLines[i]).setStatus(VOStatus.UPDATED);
-							} else {
-								((IfsettopVO) headLines[i]).setStatus(VOStatus.NEW);
-							}
+//							((IfsettopVO) headLines[i]).setItoplineposition(LineTopPositionEnum.HEAD.toIntValue());
+//							if (((IfsettopVO) headLines[i]).getPk_hr_ifsettop() != null) {
+//								((IfsettopVO) headLines[i]).setStatus(VOStatus.UPDATED);
+//							} else {
+//								((IfsettopVO) headLines[i]).setStatus(VOStatus.NEW);
+//							}
 						}
 						
 						// 这边是尾行
-						CircularlyAccessibleValueObject[] tailLines = ioItemsPanel.getSignLinePanel2().getBillListPanel().getBodyBillModel().getBodyValueVOs(IfsettopVO.class.getName());
+						CircularlyAccessibleValueObject[] tailLines = ioItemsPanel.getSignLinePanel2().getBillListPanel().getBodyBillModel().getBodyValueChangeVOs(IfsettopVO.class.getName());
 						for (int i = 0; tailLines != null && i < tailLines.length; i++) {
 							((IfsettopVO) tailLines[i]).setIseq(i + 1);
 							((IfsettopVO) tailLines[i]).setIifsum((Integer) BooleanEnum.NO.value());
-							((IfsettopVO) tailLines[i]).setItoplineposition(LineTopPositionEnum.TAIL.toIntValue());
-							if (((IfsettopVO) tailLines[i]).getPk_hr_ifsettop() != null) {
-								((IfsettopVO) tailLines[i]).setStatus(VOStatus.UPDATED);
-							} else {
-								((IfsettopVO) tailLines[i]).setStatus(VOStatus.NEW);
-							}
+//							((IfsettopVO) tailLines[i]).setItoplineposition(LineTopPositionEnum.TAIL.toIntValue());
+//							if (((IfsettopVO) tailLines[i]).getPk_hr_ifsettop() != null) {
+//								((IfsettopVO) tailLines[i]).setStatus(VOStatus.UPDATED);
+//							} else {
+//								((IfsettopVO) tailLines[i]).setStatus(VOStatus.NEW);
+//							}
 						}
 						
 						ArrayList<CircularlyAccessibleValueObject> lineVOs = new ArrayList<CircularlyAccessibleValueObject>();
