@@ -378,13 +378,17 @@ public class WaifsetDao extends BaseDAOManager {
 			sql.append("select * from hr_dataintface_b where ifid in (");
 			sql.append(ifidInSql);
 			//shenliangc 20140702 银行报盘增加户名
+			// HR本地化 by Ethan: 不知道这边为什么要把薪资发放相关项目拿掉 大概是有病吧
+			// 解决方法：将薪资项目权限移除 因为都到这种配置 基本都应该看得见薪资项目吧
+			//sql.append(" ) and ( vcontent is null or vcontent not like 'wa_data%' or vcontent in (");
 			sql.append(" ) and ( vcontent is null or vcontent not like 'wa_data%' or vcontent in (");
 			sql.append(insql);
 			sql.append(" ) or vcontent in (SELECT DISTINCT 'wa_data.'||wa_item.itemkey ");
 			sql.append(" FROM wa_item  ");
-			sql.append(" WHERE wa_item.pk_wa_item in(");
-			sql.append(ItemPowerUtil.getItemPower(waContext));
-			sql.append(" ))) order by ifid,iseq ");
+//			sql.append(" WHERE wa_item.pk_wa_item in(");
+//			sql.append(ItemPowerUtil.getItemPower(waContext));
+//			sql.append(" ))) order by ifid,iseq ");
+			sql.append(" )) order by ifid,iseq ");
 			FormatItemVO[] formatItemVOs = executeQueryVOs(sql.toString(), FormatItemVO.class);
 			
 			for(int i=0;null!=ifids&&i<ifids.length;i++){
