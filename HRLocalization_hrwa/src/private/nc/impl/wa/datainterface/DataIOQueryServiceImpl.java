@@ -345,6 +345,9 @@ public class DataIOQueryServiceImpl implements IDataIOQueryService
 	
 	// HR本地化需求：向已经输出的map里面继续添加薪资项目和人员基本信息
 	private ArrayList<HashMap<String, Object>> mergeLocalTableWithWaData(ArrayList<HashMap<String, Object>> data, WaLoginContext context) {
+		if (data == null || data.size() == 0) {
+			return data;
+		}
 		IUAPQueryBS queryBS = (IUAPQueryBS) NCLocator.getInstance().lookup(IUAPQueryBS.class.getName());
 		StringBuffer psndocCodes = new StringBuffer();
 		

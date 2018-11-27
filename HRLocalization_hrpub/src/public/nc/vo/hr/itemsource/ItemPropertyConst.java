@@ -12,7 +12,7 @@ public interface ItemPropertyConst
 
 	public static final int Float_MIN_decimalwidth = 0;// 数值型最小小数位数
 
-	public static final int Float_MAX_width = 22;// 数值型最大宽度
+	public static final int Float_MAX_width = 1000;// 数值型最大宽度
 	public static final int Float_width = 12;// 数值型默认宽度
 
 	public static final Integer FORMULA = 0;// 数据来源是公式
@@ -34,7 +34,7 @@ public interface ItemPropertyConst
 	public static final String PK_WA_GRADE = "pk_wa_grade";
 	public static final String PK_WA_WAGEFORM = "pk_wa_wageform";
 	public static final int String_Digit = 0;// 字符型小数位数
-	public static final int String_MAX_width = 128;// 字符型最大长度
+	public static final int String_MAX_width = 1000;// 字符型最大长度
 
 	public static final int String_width = 20;// 字符型默认长度
 	public static final Integer TA = 9;// 数据来源是考勤
