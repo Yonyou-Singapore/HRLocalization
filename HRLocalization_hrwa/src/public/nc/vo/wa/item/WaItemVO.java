@@ -101,6 +101,10 @@ public class WaItemVO extends SuperVO
 	private nc.vo.pub.lang.UFBoolean my_ispcb;
 	private nc.vo.pub.lang.UFBoolean my_isnplrate;
 	private nc.vo.pub.lang.UFBoolean my_isotrate;
+	
+	// 添加汇总功能相关字段2018-11-08
+	private nc.vo.pub.lang.UFBoolean g_istotalitem;
+	private java.lang.String g_totaltoitem;
 
 	private nc.vo.pub.lang.UFBoolean clearflag = UFBoolean.FALSE;
 
@@ -219,6 +223,9 @@ public class WaItemVO extends SuperVO
 	public static final String MY_ISNPLRATE = "my_isnplrate";
 	public static final String MY_ISOTRATE = "my_isotrate";
 	
+	// 添加
+	public static final String G_ISTOTALITEM = "g_istotalitem";
+	public static final String G_TOTALTOITEM = "g_totaltoitem";
 
 	public Integer getIdisplayseq()
 	{
@@ -1568,4 +1575,24 @@ public class WaItemVO extends SuperVO
 	public void setMy_isotrate(nc.vo.pub.lang.UFBoolean my_isotrate) {
 		this.my_isotrate = my_isotrate;
 	}
+
+	
+	// 汇总功能相关的getter和setter
+	public nc.vo.pub.lang.UFBoolean getG_istotalitem() {
+		return g_istotalitem;
+	}
+
+	public void setG_istotalitem(nc.vo.pub.lang.UFBoolean g_istotalitem) {
+		this.g_istotalitem = g_istotalitem;
+	}
+
+	public java.lang.String getG_totaltoitem() {
+		return g_totaltoitem;
+	}
+
+	public void setG_totaltoitem(java.lang.String g_totaltoitem) {
+		this.g_totaltoitem = g_totaltoitem;
+	}
+	
+	
 }
