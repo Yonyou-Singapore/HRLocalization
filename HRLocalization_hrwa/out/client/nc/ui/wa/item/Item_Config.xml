@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<!-- 环境变量 -->
+	<bean id="context" class="nc.ui.bd.defdoc.DefdocLoginContext">
+	</bean>
+	
+	<!-- 模型部分配置 -->	
+	
+	<!-- 应用服务类，负责进行模型操作的处理 -->
+	<bean id="ManageModelService" class="nc.ui.wa.item.model.ItemModelService"/>
+	
+	
+	<!-- 对象转换器工厂，由此获取操作对象的特征信息 -->
+	<bean id="boadatorfactory" class="nc.vo.bd.meta.BDObjectAdpaterFactory"/>
+	
+	<!-- 管理应用模型 -->
+	<bean id="ManageAppModel" class="nc.ui.wa.item.model.ItemAppDataModel">
+		<property name="service" ref="ManageModelService"></property>
+		<property name="businessObjectAdapterFactory" ref="boadatorfactory"></property>
+		<property name="context" ref="context"></property>
+	</bean>
+	
+	
+	<bean id="toftpanelActionContributors" class="nc.ui.uif2.actions.ActionContributors">
+		<property name="contributors">
+			<list>
+				<ref bean="listViewActions"/>
+				<ref bean="cardEditorActions"/>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- Actions -->
+	<bean id="cardEditorActions" class="nc.ui.uif2.actions.StandAloneToftPanelActionContainer">
+		<constructor-arg><ref bean="billFormEditor" /></constructor-arg>
+		<property name="actions">
+			<list>
+				<ref bean="addAction"/>
+				<ref bean="editAction"/>
+				<ref bean="deleteAction"/>
+				<ref bean="nullaction" />
+				<ref bean="refreshAction"/>
+				<ref bean="nullaction" />
+				<ref bean="printactiongroupAction"/>
+			</list>
+		</property>
+		<property name="editActions">
+			<list>
+				<ref bean="saveAction"/>
+				<ref bean="saveAddAction"/>
+				<ref bean="nullaction" />
+				<ref bean="cancelAction"/>
+			</list>
+		</property>
+		<property name="model" ref="ManageAppModel"/>
+	</bean>
+	
+	<bean id="listViewActions" class="nc.ui.uif2.actions.StandAloneToftPanelActionContainer">
+		<constructor-arg><ref bean="listView"/></constructor-arg>
+		<property name="actions">
+			<list>
+				<ref bean="addAction"/>
+				<ref bean="editAction"/>
+				<ref bean="deleteAction"/>
+				<ref bean="nullaction" />
+				<ref bean="refreshAction"/>
+				<ref bean="nullaction" />
+				<ref bean="displayAction" />
+				<ref bean="nullaction" />
+				<ref bean="PrintGroupListAction"/>
+				<ref bean="nullaction" />
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 模板容器，负责对模板的统一装载 -->
+	<bean id="templateContainer" class="nc.ui.uif2.editor.TemplateContainer"  init-method="load">
+		<property name="context" ref="context"/>
+		<property name="nodeKeies">
+			<list>
+			    <value>waitem</value>
+			    <value>HRA002</value>
+			    <value>pubitemp</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 数据模型管理器，主要负责各种方式的模型初始化 -->
+	<bean id="modelDataManager" class="nc.ui.wa.item.model.ItemModelDataManager">
+		<property name="service" ref="ManageModelService"></property>
+		<property name="context" ref="context"></property>
+		<property name="model" ref="ManageAppModel"></property>
+		<property name="typeField" value="category_id"/>
+	</bean>
+	
+	<!-- 界面元素 -->
+	<!-- 列表视图 -->
+	<bean id="listView" class="nc.ui.wa.item.view.ItemListView" init-method="initUI">
+		<property name="model" ref="ManageAppModel"></property>
+		<property name="dataManager" ref="modelDataManager" />
+		<property name="multiSelectionMode" value="1"></property>
+		<property name="multiSelectionEnable"> <value>false</value></property>
+		<property name="pos"><value>head</value></property>
+		<property name="templateContainer" ref="templateContainer"></property>
+		<property name="nodekey" value="waitem"/>
+	</bean>
+	<!--卡控件-->
+	<bean id="billFormEditor" class="nc.ui.wa.item.view.ItemBillFormEditor" init-method="initUI">
+		<property name="model" ref="ManageAppModel"></property>
+		<property name="templateContainer" ref="templateContainer"/>
+		<property name="nodekey" value="waitem"/>
+		<property name="actions">
+			<list>
+				<ref bean="firstLineAction"/>
+				<ref bean="preLineAction"/>
+				<ref bean="nextLineAction"/>
+				<ref bean="lastLineAction"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="nullaction" class="nc.funcnode.ui.action.SeparatorAction" />
+
+	<bean id="addAction" class="nc.ui.wa.item.action.AddItemAction">
+		<property name="defaultValueProvider" ref="defaultValueProvider" />
+		<property name="dataManager" ref="modelDataManager" />
+		<property name="model" ref="ManageAppModel" />
+		<property name="formEditor" ref="billFormEditor"/>
+	</bean>
+	<bean id="editAction" class="nc.ui.wa.item.action.EditItemAction">
+		<property name="model" ref="ManageAppModel"/>
+	</bean>
+	<bean id="deleteAction" class="nc.ui.wa.item.action.DeleteItemAction">
+		<property name="model" ref="ManageAppModel"/>
+		<property name="exceptionHandler" ref="exceptionHandler" />	
+	</bean>
+	<bean id="exceptionHandler" class="nc.ui.wa.pub.action.DelExceptionHanler">
+		<property name="context">
+			<ref bean="context" />
+		</property>
+	</bean>
+	
+	<bean id="refreshAction" class="nc.ui.wa.item.action.RefreshItemAction">
+		<property name="model" ref="ManageAppModel"/>
+		<property name="dataManager" ref="InitDataListener"/>
+		<property name="formEditor" ref="billFormEditor"/>
+	</bean>
+	
+	
+
+
+	<bean id="printactiongroupAction" class="nc.funcnode.ui.action.GroupAction">
+		<property name="code" value="print"></property> 
+		<property name="name">
+			<bean class="nc.ui.uif2.I18nFB">
+				<property name="resDir" value="xmlcode" />
+				<property name="defaultValue" value="打印" />
+				<property name="resId" value="X60130002" />
+			</bean>
+		</property>
+		<property name="actions">
+			<list>
+			    <ref bean="TemplatePrintAction" />
+				<ref bean="TemplatePreviewAction" />
+				<ref bean="cardOutPut"/>
+			</list>
+		</property>
+	</bean>
+	<!-- 列表打印 -->
+	<bean id="PrintGroupListAction" class="nc.funcnode.ui.action.GroupAction">
+		<property name="code" value="print"></property> 
+		<property name="name">
+			<bean class="nc.ui.uif2.I18nFB">
+				<property name="resDir" value="xmlcode" />
+				<property name="defaultValue" value="打印" />
+				<property name="resId" value="X60130002" />
+			</bean>
+		</property>
+		<property name="actions">
+			<list>
+				<ref bean="PrintListAction" />
+				<ref bean="PreviewListAction" />
+				<ref bean="exportListAction" />
+			</list>
+		</property>
+	</bean>
+	<bean id="PrintListAction" class="nc.ui.hr.uif2.action.print.DirectPrintAction">
+		<property name="model" ref="ManageAppModel" />
+		<property name="listView" ref="listView" />
+	</bean>
+	<bean id="PreviewListAction" class="nc.ui.hr.uif2.action.print.DirectPreviewAction">
+		<property name="model" ref="ManageAppModel" />
+		<property name="listView" ref="listView" />
+	</bean>
+	<bean id="exportListAction" class="nc.ui.hr.uif2.action.print.ExportListAction">
+    	<property name="model" ref="ManageAppModel" />
+    	<property name="listView" ref="listView" />
+    </bean>
+	<!-- 列表打印 -->
+	<bean id="TemplatePrintAction" class="nc.ui.hr.uif2.action.print.TemplatePrintAction">
+		<property name="model" ref="ManageAppModel" />
+		<property name="nodeKey" value="pubitemp"/>
+		<property name="printDlgParentConatiner" ref="billFormEditor" />
+		<property name="datasource" ref="datasource" />
+	</bean>
+	<bean id="TemplatePreviewAction" class="nc.ui.hr.uif2.action.print.TemplatePreviewAction">
+		<property name="model" ref="ManageAppModel" />
+		<property name="nodeKey" value="pubitemp"/>
+		<property name="printDlgParentConatiner" ref="billFormEditor" />
+		<property name="datasource" ref="datasource" />
+	</bean>
+	<bean id="cardOutPut" class="nc.ui.hr.uif2.action.print.ExportCardAction">
+		<property name="model" ref="ManageAppModel" />
+		<property name="nodeKey" value="pubitemp"/>
+		<property name="printDlgParentConatiner" ref="billFormEditor" />
+		<property name="datasource" ref="datasource" />
+	</bean>
+	
+	<bean id="datasource" class="nc.ui.wa.item.action.WaPubItemDataSource">
+		<property name="model" ref="ManageAppModel" />
+		<property name="singleData" value="true" />
+		<property name="cardEditor" ref="billFormEditor"/>
+	</bean>
+	
+	
+	<bean id="saveAction" class="nc.ui.wa.item.action.SaveItemAction">
+		<property name="model" ref="ManageAppModel"/>
+		<property name="editor" ref="billFormEditor"/>
+		<property name="validationService" ref="billNotNullValidator"/>
+		<property name="interceptor">
+			<bean class="nc.ui.wa.item.action.SaveItemInterceptor">
+				<property name="model" ref="ManageAppModel"></property>
+				<property name="container" ref="listView"></property>
+			</bean>
+		</property>  
+	</bean>
+	
+	<!--增加按钮，批量预置公共薪资项目-->
+	<!-- <bean id="localizationFieldsMenuAction" class="nc.funcnode.ui.action.MenuAction">
+  	<property name="code" value="localFieldsGroup" />
+		<property name="name">
+			<bean class="nc.ui.uif2.I18nFB">
+				<property name="resDir" value="6007psn" />
+				<property name="resId" value="hrlocal-000000" />
+				<property name="defaultValue" value="Localization Fields" />
+			</bean>
+		</property>
+		<property name="actions">
+			<list>
+				<ref bean="localSeaItemFieldsActionMY" />
+			</list>
+		</property>
+    </bean> -->
+	<!-- <bean id="localSeaItemFieldsActionMY" class="nc.ui.wa.item.action.LocalSeaItemAction_MY">
+		<property name="model" ref="ManageAppModel"/>
+	</bean> -->
+	<!--  -->
+	
+	<bean id="saveAddAction" class="nc.ui.wa.item.action.SaveAddItemAction">	
+		<property name="model" ref="ManageAppModel"/>
+		<property name="addAction" ref="addAction"/>
+		<property name="saveAction" ref="saveAction"/>
+		<property name="interceptor">
+			<bean class="nc.ui.wa.item.action.SaveItemInterceptor">
+				<property name="model" ref="ManageAppModel"></property>
+				<property name="container" ref="listView"></property>
+			</bean>
+		</property>  
+	</bean>
+	<bean id="cancelAction" class="nc.ui.wa.item.action.CancelItemAction">
+		<property name="model" ref="ManageAppModel"/>
+	</bean>
+	<bean id="firstLineAction" class="nc.ui.wa.item.action.FirstLineItemAction">
+		<property name="model" ref="ManageAppModel"/>
+	</bean>
+	<bean id="preLineAction" class="nc.ui.wa.item.action.PreLineItemAction">
+		<property name="model" ref="ManageAppModel"/>
+	</bean>
+	<bean id="nextLineAction" class="nc.ui.wa.item.action.NextLineItemAction">
+		<property name="model" ref="ManageAppModel"/>
+	</bean>
+	<bean id="lastLineAction" class="nc.ui.wa.item.action.LastLineItemAction">
+		<property name="model" ref="ManageAppModel"/>
+	</bean>
+
+	<bean id="displayAction" class="nc.ui.wa.item.action.DisplayOrderAction">
+		<property name="model" ref="ManageAppModel" />
+		<property name="listView" ref="listView" />
+	</bean>
+	
+	<bean id="ClosingListener" class="nc.ui.uif2.FunNodeClosingHandler">
+		<property name="model" ref="ManageAppModel" />
+		<property name="saveaction" ref="saveAction" />
+		<property name="cancelaction" ref="cancelAction" />
+	</bean>
+	<bean id="billNotNullValidator" class="nc.ui.hr.uif2.validator.BillNotNullValidateService">
+		<constructor-arg ref="billFormEditor"> </constructor-arg>
+		<property name="nextValidateService">
+			<bean class="nc.ui.wa.item.validator.SaveValidationService"/>
+		</property>
+	</bean>
+	
+	
+	
+	<!-- 层次结构构造策略 -->
+	<bean id="treeCreateStrategy" class="nc.vo.bd.meta.BDObjectTreeCreateStrategy">
+		<property name="factory" ref="boadatorfactory"/>
+		<property name="rootName">
+			<bean class="nc.ui.uif2.I18nFB">
+				<property name="resDir" value="xmlcode" />
+				<property name="defaultValue" value="项目分类" />
+				<property name="resId" value="X60130003" />
+			</bean>
+		</property>
+	</bean> 
+	
+	 <bean id="treeModelService" class="nc.ui.bd.defdoc.DefdocAppService">
+	   <property name="context" ref="context"/>
+	</bean>
+	
+	<bean id="InitDataListener"
+		class="nc.ui.wa.item.model.ItemDefdocSingleNodeDataManager">
+		<property name="model" ref="HAppModel"></property>
+		<property name="context" ref="context" />
+		<property name="service" ref="treeModelService" />
+	</bean>
+	
+
+	
+	
+	<!-- 层次应用模型 -->
+	<bean id="HAppModel" class="nc.ui.wa.item.model.WaItemHierachicalDataAppModel">
+		<property name="service">
+			<ref bean="treeModelService" />
+		</property>
+		<property name="treeCreateStrategy">
+			<ref bean="treeCreateStrategy" />
+		</property>
+		<property name="businessObjectAdapterFactory">
+			<ref bean="boadatorfactory" />
+		</property>
+		<property name="context">
+			<ref bean="context" />
+		</property>
+	</bean>
+	<bean id="treePanel" class="nc.ui.hr.uif2.view.HrTreePanel" init-method="initUI">
+		<property name="model" ref="HAppModel"/>
+		<property name="rootvisibleflag" value="true"/>
+	</bean>
+	<bean id="typeAndDocMediator" class="nc.ui.hr.uif2.mediator.TypeAndDocMediator">
+		<property name="typeModel" ref="HAppModel"/>
+		<property name="docModel" ref="ManageAppModel"/>
+		<property name="docModelDataManager" ref="modelDataManager"/>
+	</bean>
+	<bean id="defaultValueProvider" class="nc.ui.wa.item.model.ItemDefaultValueProvider">
+		<property name="modelDataManager" ref="modelDataManager"/>
+	</bean>
+
+	<bean id="typeAddAction" class="nc.ui.wa.item.action.AddItemCateg">
+		<property name="model" ref="HAppModel"/>
+		<property name="defaultValueProvider" ref="typeDefaultValueProvider"/>
+		<property name="formEditor" ref="TypeFormEditor"/>
+	</bean>
+	
+	<bean id="typeEditAction" class="nc.ui.wa.item.action.EditItemCategAction">
+		<property name="model" ref="HAppModel"/>
+	</bean>
+	
+	<bean id="typeDeteteAction" class="nc.ui.wa.item.action.DeleteItemCategAction">
+		<property name="model" ref="HAppModel"/>
+	</bean>
+	
+	<bean id="typeRefreshAction" class="nc.ui.uif2.actions.RefreshAction">
+		<property name="model" ref="HAppModel"/>
+		<property name="dataManager" ref="InitDataListener"/>
+	</bean>
+
+	<bean id="typeSaveAction" class="nc.ui.wa.item.action.ItemCategSaveAction">
+		<property name="model" ref="HAppModel"/>
+		<property name="editor" ref="TypeFormEditor"/>
+		<property name="validationService" ref="typeNotNullValidator"/>
+	</bean>
+	<bean id="typeSaveAddAction" class="nc.ui.wa.item.action.ItemCategSaveAddAction">
+		<property name="model" ref="HAppModel"/>
+		<property name="addAction" ref="typeAddAction"/>
+		<property name="saveAction" ref="typeSaveAction"/>
+	</bean>
+	<bean id="typeCancelAction" class="nc.ui.wa.item.action.ItemCategCancelAction">
+		<property name="model" ref="HAppModel"/>
+	</bean>
+
+	<bean id="typeNotNullValidator" class="nc.ui.hr.uif2.validator.BillNotNullValidateService">
+		<constructor-arg ref="TypeFormEditor"/>
+	</bean>
+	
+	<bean id="TypeFormEditor" class="nc.ui.wa.item.view.ItemTypeFormEditor" init-method="initUI">
+		<property name="model" ref="HAppModel"/>
+		<property name="templateContainer" ref="templateContainer"/>
+		<property name="nodekey" value="HRA002"/>
+		<property name="name">
+			<bean class="nc.ui.uif2.I18nFB">
+				<property name="resDir" value="xmlcode" />
+				<property name="defaultValue" value="薪资项目分类" />
+				<property name="resId" value="X60130004" />
+			</bean>
+		</property>
+		<property name="actions">
+			<list>
+				<ref bean="typeSaveAction"/>
+				<ref bean="typeSaveAddAction"/>
+				<ref bean="typeCancelAction"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="typeDefaultValueProvider" class="nc.ui.wa.item.model.TypeDefaultValueProvider">
+		<property name="model" ref="HAppModel"/>
+		<property name="defdocListCode" value="HRWA002_0xx"/>
+	</bean>
+	
+	<bean id="typeEditorController_Mediator" class="nc.ui.hr.uif2.controller.TypeFormEditorController">
+		<property name="model" ref="HAppModel"/>
+		<property name="contentPanel" ref="TypeFormEditor"/>
+	</bean>
+
+
+  <bean id="editorReturnAction" class="nc.ui.uif2.actions.ShowMeUpAction">
+    <property name="goComponent" ref="listView" />
+  </bean>
+  
+  <bean id="editorToolBarPanel" class="nc.ui.uif2.tangramlayout.CardLayoutToolbarPanel">
+    <property name="model" ref="ManageAppModel" />
+    <property name="titleAction" ref="editorReturnAction" />
+    <property name="actions">
+      <list>
+        <ref bean="firstLineAction" />
+        <ref bean="preLineAction" />
+        <ref bean="nextLineAction" />
+        <ref bean="lastLineAction" />
+      </list>
+    </property>
+  </bean>
+	
+  <bean id="typeToolbar" class="nc.ui.wa.item.view.WaToolBarPanel">
+  	<property name="model" ref="HAppModel"/>
+		<property name="actions">
+			<list>
+				<ref bean="typeAddAction"/>
+				<ref bean="typeEditAction"/>
+				<ref bean="typeDeteteAction"/>
+			</list>
+		</property>
+	</bean>
+	
+	
+	<!-- 界面布局总装 -->
+	<bean id="container" class="nc.ui.uif2.TangramContainer" init-method="initUI">		
+		<property name="tangramLayoutRoot">
+    <bean class="nc.ui.uif2.tangramlayout.node.TBNode">		 
+        <property name="showMode" value="CardLayout" />
+        <property name="tabs">
+          <list>
+            <bean class="nc.ui.uif2.tangramlayout.node.VSNode">
+            <property name="showMode" value="NoDivider" /> 
+              <property name="up">
+                <bean class="nc.ui.uif2.tangramlayout.node.CNode">
+                  <property name="component" ref="orgpanel" />
+                </bean>
+              </property>
+              <property name="down">
+                <bean class="nc.ui.uif2.tangramlayout.node.HSNode">
+                  
+                  <property name="left">
+					<bean class="nc.ui.uif2.tangramlayout.node.VSNode">
+						<property name="up">
+							<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+								<property name="component" ref="typeToolbar"></property>
+							</bean>
+						</property>
+						<property name="down">
+							<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+								<property name="component" ref="treePanel"></property>
+							</bean>
+						</property>
+						<property name="dividerLocation" value="30f" />
+					</bean>
+				  </property>				
+                  <property name="right">
+                    <bean class="nc.ui.uif2.tangramlayout.node.CNode">
+                      <property name="component" ref="listView" />
+                    </bean>
+                  </property>
+                  <property name="dividerLocation" value="0.2f" />
+                </bean>
+              </property>
+              <property name="dividerLocation" value="30f" />
+            </bean>
+            <bean class="nc.ui.uif2.tangramlayout.node.VSNode">
+              <property name="showMode" value="NoDivider" />
+              <property name="up">
+                <bean class="nc.ui.uif2.tangramlayout.node.CNode">
+                  <property name="component" ref="editorToolBarPanel" />
+                </bean>
+              </property>
+              <property name="down">
+                <bean class="nc.ui.uif2.tangramlayout.node.CNode">
+                  <property name="component" ref="billFormEditor" />
+                </bean>
+              </property>
+              <property name="dividerLocation" value="26f" />
+            </bean>
+          </list>
+        </property>
+      </bean> 
+					
+	</property>
+	</bean>
+	<!-- 界面零件 -->
+	<bean id="orgpanel" class="nc.ui.hr.uif2.view.PrimaryOrgPanel" init-method="initUI">
+		<property name="model" ref="ManageAppModel" />
+		<property name="dataManager" ref="InitDataListener" />
+		<property name="pk_orgtype" value="HRORGTYPE00000000000" />
+	</bean>
+	<!-- 超链接  -->
+  <bean id="mouseClickShowPanelMediator" class="nc.ui.hr.uif2.mediator.HyperLinkClickMediator">
+	<property name="model" ref="ManageAppModel"/>
+	<property name="showUpComponent" ref="billFormEditor"/>
+	<property name="hyperLinkColumn" value="code"/>
+  </bean>
+</beans>
+
+

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<linked-hash-map>
+  <entry>
+    <string>MalaysiaEPF</string>
+    <function>
+      <displayName>MalaysiaEPF</displayName>
+      <defaultName>6001formula;sealocal-000002</defaultName>
+      <hintMsgRes>6001formula;sealocal-000003</hintMsgRes>
+      <inputSigRes>6001formula;sealocal-000004</inputSigRes>
+      <pattern>MalaysiaEPF\(\d,f_\d+,f_\d+,\w+\)</pattern>
+      <arguments>MalaysiaEPF({0},{1},{2},{3})</arguments>
+       <parapanel>nc.ui.hr.func.WaParaAdjPanel</parapanel>
+       <convertor>nc.ui.hr.func.WaParaPanel_jdConvertor</convertor>
+      <group>WA</group>
+      <process>nc.impl.wa.func.MalaysiaEPF</process>
+      <productCode>UPP6013func</productCode>
+    </function>
+  </entry>	
+  
+  <entry>
+    <string>MalaysiaSOCSO</string>
+    <function>
+      <displayName>MalaysiaSOCSO</displayName>
+      <defaultName>6001formula;sealocal-000006</defaultName>
+      <hintMsgRes>6001formula;sealocal-000007</hintMsgRes>
+      <inputSigRes>6001formula;sealocal-000008</inputSigRes>
+      <pattern>MalaysiaSOCSO\(\d,f_\d+,c_\d+\)</pattern>
+      <arguments>MalaysiaSOCSO({0},{1},{2})</arguments>
+      <parapanel>nc.ui.hr.itemsource.view.NullParaPanel</parapanel>
+      <group>WA</group>
+      <process>nc.impl.wa.func.MalaysiaSOCSO</process>
+      <productCode>UPP6013func</productCode>
+    </function>
+  </entry>
+  
+  <entry>
+    <string>MalaysiaEIS</string>
+    <function>
+      <displayName>MalaysiaEIS</displayName>
+      <defaultName>6001formula;sealocal-000010</defaultName>
+      <hintMsgRes>6001formula;sealocal-000011</hintMsgRes>
+      <inputSigRes>6001formula;sealocal-000012</inputSigRes>
+      <pattern>MalaysiaEIS\(\d,f_\d+\)</pattern>
+      <arguments>MalaysiaEIS({0},{1})</arguments>
+      <parapanel>nc.ui.hr.itemsource.view.NullParaPanel</parapanel>
+      <group>WA</group>
+      <process>nc.impl.wa.func.MalaysiaEIS</process>
+      <productCode>UPP6013func</productCode>
+    </function>
+  </entry>	
+  
+  <entry>
+    <string>MalaysiaPCB</string>
+    <function>
+      <displayName>MalaysiaPCB</displayName>
+      <defaultName>MalaysiaPCB</defaultName>
+      <hintMsgRes>MalaysiaPCB</hintMsgRes>
+      <inputSigRes>MalaysiaPCB</inputSigRes>
+      <pattern>MalaysiaPCB\(\d,f_\d+\)</pattern>
+      <arguments>MalaysiaPCB({0},{1})</arguments>
+      <parapanel>nc.ui.hr.itemsource.view.NullParaPanel</parapanel>
+      <group>WA</group>
+      <process>nc.impl.wa.func.MalaysiaPCB</process>
+      <productCode>UPP6013func</productCode>
+    </function>
+  </entry>	
+  
+  <!-- 用于发放薪资项目的合计计算 -->
+  <entry>
+    <string>SumWaItem</string>
+    <function>
+      <displayName>SumWaItem</displayName>
+      <defaultName>SumWaItem</defaultName>
+      <hintMsgRes>SumWaItem</hintMsgRes>
+      <inputSigRes>SumWaItem</inputSigRes>
+      <pattern>SumWaItem\(\d,f_\d+\)</pattern>
+      <arguments>SumWaItem({0},{1})</arguments>
+      <parapanel>nc.ui.hr.itemsource.view.NullParaPanel</parapanel>
+      <group>WA</group>
+      <process>nc.impl.wa.func.SumWaItem</process>
+      <productCode>UPP6013func</productCode>
+    </function>
+  </entry>	
+ </linked-hash-map> 
