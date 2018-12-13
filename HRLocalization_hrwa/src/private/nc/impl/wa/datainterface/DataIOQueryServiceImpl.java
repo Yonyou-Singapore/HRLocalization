@@ -326,10 +326,14 @@ public class DataIOQueryServiceImpl implements IDataIOQueryService
 			String cond = "";
 			if (context.getNodeCode().equals(DataIOconstant.NODE_BANK))
 			{
+				// Commented on 2018-11-27: Remove the restriction where employee bank must be the same as company's
 				HrIntfaceVO vo = (HrIntfaceVO) aggVOs[i].getParentVO();
-				cond = " t_bank.pk_banktype = '" + vo.getPk_bankdoc() + "'";
+				cond = " t_bank.pk_banktype like '%%'";
 				datas = queryWaDataByCondBank(context, sqlBuffer.toString(), cond);
-				datas = mergeLocalTableWithWaData(datas, context);
+				// Added on 2018-11-27 by Ethan, to avoid null pointer.
+				if (datas != null || datas.size() > 0) {
+					datas = mergeLocalTableWithWaData(datas, context);
+				}
 			}else{
 
 				datas = queryWaDataByCond(context, sqlBuffer.toString(), cond);
