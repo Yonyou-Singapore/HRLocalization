@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module name="nc.itf.hr.wa.HRWAEJB"> 
+  <public>
+    <component priority="0" singleton="true" remote="true" tx="CMT" supportAlias="true">
+      <interface>nc.itf.hr.wa.ISeaLocalItemManageService</interface>
+      <implementation>nc.impl.wa.item.SeaLocaltemServiceImpl</implementation>
+    </component> 
+  </public>
+</module>
+
+    

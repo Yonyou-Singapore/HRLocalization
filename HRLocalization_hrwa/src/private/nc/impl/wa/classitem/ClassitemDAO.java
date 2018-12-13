@@ -65,7 +65,7 @@ public class ClassitemDAO extends BaseDAOManager{
 				+ "  where wa_classitem.pk_wa_class = ? and wa_classitem.pk_org = ? and wa_classitem.cyear = ? "
 				+ " and wa_classitem.cperiod = ? ";
 		if(!StringUtils.isBlank(condition)){
-			sql +=" and (" + condition + ")";
+			sql +=" and (" + condition + ")"; 
 		}
 		sql = sql	+ "  order by  wa_classitem.idisplayseq  ";
 
