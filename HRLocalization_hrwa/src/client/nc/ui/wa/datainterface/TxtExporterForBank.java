@@ -660,6 +660,7 @@ public class TxtExporterForBank extends DefaultExporter
 	{
 		// 取代 dateformat中的 YYYY MM DD
 		String year = String.valueOf(date.getYear());
+		String yearTwoDigit = year.substring(2);
 		String month = String.valueOf(date.getMonth());
 		if (month.trim().length() == 1)
 		{
@@ -671,7 +672,7 @@ public class TxtExporterForBank extends DefaultExporter
 		{
 			day = "0" + day;
 		}
-		return dateFormat.replaceAll("YYYY", year).replaceAll("MM", month).replaceAll("DD", day);
+		return dateFormat.replaceAll("YYYY", year).replaceAll("YY", yearTwoDigit).replaceAll("MM", month).replaceAll("DD", day);
 
 	}
 
@@ -985,33 +986,6 @@ public class TxtExporterForBank extends DefaultExporter
 
 					value = getStringDigit(b != null ? b.toString() : "", formatItemVO, dot, kilobit);
 
-					// if (formatItemVO.getIfieldtype().equals(
-					// FieldTypeEnum.DEC.value())) {
-					// Object b = null;
-					// if(value==null)
-					// {
-					// b = new BigDecimal(0.00);
-					// }
-					// else
-					// {
-					// if(value instanceof BigDecimal)
-					// {
-					// b = (BigDecimal) value;
-					// }
-					// else
-					// {
-					// b = (Integer )value;
-					// }
-					// }
-					//
-					// value = getStringDigit(b!=null?b.toString():"",
-					// formatItemVO, dot,
-					// kilobit);
-					// } else {
-					// value = getStringDigit(value.toString(), formatItemVO,
-					// dot, kilobit);
-					// }
-
 				}
 				else if (formatItemVO.getIfieldtype().equals(FieldTypeEnum.DATE.value()))
 				{
@@ -1021,7 +995,9 @@ public class TxtExporterForBank extends DefaultExporter
 						value = value.toString().substring(0, 10);
 					}
 					formatItemVO.setVcaret(null);
-					value = getStringStr(value.toString(), formatItemVO);
+					// HR本地化改动，让行也能输出日期，简直有病 ，导个银行报盘还要放生日么
+					value = formatDate(new UFDate(value.toString()), formatItemVO.getDateformat());
+					value = getStringStr((String)value, formatItemVO);
 				}
 				else if (formatItemVO.getIfieldtype().equals(FieldTypeEnum.BOO.value()))
 				{
