@@ -101,8 +101,6 @@ public class DataIOWizard
 				{
 					// 保存
 					List<WizardStep> steps = event.getModel().getSteps();
-					// BaseInfPanel basePanel =
-					// (BaseInfPanel)steps.get(0).getComp();
 					ParaInfPanel paraPanel = (ParaInfPanel) steps.get(0).getComp();
 					IOItemsPanel ioItemsPanel = null;
 					if (appModel.getContext().getNodeCode().equals(DataIOconstant.NODE_DATAIO))
@@ -178,7 +176,6 @@ public class DataIOWizard
 					if (StringUtils.isBlank(((HrIntfaceVO) aggVO.getParentVO()).getPrimaryKey())){ //新增时才有同步功能
 						//数据接口节点在没有选择薪资方案及其期间时不可用
 						String nodeCode = appModel.getContext().getNodeCode();
-						//					Integer node = ((DataIOAppModel)getModel()).getNode();
 						if(nodeCode.equals(DataIOconstant.NODE_DATAIO))
 						{
 							/*是否同步后续期间*/
@@ -362,15 +359,12 @@ public class DataIOWizard
 			public void stepActived(WizardStepEvent event)
 			{
 
-				// BaseInfPanel basePanel =
-				// (BaseInfPanel)event.getStep().getModel().getSteps().get(0).getComp();
 				ParaInfPanel paraPanel = (ParaInfPanel) event.getStep().getComp();
 
 				// 隐藏表头，和标志行
 				if (appModel.getContext().getNodeCode().equals(DataIOconstant.NODE_DATAIO))
 				{
 					paraPanel.getRowPanel().setVisible(false);
-					// paraPanel.getTablePanel().setVisible(false);
 				}
 			}
 
@@ -727,10 +721,6 @@ public class DataIOWizard
 		FormatItemVO[] childvos = null;
 		Object[] vos = panel.getSelectedItems();
 		Vector<String> v = new Vector<String>();
-		//		FormatItemVO[] itemVOs = (FormatItemVO[])aggVO.getTableVO(DataIOconstant.HR_DATAINTFACE_B);
-		//		for(FormatItemVO vo: itemVOs){
-		//			vo.setStatus(VOStatus.DELETED);
-		//		}
 		FormatItemVO[] itemVOs =(FormatItemVO[])aggHrVO.getTableVO(DataIOconstant.HR_DATAINTFACE_B);
 		Map<String,FormatItemVO> map = new HashMap<String,FormatItemVO>();
 		if(itemVOs!=null){
@@ -773,9 +763,6 @@ public class DataIOWizard
 				itemvo.setIfid(null);
 				itemvo.setPk_dataintface_b(null);
 
-//				if(FieldTypeEnum.DEC.value().equals(itemvo.getIfieldtype()) && 0==itemvo.getIflddecimal()){
-//					itemvo.setIflddecimal(2);
-//				}
 				itemvo.setStatus(VOStatus.NEW);
 				childvos[i] = itemvo;
 			}
@@ -818,17 +805,9 @@ public class DataIOWizard
 		}
 
 		// 接口名称，外部文件及其类型，报送银行
-		// ((HrIntfaceVO)aggVO.getParentVO()).setVifname(basePanel.getFormatNameTextField().getText());
-		// ((HrIntfaceVO)aggVO.getParentVO()).setVfilename(basePanel.getOutFileNameTextField().getText());
-		// ((HrIntfaceVO)aggVO.getParentVO()).setIfiletype((Integer)basePanel.getFileTypeCombox().getSelectdItemValue());
-		// ((HrIntfaceVO)aggVO.getParentVO()).setPk_bankdoc(basePanel.getBankRefPane().getRefPK());
-		// ((HrIntfaceVO)aggVO.getParentVO()).setVmemo(basePanel.getMemTextArea().getText());
-
 		((HrIntfaceVO) aggVO.getParentVO()).setPk_bankdoc(paraPanel.getBankRefPane().getRefPK());
 		((HrIntfaceVO) aggVO.getParentVO()).setVifname(paraPanel.getFormatNameTextField().getText());
-		// ((HrIntfaceVO)aggVO.getParentVO()).setVfilename(paraPanel.getOutFileNameTextField().getText());
 		((HrIntfaceVO) aggVO.getParentVO()).setIfiletype((Integer) paraPanel.getFileTypeCombox().getSelectdItemValue());
-
 		((HrIntfaceVO) aggVO.getParentVO()).setVmemo(paraPanel.getMemTextArea().getText());
 
 		// 关联字段
