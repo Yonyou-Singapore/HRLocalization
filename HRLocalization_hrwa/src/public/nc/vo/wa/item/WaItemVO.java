@@ -94,11 +94,14 @@ public class WaItemVO extends SuperVO
 	private java.lang.String def40;
 	
 	// 添加本地化/马来西亚字段 2018-10-09
+	// EPF字段修改 添加my_isepf_n, my_isepf_a, my_ispcb_n, my_ispcb_a
 	private java.lang.Integer g_iproperty = 0;
-	private nc.vo.pub.lang.UFBoolean my_isepf;
+	private nc.vo.pub.lang.UFBoolean my_isepf_n;
+	private nc.vo.pub.lang.UFBoolean my_isepf_a;
 	private nc.vo.pub.lang.UFBoolean my_iseis;
 	private nc.vo.pub.lang.UFBoolean my_issocso;
-	private nc.vo.pub.lang.UFBoolean my_ispcb;
+	private nc.vo.pub.lang.UFBoolean my_ispcb_n;
+	private nc.vo.pub.lang.UFBoolean my_ispcb_a;
 	private nc.vo.pub.lang.UFBoolean my_isnplrate;
 	private nc.vo.pub.lang.UFBoolean my_isotrate;
 	
@@ -216,10 +219,12 @@ public class WaItemVO extends SuperVO
 	
 	// 添加本地化/马来西亚字段名
 	public static final String G_IPROPERTY = "g_iproperty";
-	public static final String MY_ISEPF = "my_isepf";
+	public static final String MY_ISEPF_N = "my_isepf_n";
+	public static final String MY_ISEPF_A = "my_isepf_a";
 	public static final String MY_ISEIS = "my_iseis";
 	public static final String MY_ISSOCSO = "my_issocso";
-	public static final String MY_ISPCB = "my_ispcb";
+	public static final String MY_ISPCB_N = "my_ispcb_n";
+	public static final String MY_ISPCB_A = "my_ispcb_a";
 	public static final String MY_ISNPLRATE = "my_isnplrate";
 	public static final String MY_ISOTRATE = "my_isotrate";
 	
@@ -1520,13 +1525,6 @@ public class WaItemVO extends SuperVO
 		this.g_iproperty = g_iproperty;
 	}
 
-	public nc.vo.pub.lang.UFBoolean getMy_isepf() {
-		return my_isepf;
-	}
-
-	public void setMy_isepf(nc.vo.pub.lang.UFBoolean my_isepf) {
-		this.my_isepf = my_isepf;
-	}
 
 	public nc.vo.pub.lang.UFBoolean getMy_iseis() {
 		return my_iseis;
@@ -1544,14 +1542,6 @@ public class WaItemVO extends SuperVO
 		this.my_issocso = my_issocso;
 	}
 
-	public nc.vo.pub.lang.UFBoolean getMy_ispcb() {
-		return my_ispcb;
-	}
-
-	public void setMy_ispcb(nc.vo.pub.lang.UFBoolean my_ispcb) {
-		this.my_ispcb = my_ispcb;
-	}
-
 	public nc.vo.pub.lang.UFBoolean getMy_isnplrate() {
 		return my_isnplrate;
 	}
@@ -1567,8 +1557,39 @@ public class WaItemVO extends SuperVO
 	public void setMy_isotrate(nc.vo.pub.lang.UFBoolean my_isotrate) {
 		this.my_isotrate = my_isotrate;
 	}
-
 	
+	public nc.vo.pub.lang.UFBoolean getMy_isepf_n() {
+		return my_isepf_n;
+	}
+
+	public void setMy_isepf_n(nc.vo.pub.lang.UFBoolean my_isepf_n) {
+		this.my_isepf_n = my_isepf_n;
+	}
+
+	public nc.vo.pub.lang.UFBoolean getMy_isepf_a() {
+		return my_isepf_a;
+	}
+
+	public void setMy_isepf_a(nc.vo.pub.lang.UFBoolean my_isepf_a) {
+		this.my_isepf_a = my_isepf_a;
+	}
+
+	public nc.vo.pub.lang.UFBoolean getMy_ispcb_n() {
+		return my_ispcb_n;
+	}
+
+	public void setMy_ispcb_n(nc.vo.pub.lang.UFBoolean my_ispcb_n) {
+		this.my_ispcb_n = my_ispcb_n;
+	}
+
+	public nc.vo.pub.lang.UFBoolean getMy_ispcb_a() {
+		return my_ispcb_a;
+	}
+
+	public void setMy_ispcb_a(nc.vo.pub.lang.UFBoolean my_ispcb_a) {
+		this.my_ispcb_a = my_ispcb_a;
+	}
+
 	// 汇总功能相关的getter和setter
 	public nc.vo.pub.lang.UFBoolean getG_istotalitem() {
 		return g_istotalitem;
