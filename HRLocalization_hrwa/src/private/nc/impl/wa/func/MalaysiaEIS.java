@@ -1,7 +1,9 @@
 package nc.impl.wa.func;
 
+import nc.impl.wa.classitem.ClassitemDAO;
 import nc.vo.hr.func.FunctionReplaceVO;
 import nc.vo.pub.BusinessException;
+import nc.vo.wa.classitem.WaClassItemVO;
 import nc.vo.wa.pub.WaLoginContext;
 
 public class MalaysiaEIS extends AbstractPreExcutorFormulaParse {
@@ -11,8 +13,12 @@ public class MalaysiaEIS extends AbstractPreExcutorFormulaParse {
 		FunctionReplaceVO fvo = new FunctionReplaceVO();
 		String[] arguments = getArguments(formula.toString());
 		String option = arguments[0];
-		String monthlySalary = arguments[1];
 		String sql = null;
+		ClassitemDAO dao = new ClassitemDAO();
+		WaClassItemVO[] monthlySalaryItemVOs = dao.queryItemInfoVO(this.getContext().getPk_org(),  this.getContext().getPk_wa_class()
+				, this.getContext().getCyear(), this.getContext().getCperiod(), " wa_classitem.my_iseis = 'Y' ");
+		String monthlySalary = SeaLocalFormulaUtil.getConcatString(monthlySalaryItemVOs);
+		
 		if (option.equals("0")) {
 			sql = getEmployeeContribution(monthlySalary);
 		} else if (option.equals("1")) {
@@ -34,16 +40,16 @@ public class MalaysiaEIS extends AbstractPreExcutorFormulaParse {
 	private String getEmployeeContribution(String monthlySalary) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(" select employee_cont from my_eis_rates ");
-		sb.append(" where wa_data." + monthlySalary + " > lower and ");
-		sb.append(" wa_data." + monthlySalary + " <= upper ");
+		sb.append(" where " + monthlySalary + " > lower and ");
+		sb.append(monthlySalary + " <= upper ");
 		return sb.toString();
 	}
 	
 	private String getEmployerContribution(String monthlySalary) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(" select employer_cont from my_eis_rates ");
-		sb.append(" where wa_data." + monthlySalary + " > lower and ");
-		sb.append(" wa_data." + monthlySalary + " <= upper ");
+		sb.append(" where " + monthlySalary + " > lower and ");
+		sb.append(monthlySalary + " <= upper ");
 		return sb.toString();
 	}
 }
