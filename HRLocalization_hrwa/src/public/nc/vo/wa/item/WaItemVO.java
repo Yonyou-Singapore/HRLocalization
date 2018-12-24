@@ -95,7 +95,6 @@ public class WaItemVO extends SuperVO
 	
 	// 添加本地化/马来西亚字段 2018-10-09
 	// EPF字段修改 添加my_isepf_n, my_isepf_a, my_ispcb_n, my_ispcb_a
-	private java.lang.Integer g_iproperty = 0;
 	private nc.vo.pub.lang.UFBoolean my_isepf_n;
 	private nc.vo.pub.lang.UFBoolean my_isepf_a;
 	private nc.vo.pub.lang.UFBoolean my_iseis;
@@ -1517,15 +1516,6 @@ public class WaItemVO extends SuperVO
 
 	
 	// 本地化和马来西亚字段的getter和setter
-	public java.lang.Integer getG_iproperty() {
-		return g_iproperty;
-	}
-
-	public void setG_iproperty(java.lang.Integer g_iproperty) {
-		this.g_iproperty = g_iproperty;
-	}
-
-
 	public nc.vo.pub.lang.UFBoolean getMy_iseis() {
 		return my_iseis;
 	}
