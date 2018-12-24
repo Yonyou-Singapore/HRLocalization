@@ -309,7 +309,12 @@ public class MalaysiaVO_PCB extends SuperVO implements Serializable{
 			 + " left join bd_defdoc def"
 			    + " on def.pk_defdoc = p.my_category"
 			 + " left join hi_psnorg hiorg"
-			    + " on hiorg.pk_psndoc = p.pk_psndoc) ";
+			    + " on hiorg.pk_psndoc = p.pk_psndoc " 
+			 + " group by wa_data.f_519,wa_data.f_520 ,wa_data.f_522 ,wa_data.f_529 ,wa_data.f_530 ,"
+             + " wa_data.f_531 ,wa_data.f_532 ,wa_data.f_533 ,p.my_numberofchildren ,p.my_totalpayable ,p.my_totalepf ,"
+             + " p.my_taxexemption ,p.my_totalpcb ,p.my_isspouseworking ,p.my_isdisabled ,p.my_isspousedisabled ,"
+             + " p.my_category ,p.my_pcbgroup ,wa_data.pk_wa_class ,c.creator ,"
+             + " c.pk_cacu_data ,hiorg.begindate ,p.my_openingdata) ";
 		return tablename;
 	}
 

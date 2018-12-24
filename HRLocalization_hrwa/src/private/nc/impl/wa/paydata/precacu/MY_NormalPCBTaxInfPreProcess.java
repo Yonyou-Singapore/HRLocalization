@@ -39,6 +39,7 @@ import nc.vo.wa.classitem.WaClassItemVO;
 import nc.vo.wa.item.MalaysiaVO_PCB;
 import nc.vo.wa.item.MalaysiaVO_PCB_Rate;
 import nc.vo.wa.item.MalaysiaVO_PCB_para;
+import nc.vo.wa.item.UFDoubleScaleUtils;
 import nc.vo.wa.pub.WaLoginContext;
 
 public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implements
@@ -447,24 +448,7 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 	 * @return
 	 */
 	public UFDouble getPrecisson(UFDouble value) {
-		BigDecimal bd = value.toBigDecimal();
-		if(bd == null || BigDecimal.ZERO.compareTo(bd) == 1){
-			return new UFDouble(BigDecimal.ZERO.setScale(2));
-		}
-		bd = bd.setScale(2,UFDouble.ROUND_FLOOR);
-		String strBd = bd.toString();
-		String strLastBit = strBd.substring(strBd.length()-1,strBd.length());
-		BigDecimal bdTemp = BigDecimal.ZERO;
-		bdTemp.setScale(2);
-		int iLastBit = Integer.valueOf(strLastBit);
-		if(iLastBit%5 != 0){
-			bdTemp = BigDecimal.valueOf(iLastBit).divide(BigDecimal.valueOf(100));
-			bdTemp = bdTemp.multiply(BigDecimal.valueOf(-1));
-			bdTemp = bdTemp.add(iLastBit>5 ? new BigDecimal("0.1") : new BigDecimal("0.05"));
-		}
-		bd = bd.add(bdTemp);
-		return new UFDouble(bd);
-
+		return UFDoubleScaleUtils.setScaleForSpecial2(value);
 	}
 
 	/**
@@ -577,11 +561,26 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 					, context.getCyear(), context.getCperiod(), " wa_classitem.my_ispcb_a = 'Y' ");
 			String y1 = SeaLocalFormulaUtil.getConcatString(normalpcb);
 			String yt = SeaLocalFormulaUtil.getConcatString(additionalpcb);
+			//¥¶¿Ì+∫≈
+			y1 = this.removeOtherSymbol(y1, "y1");
+			yt = this.removeOtherSymbol(yt, "yt");
 			MalaysiaVO_PCB.setSumY1(y1);
 			MalaysiaVO_PCB.setSumYt(yt);
 		} catch (BusinessException e) {
 			ExceptionUtils.wrapException(e.getMessage(), e);
 		}
+		
+	}
+
+	private String removeOtherSymbol(String y1, String alias) {
+		if(y1 == null || "".equals(y1)) {
+			return null;
+		}
+		if(y1.trim().startsWith("+")) {
+			return "sum("+ y1.substring(y1.indexOf("+") + 1) + ")" + alias + ",";
+		}
+		
+		return "sum(" + y1 + ")" + alias + ",";
 		
 	}
 
