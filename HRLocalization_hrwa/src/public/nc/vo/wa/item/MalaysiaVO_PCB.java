@@ -25,9 +25,11 @@ public class MalaysiaVO_PCB extends SuperVO implements Serializable{
 	public static final String MY_RETURNEXPER = "03";
 	public static final String MY_KNOWLEDGE = "04";
 	
-	//人员属于哪个扣税类别 1&3？ or2？
-	public static final String MY_GROUP1_3 = "01";
-	public static final String MY_GROUP2 = "02";
+	//扣税时需要确认属于哪种pcb group
+	public static final String MY_SINGLEOR = "01";
+	public static final String MY_MARRIEDAND_SPONSENOTWORKING = "02";
+	public static final String MY_MARRIEDAND_SPONSEWORKING = "03";
+	public static final String MY_DIVORCEORWINDOW = "04";
 	
 	//已有字段
 	private UFDouble y1;
@@ -59,6 +61,7 @@ public class MalaysiaVO_PCB extends SuperVO implements Serializable{
 	private String pk_cacu_data;
 	
 	private UFDate begindate;
+	private UFDate openingdate;
 	
 	public UFDouble getY1() {
 		return y1;
@@ -251,6 +254,14 @@ public class MalaysiaVO_PCB extends SuperVO implements Serializable{
 	public void setBegindate(UFDate begindate) {
 		this.begindate = begindate;
 	}
+	
+	public UFDate getOpeningdate() {
+		return openingdate;
+	}
+
+	public void setOpeningdate(UFDate openingdate) {
+		this.openingdate = openingdate;
+	}
 
 	@Override
 	public String getTableName() {
@@ -282,7 +293,8 @@ public class MalaysiaVO_PCB extends SuperVO implements Serializable{
                    + " d.pk_wa_class 		 pk_wa_class,"
                    + " c.creator 			 creator,"
                    + " c.pk_cacu_data        pk_cacu_data,"
-                   + " hiorg.begindate       begindate"
+                   + " hiorg.begindate       begindate,"
+                   + " p.my_openingdata 	 openingdate"
 			  + " from wa_cacu_data c"
 			 + " inner join wa_data d"
 			   + "  on c.pk_wa_data = d.pk_wa_data"

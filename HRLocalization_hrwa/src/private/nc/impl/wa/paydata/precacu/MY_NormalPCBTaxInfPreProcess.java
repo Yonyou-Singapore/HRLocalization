@@ -3,6 +3,7 @@ package nc.impl.wa.paydata.precacu;
 /**
  * PCB Group 计税
  */
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -35,7 +36,6 @@ import nc.vo.pubapp.pattern.pub.SqlBuilder;
 import nc.vo.wa.item.MalaysiaVO_PCB;
 import nc.vo.wa.item.MalaysiaVO_PCB_Rate;
 import nc.vo.wa.item.MalaysiaVO_PCB_para;
-import nc.vo.wa.item.UFDoubleScaleUtils;
 import nc.vo.wa.pub.WaLoginContext;
 
 public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implements
@@ -163,14 +163,6 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 		}
 	}
 
-	/**
-	 * 计算P = ([(P – M) R + B] – (Z + X))/n + 1
-	 * @param results
-	 */
-	private void cacuPara_P(List<MalaysiaVO_PCB> results) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	/**
 	 * 计算部分薪资项目,如"P = [∑(Y – K*) + (Y1 – K1*) + [(Y2 – K2*) n] + (Yt – Kt*)**] – 
@@ -192,9 +184,9 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 		//剩余月份
 		Integer n = 12 - Integer.valueOf(period);
 		for(MalaysiaVO_PCB vo : results) {
-			if(MalaysiaVO_PCB.MY_RESIDENT.equals(my_pcbcategoryandgroup.get(vo.getPcbcategory()))) {
+			if(vo.getPcbcategory() != null && MalaysiaVO_PCB.MY_RESIDENT.equals(my_pcbcategoryandgroup.get(vo.getPcbcategory()))) {
 				this.calResident(vo, wacacumap, stableParas, raterange, period, year, n);
-			} else if(MalaysiaVO_PCB.MY_NONRESIDENT.equals(my_pcbcategoryandgroup.get(vo.getPcbcategory()))) {
+			} else if(vo.getPcbcategory() != null && MalaysiaVO_PCB.MY_NONRESIDENT.equals(my_pcbcategoryandgroup.get(vo.getPcbcategory()))) {
 				this.calNonResident(vo, wacacumap, stableParas, raterange);
 			}
 			
@@ -233,6 +225,7 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 	 */
 	private void calResident(MalaysiaVO_PCB vo, ConcurrentHashMap<String, UFDouble> wacacumap, 
 			Map<String, UFDouble> stableParas, MalaysiaVO_PCB_Rate[] raterange, String period, String year, Integer n) {
+		
 		//Y2: 以Y1为后续月份的预估收入
 		UFDouble y1 = vo.getY1();//f_198应税收入
 		UFDouble y2 = y1;
@@ -249,12 +242,13 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 		UFDouble k2 = UFDouble.ZERO_DBL;
 		UFDouble lp = UFDouble.ZERO_DBL;
 		//S
-		if(!vo.getIsspouseworking().booleanValue()) {
-			s = stableParas.get("S");
+		if(vo.getPcbgroup() != null) {
+			s = this.getSvalue(vo, stableParas);
+//			s = stableParas.get("S");
 		}
 		
 		//DU
-		if(vo.getIsdisable().booleanValue()) {
+		if(vo.getIsdisable() != null && vo.getIsdisable().booleanValue()) {
 			du = stableParas.get("DU");
 		}
 		//SU
@@ -264,9 +258,19 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 		//QC
 		qc = vo.getChildren() == null ? UFDouble.ZERO_DBL : UFDoubleUtils.multiply(vo.getChildren(), stableParas.get("QC"));
 		
-		//Y,K,LP
+		//LOG
+		StringBuilder sb = new StringBuilder();
+		Logger.error("=================PCB开始计算=================");
+		sb.append("PCB=====" + "period:").append(period).append(" ,Basic Salary").append(y1).append("/n");
+		sb.append(" ,S:" + s).append(" ,D:" + d).append(" ,DU:" + du).append(" ,SU:"+ su).append(" ,QC:" + qc).append("/n");
+		Logger.error(sb.toString());
+		
+		//Y,K,LP   入职日期是否大于本年的1月1日
 		Boolean iscurrenroll = compareBeginDate(vo.getBegindate(), period, year);
-		if(iscurrenroll) {
+		//场景:系统上线时，将本年以前的抵扣或收入录入相应的人员信息集中，增加起初字段判断是否期初
+		Boolean isopenningdata = compareOpenningDate(vo.getOpeningdate(), period, year);
+		
+		if(iscurrenroll || isopenningdata) {
 			y = UFDoubleUtils.add(vo.getY(), vo.getTotalpayable());
 			k = UFDoubleUtils.add(vo.getK(), vo.getTotalepf());
 			lp = UFDoubleUtils.add(vo.getLp(), vo.getTotaltax());
@@ -277,13 +281,24 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 		}
 		//K2
 		k2 = this.getK2(stableParas.get("TQ"),k, k1, kt, n);
+		//如果 K+k1>6000  K=6000, k1=0
+		if(UFDoubleUtils.isGreaterThan(UFDoubleUtils.add(k, k1), stableParas.get("TQ"))) {
+			Logger.error("===PCB===如果 K+k1>6000  K=6000, k1=0");
+			k = stableParas.get("TQ");
+			k1 = UFDouble.ZERO_DBL;
+		}
+		
 		//计算P
 		UFDouble P1 = UFDoubleUtils.add(UFDoubleUtils.sub(y, k), 
 				UFDoubleUtils.sub(y1, k1), 
 				UFDoubleUtils.multiply(UFDoubleUtils.sub(y2, k2), new UFDouble(n)),
-				UFDoubleUtils.sub(vo.getYt(), kt));
+				UFDoubleUtils.sub(UFDouble.ZERO_DBL, UFDouble.ZERO_DBL));//第一次的时候yt和kt为0
 		UFDouble P2 = UFDoubleUtils.add(d, s, du, su, qc, lp, vo.getLp1());
-		UFDouble P = UFDoubleUtils.sub(P1, P2);
+		UFDouble P = UFDoubleUtils.sub(P1, P2).setScale(2, UFDouble.ROUND_FLOOR);
+		
+		Logger.error("======PCB=====P = [∑(Y – K) + (Y1 – K1) + [(Y2 – K2) n] + (Yt – Kt)] – [D + S + DU + SU + QC + (∑LP + LP1)]");
+		Logger.error("======PCB=====[∑(" + y + "-" + k + ") + (" + y1 + "-" + k1 + ") + [(" + y2 + "-" + k2 + ")*" + n + "] + (" +
+				0 + "-" + 0 + ")] - [" + d + "+" + s + "+" + du + "+" + su + "+" + qc + "+" + lp + "+" + vo.getLp1() + ")]");
 		
 		//根据P 确定税率， 速算扣除数， 速算种类， ZAKAT得到最终税额
 		MalaysiaVO_PCB_Rate pabrange = this.matchPcbRateAndRange(P, raterange, vo);
@@ -291,17 +306,26 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 		//计算Z,X
 		UFDouble z = UFDouble.ZERO_DBL;
 		UFDouble x = UFDouble.ZERO_DBL;
-		if(iscurrenroll) {
-			z = UFDoubleUtils.add(vo.getZ(), vo.getTotalpcb());
+		if(iscurrenroll || isopenningdata) {
+			z = vo.getZ();
 			x = UFDoubleUtils.add(vo.getX(), vo.getTotalpcb());
 		} else {
 			z = vo.getZ();
 			x = vo.getX();
 		}
-		UFDouble tempmtd = UFDoubleUtils.sub(UFDoubleUtils.add(UFDoubleUtils.multiply(
-				UFDoubleUtils.sub(P,  pabrange.getPcb_m()), UFDoubleUtils.div(pabrange.getPcb_rate(),new UFDouble(100))), pabrange.getPcb_category1_3()), 
-				UFDoubleUtils.add(z, x));
+		//扣税类别
+		UFDouble decucationclass = this.getDeductionClass(vo, pabrange);
+		
+		UFDouble tempmtd = UFDoubleUtils.sub(
+				UFDoubleUtils.add(UFDoubleUtils.multiply(
+				UFDoubleUtils.sub(P,  pabrange.getPcb_m()), 
+				UFDoubleUtils.div(pabrange.getPcb_rate(),new UFDouble(100))), decucationclass), 
+				UFDoubleUtils.add(z, x)).setScale(2, UFDouble.ROUND_FLOOR);
 		UFDouble mtd = UFDoubleUtils.div(tempmtd, new UFDouble(n + 1));
+		Logger.error("====PCB==== ([(P – M) R + B] – (Z + X))/n + 1");
+		Logger.error("====PCB====([(" + P + "-" + pabrange.getPcb_m() + ")*" + pabrange.getPcb_rate() + "+" + decucationclass + "] - ("
+				+ z + "+" + x + ")) / " + (n+1));
+		Logger.error("====PCB====MTD: " + mtd);
 		//计算Net MTD: MTD - zakat
 		UFDouble netmtd = UFDoubleUtils.sub(mtd, z);
 		if(UFDoubleUtils.isLessThan(netmtd, UFDouble.ZERO_DBL) && 
@@ -310,58 +334,123 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 			return;
 		} else if(UFDoubleUtils.isLessThan(netmtd, UFDouble.ZERO_DBL) &&
 				UFDoubleUtils.isGreaterThan(vo.getYt(), UFDouble.ZERO_DBL)) {
-			//TODO
 			netmtd = mtd;
-		} else if((UFDoubleUtils.isGreaterThan(netmtd, UFDouble.ZERO_DBL) && UFDouble.ZERO_DBL.equals(vo.getYt())
-				|| UFDoubleUtils.isEqual(netmtd, UFDouble.ZERO_DBL) && UFDouble.ZERO_DBL.equals(vo.getYt()))) {
-			
+		} else if(!UFDoubleUtils.isLessThan(netmtd, UFDouble.ZERO_DBL) && !UFDoubleUtils.isGreaterThan(vo.getYt(), UFDouble.ZERO_DBL)) {
 			wacacumap.put(vo.getPk_cacu_data(), this.getPrecisson(netmtd));
+			Logger.error("PCB==========" + " ,最终的netMTD: " + this.getPrecisson(netmtd) + " ,Z:" + z);
 			return;
 		} else if(UFDoubleUtils.isGreaterThan(netmtd, UFDouble.ZERO_DBL) && UFDoubleUtils.isGreaterThan(vo.getYt(), UFDouble.ZERO_DBL)) {
-			//TODO
 		}
-		
+		//在这里进行向下进位
+		mtd = mtd.setScale(2, UFDouble.ROUND_FLOOR);
+		netmtd = netmtd.setScale(2, UFDouble.ROUND_FLOOR);
 		//计算additional remuneration : X + [Step [2.13] x (n + 1)]
-		UFDouble totalmonth_decu = UFDoubleUtils.add(x, tempmtd);
-		UFDouble totalyear_decu = UFDoubleUtils.add(UFDoubleUtils.multiply(UFDoubleUtils.sub(P, pabrange.getPcb_m()), pabrange.getPcb_rate()),
-				pabrange.getPcb_category1_3());
-		UFDouble currtax = this.getCurrTax(totalyear_decu, totalmonth_decu, z);
+		UFDouble totalmonth_decu = UFDoubleUtils.add(x, UFDoubleUtils.multiply(mtd, new UFDouble(n+1)));
+		UFDouble totalyear_decu1 = UFDoubleUtils.add(UFDoubleUtils.sub(y, k), 
+				UFDoubleUtils.sub(y1, k1), 
+				UFDoubleUtils.multiply(UFDoubleUtils.sub(y2, k2), new UFDouble(n)),
+				UFDoubleUtils.sub(vo.getYt(), vo.getKt()));//第一次的时候yt和kt为0
+		
+		UFDouble totoalyearaddP = UFDoubleUtils.sub(totalyear_decu1, P2).setScale(2, UFDouble.ROUND_FLOOR);;//额外收入重新算出的P
+		//第二次计算P(有additional 收入)
+		Logger.error("======PCB caclute additional P=====[∑(Y – K) + (Y1 – K1) + [(Y2 – K2) n] + (Yt – Kt)] – [D + S + DU + SU + QC + (∑LP + LP1)]");
+		Logger.error("======PCB=====[∑(" + y + "-" + k + ") + (" + y1 + "-" + k1 + ") + [(" + y2 + "-" + k2 + ")*" + n + "] + (" +
+				vo.getYt() + "-" + vo.getKt() + ")] - [" + d + "+" + s + "+" + du + "+" + su + "+" + qc + "+" + lp + "+" + vo.getLp1() + ")]");
+		Logger.error("======PCB=====" + totoalyearaddP);
+		
+		//重新找费率表
+		MalaysiaVO_PCB_Rate range2 = this.matchPcbRateAndRange(totoalyearaddP, raterange, vo);
+		//扣税类别
+		decucationclass = this.getDeductionClass(vo, range2);
+		
+		UFDouble tempmtd2 = UFDoubleUtils.add(UFDoubleUtils.multiply(
+				UFDoubleUtils.sub(totoalyearaddP,  range2.getPcb_m()), 
+				UFDoubleUtils.div(range2.getPcb_rate(),new UFDouble(100))), decucationclass).setScale(2, UFDouble.ROUND_FLOOR);
+		UFDouble additonmtd = UFDoubleUtils.add(UFDoubleUtils.sub(tempmtd2, totalmonth_decu), z).setScale(2, UFDouble.ROUND_FLOOR);
+		if(UFDoubleUtils.isLessThan(additonmtd, new UFDouble(10))) {
+			additonmtd = UFDouble.ZERO_DBL;
+		}
+		Logger.error("======PCB==additional mtd===Total tax for a year = (P – M) x R + B");
+		Logger.error("====PCB==additional mtd====([(" + totoalyearaddP + "-" + range2.getPcb_m() + ")*" + range2.getPcb_rate() + "+" + decucationclass + "]");
+		Logger.error("Total tax for a year: " + tempmtd2);
+		Logger.error("Additional MTD=Step [3.3] - Step [3.1] + ZAKAT");
+		Logger.error(tempmtd2 + "-" + totalmonth_decu + " + " + z);
+		Logger.error(additonmtd);
 		
 		//last
-		UFDouble pcb = UFDoubleUtils.sub(UFDoubleUtils.add(netmtd, currtax), z);
-		//TODO 精度未处理
-		
+		UFDouble pcb = UFDoubleUtils.add(netmtd, additonmtd);
+		Logger.error("===========最终PCB==========" + " ,PCB: " + pcb);
 		
 		wacacumap.put(vo.getPk_cacu_data(), this.getPrecisson(pcb));
 		
 	}
+	
+	private UFDouble getSvalue(MalaysiaVO_PCB vo, Map<String, UFDouble> stableParas) {
+		if("02".equals(my_pcbcategoryandgroup.get(vo.getPcbgroup()))) {
+			return stableParas.get("S");
+		}
+		return UFDouble.ZERO_DBL;
+	}
+
+	private UFDouble getDeductionClass(MalaysiaVO_PCB vo,MalaysiaVO_PCB_Rate pabrange) {
+		if(vo.getPcbgroup() == null) {
+			return UFDouble.ZERO_DBL;
+		}
+		if(MalaysiaVO_PCB.MY_SINGLEOR.equals(my_pcbcategoryandgroup.get(vo.getPcbgroup())) ||
+				MalaysiaVO_PCB.MY_MARRIEDAND_SPONSEWORKING.equals(my_pcbcategoryandgroup.get(vo.getPcbgroup())) ||
+				MalaysiaVO_PCB.MY_DIVORCEORWINDOW.equals(my_pcbcategoryandgroup.get(vo.getPcbgroup()))) {
+			return pabrange.getPcb_category1_3();
+		} else if(MalaysiaVO_PCB.MY_MARRIEDAND_SPONSENOTWORKING.equals(my_pcbcategoryandgroup.get(vo.getPcbgroup()))) {
+			return pabrange.getPcb_category2();
+		} else {
+			return UFDouble.ZERO_DBL;
+		}
+	}
+
 	/**
-	 * Malaysia PCB进舍位方式比较奇葩 
+	 * 当前月 - 期初月 = 1表示 上线所在月份发的薪水
+	 * @param openingdate
+	 * @param period
+	 * @param year
+	 * @return
+	 */
+	private Boolean compareOpenningDate(UFDate openingdate, String period,
+			String year) {
+		if(openingdate != null) {
+			int openingyear = openingdate.getYear();
+			if(openingyear == Integer.valueOf(year)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Malaysia PCB进舍位方式比较奇怪
 	 * 1,2,3,4分进位为5    6,7,8,9进位为10
 	 * 如2.22 为2.25,  2.27为2.30
 	 * @param context
 	 * @return
 	 */
 	public UFDouble getPrecisson(UFDouble value) {
-		//不考虑薪资发放项目的舍位方式，固定未此方法
-		return UFDoubleScaleUtils.setScale(value, new UFDouble(0.05), RoundingMode.HALF_UP);
-	}
-
-	/**
-	 * 
-	 * @param totalyear_decu
-	 * @param totalmonth_decu
-	 * @param z
-	 * @return
-	 */
-	private UFDouble getCurrTax(UFDouble totalyear_decu,
-			UFDouble totalmonth_decu, UFDouble z) {
-		UFDouble currtax = UFDoubleUtils.add(UFDoubleUtils.add(totalyear_decu, totalmonth_decu), z);
-		if(UFDoubleUtils.isLessThan(currtax, new UFDouble(10))) {
-			return new UFDouble(10);
-		} else {
-			return currtax;
+		BigDecimal bd = value.toBigDecimal();
+		if(bd == null || BigDecimal.ZERO.compareTo(bd) == 1){
+			return new UFDouble(BigDecimal.ZERO.setScale(2));
 		}
+		bd = bd.setScale(2,UFDouble.ROUND_FLOOR);
+		String strBd = bd.toString();
+		String strLastBit = strBd.substring(strBd.length()-1,strBd.length());
+		BigDecimal bdTemp = BigDecimal.ZERO;
+		bdTemp.setScale(2);
+		int iLastBit = Integer.valueOf(strLastBit);
+		if(iLastBit%5 != 0){
+			bdTemp = BigDecimal.valueOf(iLastBit).divide(BigDecimal.valueOf(100));
+			bdTemp = bdTemp.multiply(BigDecimal.valueOf(-1));
+			bdTemp = bdTemp.add(iLastBit>5 ? new BigDecimal("0.1") : new BigDecimal("0.05"));
+		}
+		bd = bd.add(bdTemp);
+		return new UFDouble(bd);
+
 	}
 
 	/**
@@ -373,11 +462,11 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 	private MalaysiaVO_PCB_Rate matchPcbRateAndRange(UFDouble p, MalaysiaVO_PCB_Rate[] raterange, MalaysiaVO_PCB vo) {
 		for(MalaysiaVO_PCB_Rate range : raterange) {
 			if(range.getLower_limit() != null && 
-					MalaysiaVO_PCB.MY_RESIDENT.equals(my_pcbcategoryandgroup.get(vo.getPcbcategory())) && //Resident
+					MalaysiaVO_PCB.MY_RESIDENT.equals(range.getPcb_group()) && //Resident
 					UFDoubleUtils.isGreaterThan(p, range.getLower_limit()) &&
 					UFDoubleUtils.isLessThan(p, range.getUpper_limit())) {
 				return range;
-			} else if(p == null && MalaysiaVO_PCB.MY_NONRESIDENT.equals(my_pcbcategoryandgroup.get(vo.getPcbcategory()))) {
+			} else if(p == null && MalaysiaVO_PCB.MY_NONRESIDENT.equals(range.getPcb_group())) {
 				return range;
 			}
 		}
@@ -403,9 +492,15 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 	 */
 	private UFDouble getK2(UFDouble qt, UFDouble k, UFDouble k1, UFDouble kt,
 			Integer n) {
-		UFDouble uf1 = UFDoubleUtils.sub(qt, UFDoubleUtils.div(UFDoubleUtils.add(k, k1, kt), new UFDouble(n)));
+		UFDouble uf1 = UFDoubleUtils.div(UFDoubleUtils.sub(qt, UFDoubleUtils.add(k, k1, kt)), new UFDouble(n));
 		UFDouble uf2 = k1;
-		return UFDoubleUtils.isGreaterThan(uf1, uf2) ? uf2 : uf1;
+		UFDouble k2 =  UFDoubleUtils.isGreaterThan(uf1, uf2) ? uf2 : uf1.setScale(2, UFDouble.ROUND_FLOOR);
+		//输出公式
+		Logger.error("K2:[[6000 – (∑K + K1 + Kt)] / n]");
+		Logger.error("[" + qt + "-" + "(" + k + "+" + k1 + "+" + kt + ") ]" + "/" + n);
+		Logger.error("K2: " + k2);
+		
+		return k2;
 		
 	}
 
@@ -421,15 +516,7 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 		if(begindate != null) {
 			int enrollyear = begindate.getYear();
 			if(enrollyear == Integer.valueOf(year)) {
-				int enrollmonth = begindate.getMonth();
-				if(enrollmonth > 1) {
-					return true;
-				} else {
-					int enrollday = begindate.getDay();
-					if(enrollday > 1) {
-						return true;
-					}
-				}
+				return true;
 			}
 		}
 		return false;
@@ -448,6 +535,7 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 		return paramap;
 	}
 
+	@SuppressWarnings("unchecked")
 	private List<MalaysiaVO_PCB> queryPCBKnownItems(
 			MalaysiaTaxFormulaVO malaysiaFormulaVO, WaLoginContext context) {
 		List<MalaysiaVO_PCB> results = null;
@@ -461,20 +549,6 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 			ExceptionUtils.wrapException(e.getMessage(), e);
 		}
 		return results;
-	}
-
-	private List<MalaysiaVO_PCB> constructVO(
-			List<Map<String, Object>> resultslist) {
-		List<MalaysiaVO_PCB> pcbs = new ArrayList<MalaysiaVO_PCB>();
-		for(Map<String, Object> map : resultslist) {
-			if(map != null) {
-				for(Map.Entry<String, Object> entry : map.entrySet()) {
-					MalaysiaVO_PCB pcb = new MalaysiaVO_PCB();
-					pcb.setY1(new UFDouble(entry.getKey()));
-				}
-			}
-		}
-		return null;
 	}
 
 	@Override
