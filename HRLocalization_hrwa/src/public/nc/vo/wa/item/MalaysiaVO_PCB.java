@@ -63,6 +63,10 @@ public class MalaysiaVO_PCB extends SuperVO implements Serializable{
 	private UFDate begindate;
 	private UFDate openingdate;
 	
+	//sql 属性
+	private static String sumY1;//normal pcb
+	private static String sumYt;//aditional pcb
+	
 	public UFDouble getY1() {
 		return y1;
 	}
@@ -270,16 +274,18 @@ public class MalaysiaVO_PCB extends SuperVO implements Serializable{
 	
 	public static String constructTableName() {
 		String tablename = " (select "
-			       + " d.f_514 y1,"
-			       + " d.f_515 yt,"
-			       + " d.f_519 k1,"
-			       + " d.f_520 kt,"
-			       + " d.f_522 lp1,"
-			       + " d.f_529 x,"
-			       + " d.f_530 y,"
-			       + " d.f_531 k,"
-			       + " d.f_532 lp,"
-			       + " d.f_533 z,"
+//			       + " wa_data.f_514 y1,"  这里y1和yt写活，它可能取自增减属性
+				+ getSumY1()
+//			       + " wa_data.f_515 yt,"
+				+ getSumYt()
+			       + " wa_data.f_519 k1,"
+			       + " wa_data.f_520 kt,"
+			       + " wa_data.f_522 lp1,"
+			       + " wa_data.f_529 x,"
+			       + " wa_data.f_530 y,"
+			       + " wa_data.f_531 k,"
+			       + " wa_data.f_532 lp,"
+			       + " wa_data.f_533 z,"
 			       + " p.my_numberofchildren children,"
 			       + " p.my_totalpayable totalpayable,"
 			       + " p.my_totalepf totalepf,"
@@ -290,14 +296,14 @@ public class MalaysiaVO_PCB extends SuperVO implements Serializable{
 			       + " p.my_isspousedisabled issponsedisable,"
 			       + " p.my_category pcbcategory,"
 			       + " p.my_pcbgroup         pcbgroup,"
-                   + " d.pk_wa_class 		 pk_wa_class,"
+                   + " wa_data.pk_wa_class 		 pk_wa_class,"
                    + " c.creator 			 creator,"
                    + " c.pk_cacu_data        pk_cacu_data,"
                    + " hiorg.begindate       begindate,"
                    + " p.my_openingdata 	 openingdate"
 			  + " from wa_cacu_data c"
-			 + " inner join wa_data d"
-			   + "  on c.pk_wa_data = d.pk_wa_data"
+			 + " inner join wa_data wa_data"
+			   + "  on c.pk_wa_data = wa_data.pk_wa_data"
 			 + " inner join bd_psndoc p"
 			    + " on p.pk_psndoc = c.pk_psndoc"
 			 + " left join bd_defdoc def"
@@ -306,6 +312,23 @@ public class MalaysiaVO_PCB extends SuperVO implements Serializable{
 			    + " on hiorg.pk_psndoc = p.pk_psndoc) ";
 		return tablename;
 	}
+
+	public static String getSumY1() {
+		return sumY1;
+	}
+
+	public static void setSumY1(String sumy1) {
+		sumY1 = sumy1;
+	}
+
+	public static String getSumYt() {
+		return sumYt;
+	}
+
+	public static void setSumYt(String sumyt) {
+		sumYt = sumyt;
+	}
+
 	@Override
 	public void setPrimaryKey(String pk_cacu_data) {
 		this.pk_cacu_data = pk_cacu_data;

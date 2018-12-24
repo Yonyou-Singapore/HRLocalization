@@ -18,6 +18,8 @@ import nc.bs.dao.BaseDAO;
 import nc.bs.dao.DAOException;
 import nc.bs.logging.Logger;
 import nc.bs.mw.sqltrans.TempTable;
+import nc.impl.wa.classitem.ClassitemDAO;
+import nc.impl.wa.func.SeaLocalFormulaUtil;
 import nc.impl.wa.paydata.caculate.AbstractFormulaExecutor;
 import nc.impl.wa.paydata.tax.IMalaysiaPCBTaxInfPreProcess;
 import nc.jdbc.framework.ConnectionFactory;
@@ -33,6 +35,7 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.pubapp.pattern.pub.SqlBuilder;
+import nc.vo.wa.classitem.WaClassItemVO;
 import nc.vo.wa.item.MalaysiaVO_PCB;
 import nc.vo.wa.item.MalaysiaVO_PCB_Rate;
 import nc.vo.wa.item.MalaysiaVO_PCB_para;
@@ -385,6 +388,17 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 		
 	}
 	
+	/**
+	 * 根据薪资项目属性重新取Y1
+	 * @param vo
+	 * @param y1
+	 * @return
+	 */
+	private UFDouble reFetchY1(MalaysiaVO_PCB vo, UFDouble y1) {
+		
+		return null;
+	}
+
 	private UFDouble getSvalue(MalaysiaVO_PCB vo, Map<String, UFDouble> stableParas) {
 		if("02".equals(my_pcbcategoryandgroup.get(vo.getPcbgroup()))) {
 			return stableParas.get("S");
@@ -544,11 +558,31 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 		parameter.addParam(context.getPk_wa_class());
 		parameter.addParam(context.getWaLoginVO().getCreator());
 		try {
+			//y1 场景：薪资项目增加属性，如用于normal pcb计算和additional pcb计算，并且有增减属性,需要重新计算y1
+			this.setPcbTableNameForY1AndYt(context);
+			
 			results = (List<MalaysiaVO_PCB>) dao.retrieveByClause(MalaysiaVO_PCB.class, condition, parameter);
 		} catch (Exception e) {
 			ExceptionUtils.wrapException(e.getMessage(), e);
 		}
 		return results;
+	}
+
+	private void setPcbTableNameForY1AndYt(WaLoginContext context) {
+		ClassitemDAO dao = new ClassitemDAO();
+		try {
+			WaClassItemVO[] normalpcb = dao.queryItemInfoVO(context.getPk_org(),  context.getPk_wa_class()
+					, context.getCyear(), context.getCperiod(), " wa_classitem.my_ispcb_n = 'Y' ");
+			WaClassItemVO[] additionalpcb = dao.queryItemInfoVO(context.getPk_org(),  context.getPk_wa_class()
+					, context.getCyear(), context.getCperiod(), " wa_classitem.my_ispcb_a = 'Y' ");
+			String y1 = SeaLocalFormulaUtil.getConcatString(normalpcb);
+			String yt = SeaLocalFormulaUtil.getConcatString(additionalpcb);
+			MalaysiaVO_PCB.setSumY1(y1);
+			MalaysiaVO_PCB.setSumYt(yt);
+		} catch (BusinessException e) {
+			ExceptionUtils.wrapException(e.getMessage(), e);
+		}
+		
 	}
 
 	@Override
