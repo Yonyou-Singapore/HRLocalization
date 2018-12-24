@@ -37,8 +37,9 @@ public class FormatItemVO extends SuperVO
     private java.lang.Integer dr = 0;
     private nc.vo.pub.lang.UFDateTime ts;
     
-    // HR本地化对银行报盘改动：添加折行字段
+    // HR本地化对银行报盘改动：添加折行字段，日期格式
     private java.lang.Integer inextline = 0;
+    private java.lang.String dateformat;
     
     public static final String IFID = "ifid";
     public static final String PK_DATAINTFACE_B = "pk_dataintface_b";
@@ -489,5 +490,16 @@ public class FormatItemVO extends SuperVO
 		this.inextline = inextline;
 	}
 	// HR本地化需求：折行字段的getter和setter end
-    
+
+	// HR本地化需求：日期格式的getter和setter start
+	public java.lang.String getDateformat() {
+		return dateformat;
+	}
+
+	public void setDateformat(java.lang.String dateformat) {
+		this.dateformat = dateformat;
+	}
+	// HR本地化需求：日期格式的getter和setter end
+	
+	
 }

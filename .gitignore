@@ -14,3 +14,4 @@ local.properties
 .settings/
 .loadpath
 *.jar
+*.class

@@ -4,6 +4,6 @@ import nc.ui.hr.formula.func.HrDigitFunc;
 
 public class MalaysiaEIS extends HrDigitFunc{
 	public MalaysiaEIS () {
-		this.numberOfParameters = 2;
+		this.numberOfParameters = 1;
 	}
 }
