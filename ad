@@ -1,0 +1,472 @@
+[33mcommit 46746b0cf4f3083e47983f9a35ccd739148e89e5[m[33m ([m[1;36mHEAD -> [m[1;32mstaging-branch[m[33m, [m[1;31mstaging-branch/staging-branch-william[m[33m)[m
+Author: weiningc <weiningc@yonyou.com>
+Date:   Wed Dec 26 14:17:05 2018 +0800
+
+    commit some add things
+
+[33mcommit ff71d21723248c8c8d413ecc518effa33a8191b0[m
+Author: weiningc <weiningc@yonyou.com>
+Date:   Wed Dec 26 10:56:22 2018 +0800
+
+    hrrp init commit2
+
+[33mcommit 68bdbeaf0db463a6d43c7f68f683eee0dcf3863b[m
+Author: weiningc <weiningc@yonyou.com>
+Date:   Wed Dec 26 09:47:25 2018 +0800
+
+    ufoe init commit. 预置薪资项目时这里需要改为批量处理
+
+[33mcommit a6cb5531a9420b91ded6f1558a7b4f69da33dfce[m
+Author: weiningc <weiningc@yonyou.com>
+Date:   Wed Dec 26 09:44:14 2018 +0800
+
+    PDF-hrrp init commit.
+
+[33mcommit 40ca12b405f63299ac7520e25bdf8c53587387ee[m
+Author: weiningc <weiningc@yonyou.com>
+Date:   Mon Dec 24 18:18:52 2018 +0800
+
+    PCB增加累计计算，根据增减属性进行计算 y1,yt
+
+[33mcommit a5ca998aeea8127881ca4c48334bbadadbc486a9[m
+Author: weiningc <weiningc@yonyou.com>
+Date:   Mon Dec 24 16:09:15 2018 +0800
+
+    modify script ,add openning data
+
+[33mcommit 564b5ec95425d89c1a622dd70520d1ad8194cea4[m
+Author: weiningc <weiningc@yonyou.com>
+Date:   Mon Dec 24 16:05:26 2018 +0800
+
+    script commit
+
+[33mcommit 0b7026d8205ce715d67d6b16d372feec8fb575e0[m[33m ([m[1;31mstaging-branch/staging-branch[m[33m)[m
+Merge: e8731b9 10caf3a
+Author: Wu Heyang <wuheyang0617@gmail.com>
+Date:   Mon Dec 24 15:20:57 2018 +0800
+
+    Merge pull request #15 from Yonyou-Singapore/staging-branch-ethan
+    
+    Staging branch ethan
+
+[33mcommit 10caf3ae8e7984d55d7fe698d129a8d60b47f249[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Mon Dec 24 15:20:32 2018 +0800
+
+    Deleted g_iproperty field
+
+[33mcommit f8e591eceefaa4482f7d99dfa7602d0efaa188cf[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Mon Dec 24 15:02:33 2018 +0800
+
+    Tweaked the calculation logic of EPF
+
+[33mcommit e8731b921fe0ac4ac55f3c59c1111c771e854630[m
+Merge: 2584013 851a851
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Mon Dec 24 14:46:42 2018 +0800
+
+    Merge branch 'staging-branch' of https://github.com/Yonyou-Singapore/HRLocalization
+    
+    # Conflicts:
+    #       HRLocalization_hrwa/out/resources/hr/wa/formula/sealocal_MY.xml
+    #       HRLocalization_hrwa/resources/hr/wa/formula/sealocal_MY.xml
+
+[33mcommit 2584013e74790b07a77b7552dcae4bdfbf1f9b0a[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Mon Dec 24 14:37:54 2018 +0800
+
+    Adding additional formula for EPF normal renumeration contribution
+
+[33mcommit 851a85169c9ad8c33d247ecc1708cfcf70775515[m
+Author: weiningc <weiningc@yonyou.com>
+Date:   Mon Dec 24 14:12:58 2018 +0800
+
+    增加本年度本期以前累计函数
+
+[33mcommit cdf8d869f71c5375929278df37ab71dac8822222[m
+Author: weiningc <weiningc@yonyou.com>
+Date:   Mon Dec 24 14:12:04 2018 +0800
+
+    git checkout -f 强制将本地分支切换到staging-branch
+
+[33mcommit f9fce6666d2b1a6c4a6e67d488025ac8fd04d8ac[m[33m ([m[1;31mmaster/master[m[33m, [m[1;31mlocalstaging-branch/staging-branch[m[33m)[m
+Merge: ec2f69e 2fb329d
+Author: weiningc <34128336+weiningc@users.noreply.github.com>
+Date:   Mon Dec 24 10:04:48 2018 +0800
+
+    Merge pull request #14 from Yonyou-Singapore/staging-branch
+    
+    EPF, EIS, SOCSO Updated
+
+[33mcommit 2fb329dc3b229c7105a0b5679a74db8ad6d8d8dd[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Fri Dec 21 13:18:55 2018 +0800
+
+    .gitignore fix
+
+[33mcommit e5867d0836ed2e336dd31f8f84d4764cb0ccac17[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Fri Dec 21 13:14:07 2018 +0800
+
+    Redefined git ignore
+
+[33mcommit 81ca63786b0d592bc54ad8596aad8321e080f120[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Fri Dec 21 12:58:22 2018 +0800
+
+    Malaysia Salary formula for EPF, EIS and SOCSO modification:
+    Allow to interact with the localization fields for calculation. If the item is ticked, automatically it will be set as part of the calculation.
+
+[33mcommit 917c4ac98bee2a2ce41a53526a01f5ef34887830[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Thu Dec 20 16:20:32 2018 +0800
+
+    Resolve the issue that customized fields cannot be properly queried by WaClassItemDAO
+
+[33mcommit bac8b90ae0d26be918ffb69ad5761f74a90c768a[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Thu Dec 20 16:09:23 2018 +0800
+
+    Modification on class item and waitem add fields and total item fields
+
+[33mcommit 6b5310d0586f4495f17fbf2051655c89937da7bf[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Thu Dec 20 15:17:55 2018 +0800
+
+    Modification on EPF and PCB check flag, separated normal renumeration and additonal renumeration
+
+[33mcommit 2d6b94a89ba7a649d065f8f136d7a552bd656594[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Thu Dec 20 12:12:02 2018 +0800
+
+    Deleted useless comments
+
+[33mcommit ea6212bd9e4799f0a5f2487731e0d7986bc4cc23[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Wed Dec 19 15:07:44 2018 +0800
+
+    Date format modification on the Data Submission to Bank function
+
+[33mcommit a57c92329c50b210183afd5c828a8a9b0ab7154f[m
+Merge: 6ebebdb ec2f69e
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Thu Dec 13 12:16:53 2018 +0800
+
+    Merge branch 'master' of https://github.com/Yonyou-Singapore/HRLocalization
+    
+    # Conflicts:
+    #       HRLocalization_hrwa/out/public/nc/vo/wa/item/WaItemVO.class
+
+[33mcommit 6ebebdb2f61fc3a3d82be63f8d03f86cb3c31ed0[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Thu Dec 13 12:07:54 2018 +0800
+
+    Total Item change in VO:
+    - Add Fields
+     -Add getter and setter
+
+[33mcommit ec2f69e1178285065eb829825dc1c36fff8be278[m
+Merge: 5fd06eb 83e7976
+Author: Wu Heyang <wuheyang0617@gmail.com>
+Date:   Thu Dec 13 12:06:06 2018 +0800
+
+    Merge pull request #13 from Yonyou-Singapore/staging-branch
+    
+    20181213 Pull Request
+
+[33mcommit b1a4abc49eeb0d49704e8416932dce8b41d373c3[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Thu Dec 13 11:58:25 2018 +0800
+
+    Correction on standard product logic: remove consistency check on personal bank account and company bank account
+
+[33mcommit 83e79760ba40a7a5e9afddb70288569c654b1333[m[33m ([m[1;31mmaster/staging-branch[m[33m)[m
+Author: weiningc <weiningc@yonyou.com>
+Date:   Tue Dec 4 11:00:00 2018 +0800
+
+    PCB init commit;
+
+[33mcommit 391c97b970f03211b665afb617cb0c281ae0e392[m
+Author: weiningc <weiningc@yonyou.com>
+Date:   Tue Dec 4 10:59:01 2018 +0800
+
+    PCB函数功能init commit;
+
+[33mcommit b96b3bba5580e455a354748be7d376ce17618fd0[m
+Merge: c24192b d01ee48
+Author: weiningc <weiningc@yonyou.com>
+Date:   Tue Dec 4 10:42:48 2018 +0800
+
+    Merge branch 'staging-branch' of https://github.com/Yonyou-Singapore/HRLocalization.git into staging-branch
+
+[33mcommit 5fd06eb1fdde716a9ae716c2d982bc9e7aa5aaf5[m[33m ([m[1;31mlocalstaging-branch/master[m[33m)[m
+Merge: c9cd694 d01ee48
+Author: tonychen2018 <41404943+tonychen2018@users.noreply.github.com>
+Date:   Tue Nov 27 10:12:57 2018 +0800
+
+    Merge pull request #12 from Yonyou-Singapore/staging-branch
+    
+    HR Localization 2018-11-27 Pull Request
+
+[33mcommit d01ee48b8f5046366ebcbaa0c7e45c67a75343b9[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Tue Nov 27 00:44:06 2018 +0800
+
+    Removed pre-check on salary item permission for Data Submission to Bank because the configuration is before export where a salary scheme could be selected and also, the personnel using this function should be quite high in position to view all salary items.
+
+[33mcommit 9c8c9003d4c4342363919438732f3f53d95287e1[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Mon Nov 26 18:16:37 2018 +0800
+
+    Initial import of class WaifsetDao - to disable the filtering of payment items
+
+[33mcommit 6f5d94443ea040e11492f15465c1db5f1aa7cce4[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Mon Nov 26 12:33:22 2018 +0800
+
+    2018-11-26 Fix: Solved flag line was not able to be deleted bug
+
+[33mcommit c24192b5458fef3527ea4308d5c6d061c36d6aff[m
+Author: weiningc <weiningc@yonyou.com>
+Date:   Thu Nov 22 18:09:55 2018 +0800
+
+    11
+
+[33mcommit 903d7e47567bc09c972b39d0171710204cc9af1b[m
+Author: weiningc <weiningc@yonyou.com>
+Date:   Thu Nov 22 18:08:39 2018 +0800
+
+    本地化公式配置文件xml移至sealocal_MY.xml,不影响原先的wa_formula.xml
+
+[33mcommit 519e71d16a63f39b24c42561587156cf482a638b[m
+Merge: ca73c5d 71c72db
+Author: weiningc <weiningc@yonyou.com>
+Date:   Thu Nov 8 09:43:18 2018 +0800
+
+    Merge branch 'staging-branch' of https://github.com/Yonyou-Singapore/HRLocalization.git into staging-branch
+
+[33mcommit 71c72db8dacad3f5c00f79247f5d6a4caff1bb05[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Wed Nov 7 16:37:16 2018 +0800
+
+    Added multilang resources for EPF, SOCSO and EIS
+
+[33mcommit 302e853ed6c9f68a3e8abae72d869b9de852606d[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Tue Nov 6 15:09:27 2018 +0800
+
+    Finalization on MalaysiaSOCSO calculation
+
+[33mcommit ca73c5d60f9409cb8003a90ffc20e9ca567deaf2[m
+Merge: d6f7163 7cdf30c
+Author: weiningc <weiningc@yonyou.com>
+Date:   Fri Nov 2 09:59:30 2018 +0800
+
+    Merge branch 'staging-branch' of https://github.com/Yonyou-Singapore/HRLocalization.git into staging-branch
+
+[33mcommit 7cdf30c88ed79a7421f08745348fecbdac16e132[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Fri Nov 2 09:57:41 2018 +0800
+
+    Added Malaysia EIS contribution calculation function
+
+[33mcommit c0501ceb583c46320d50f72bc7199bf037d61055[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Thu Nov 1 12:11:31 2018 +0800
+
+    Finished scripts and relevant documents for the contribution tables for EPF, EIS and SOCSO
+
+[33mcommit d6f716371ccac8a94bc9ac6ec1f1dc42f005257c[m
+Merge: a3bf460 397b6c2
+Author: weiningc <weiningc@yonyou.com>
+Date:   Wed Oct 31 22:30:57 2018 +0800
+
+    Merge branch 'staging-branch' of https://github.com/Yonyou-Singapore/HRLocalization.git into staging-branch
+
+[33mcommit 397b6c2e7532436e970c2a069abd68b9eace6f06[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Wed Oct 31 21:38:25 2018 +0800
+
+    Malaysia EPF calculation code and xml configuration file. Pending to complete: UI/UX improvement and user guide
+
+[33mcommit 65b7470b6f226d24f6649012668091b0c5f27243[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Wed Oct 31 16:23:54 2018 +0800
+
+    Document and Scripts for EPF Contribution Table
+
+[33mcommit a3bf46018236b8d1cceef45240f8f249ae8543b0[m
+Author: weiningc <weiningc@yonyou.com>
+Date:   Tue Oct 30 18:40:46 2018 +0800
+
+    Git test001-weiningc
+
+[33mcommit 6f1f1773ca3130c7cdcfddd96083bebd9d90a959[m
+Merge: fc2468d c9cd694
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Tue Oct 30 09:49:35 2018 +0800
+
+    Merge branch 'master' of https://github.com/Yonyou-Singapore/HRLocalization
+    
+    Successfully merged with remote master after Data Submission to Bank
+    feature enhancement
+
+[33mcommit c9cd69475c3d66d98af794046f2d5dcf026fac17[m
+Merge: f329571 cb70e1a
+Author: Wu Heyang <wuheyang0617@gmail.com>
+Date:   Tue Oct 30 09:48:47 2018 +0800
+
+    Merge pull request #9 from Yonyou-Singapore/staging-branch
+    
+    银行报盘功能改造开发
+
+[33mcommit fc2468d37f74d1f8ee00d6aa2745dbe543b67541[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Mon Oct 29 15:59:34 2018 +0800
+
+    Added Malaysia PCB calculation formula in the UI
+
+[33mcommit 20de60b3299189825121dd58c3cbb39f422c2dba[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Mon Oct 29 15:33:32 2018 +0800
+
+    Added Malaysia EIS function in the formula UI
+
+[33mcommit 4cd01190453dc53a6ab6585ebf317c61166be12c[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Mon Oct 29 15:20:35 2018 +0800
+
+    Added Malaysia SOCSO calculation formula in the UI
+
+[33mcommit c7a2e69c3aa0ec9d7dc4d681fff6c736d188ddb3[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Mon Oct 29 12:19:11 2018 +0800
+
+    Added Malaysia EPF formula display
+
+[33mcommit e840d5b09e4724472b0d365251acd33316e27b09[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Thu Oct 25 17:25:17 2018 +0800
+
+    Random fix
+
+[33mcommit c481842e28634ce156c8fa465add59922f4d8999[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Thu Oct 25 15:38:25 2018 +0800
+
+    Patch from HQ
+
+[33mcommit ff20c17fe955c44cda88280f591f599c0a6009d2[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Thu Oct 25 11:59:51 2018 +0800
+
+    Maximum width for items was increased to 1000
+
+[33mcommit 7c2d0ddf150ed0ee229c6811bb90898ebb2612fc[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Thu Oct 25 11:43:02 2018 +0800
+
+    Let the flag lines to follow the ifNeedDot method as well
+
+[33mcommit 56968f868157ad7aa97bd0c746d4b674dc04abd8[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Wed Oct 24 17:36:58 2018 +0800
+
+    Resolved an IndexOutBoundExcepition when the salary scheme does not have an item attach to a bank card
+
+[33mcommit cb70e1abb290291eabb9fe193233bb9955a96800[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Mon Oct 22 18:18:25 2018 +0800
+
+    Deleted one line of comment
+
+[33mcommit 0de13e2f6e55c5b5b5cd247ea8b0e24d3dba7b4a[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Mon Oct 22 18:14:48 2018 +0800
+
+    Data Submission to Bank: the flag line sum to total is working now
+
+[33mcommit 34ed8536b514591f8e93ef94e9f6a43524fd04bd[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Mon Oct 22 17:30:38 2018 +0800
+
+    添加了方法将人员信息和薪资发放信息根据人员维护起来
+
+[33mcommit bc65c7073bef9a79762e65b905b9b17d6d1b326d[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Mon Oct 22 14:23:34 2018 +0800
+
+    Initial import of DataIOQueryServiceImpl for Data Submission to Bank
+
+[33mcommit 657e6ba975cbb075b27d5eb89b52675ddbc2ed74[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Thu Oct 18 20:38:34 2018 +0800
+
+    Added item sum enum to enable summing up salary items in the header or tailor
+
+[33mcommit 4ccbe38fe5ad14a1518a90c2bfb3d913e308490a[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Thu Oct 18 20:30:56 2018 +0800
+
+    Initial import of WaSignLineNameStrategy for Data Submission to Bank
+
+[33mcommit efcab31b39415bcdb631e3ddf7a188844b08da7b[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Thu Oct 18 19:11:15 2018 +0800
+
+    Handle polymorphism on the UI component.
+
+[33mcommit c6071a28281c424f6c2af95707d1812dae4bd62f[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Thu Oct 18 18:05:37 2018 +0800
+
+    Dealt with nextline, top line and bottom line scenarios.
+
+[33mcommit 56ab838ef1e50d1aebdb13ae1fc5f283dff8990c[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Thu Oct 18 15:37:26 2018 +0800
+
+    Modified panel to update the flag lines to be single lines to avoid conflicts with system original logic for multiple lines
+
+[33mcommit e6f1542fd8cbaffd52db400c157e077a78371cd5[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Thu Oct 18 15:03:30 2018 +0800
+
+    Added a special strategy for Data Submission to Bank txt exporter
+
+[33mcommit c2150b365bb1a684012708fa906a7227762716e1[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Thu Oct 18 14:58:54 2018 +0800
+
+    Initial import of OutDataAction for Data Submission to bank and previous leftover commit. The import is for implementing another exporter specially for Data Submission to Banks to avoid conflict with Data Interface.
+
+[33mcommit 152254a6d2d7953f9990cbe538517630190dbc91[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Thu Oct 18 14:38:36 2018 +0800
+
+    Added null seperator for Data Submission to Bank. Null separator means that no separator is set.
+
+[33mcommit 6c7b9cd070ba333c5a56d572f22e1f53203f9c3d[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Thu Oct 18 14:35:40 2018 +0800
+
+    Initial import of ItemSeprtorEnum class for Data Submission to Bank
+
+[33mcommit 1c12fc70d362f2470f3df2e0aaea6023326baeb6[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Thu Oct 18 14:33:42 2018 +0800
+
+    Initial import of DataIOconstant class for Data Submission to Bank
+
+[33mcommit 0eaff96d4a64454e8f96ebe86c56e73b6f074c31[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Wed Oct 17 18:05:00 2018 +0800
+
+    Initial import of the TxtExporter for Data Submission to Bank
+
+[33mcommit d0c5748ddef894e1edc67c9967b7108df41f1fc0[m
+Author: whyCaiji <wuheyang0617@gmail.com>
+Date:   Wed Oct 17 17:59:20 2018 +0800
+
+    Add another datasource type to the data submission to bank: Personal Info. The ref model is to select the corresponding fields and convert to in-built system way of recognizing formula. Only apply to detail lines first, the flag line will implement later.
