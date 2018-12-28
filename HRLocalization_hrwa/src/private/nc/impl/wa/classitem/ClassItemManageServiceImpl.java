@@ -909,9 +909,9 @@ public class ClassItemManageServiceImpl implements IClassItemManageService, ICla
 				return;
 			}
 			BDPKLockUtil.lockSuperVO(items);
-			
+				
 			for (WaClassItemVO parent : items) {
-				if (parent.getG_istotalitem().booleanValue() == true) {
+				if (parent.getG_istotalitem() == null ? false : parent.getG_istotalitem().booleanValue()) {
 					StringBuilder formulaSb = new StringBuilder();
 					StringBuilder formulaStrSb = new StringBuilder();
 					
@@ -923,21 +923,25 @@ public class ClassItemManageServiceImpl implements IClassItemManageService, ICla
 					for (WaClassItemVO child : items) {
 						if (child.getG_totaltoitem() != null && child.getG_totaltoitem().equals(parent.getItemkey())) {
 							if (!child.getItemkey().equals(parent.getItemkey())) {
-								formulaSb.append("wa_data."+child.getItemkey() + "+");
-								formulaStrSb.append("wa_data."+child.getItemkey() + "+");
+								if (child.getIproperty().intValue() == PropertyEnumVO.MINUS.toIntValue()) {
+									formulaSb.append(" - wa_data." + child.getItemkey());
+									formulaStrSb.append(" - wa_data." + child.getItemkey());
+								} else {
+									formulaSb.append(" + wa_data." + child.getItemkey());
+									formulaStrSb.append(" + wa_data." + child.getItemkey());
+								}
 							}
 						}
 					}
-					
-					formulaSb.deleteCharAt(formulaSb.length() - 1);
-					formulaStrSb.deleteCharAt(formulaStrSb.length() - 1);
-					
 					parent.setVformula(formulaSb.toString());
 					parent.setVformulastr(formulaStrSb.toString());
 				} else {
 					continue;
 				}
 			}
+			BaseDAO baseDAO = new BaseDAO();
+			baseDAO.updateVOArray(items, new String[] { WaClassItemVO.VFORMULA, WaClassItemVO.VFORMULASTR});
+			WaCacheUtils.synCache(items[0].getTableName());
 		} catch (Exception e) {
 			Logger.error(e.getMessage(), e);
 			throw new BusinessException(ResHelper.getString("60130classpower","060130classpower0179")/*@res "生成系统项目的默认公式失败！"*/);
@@ -1013,7 +1017,7 @@ public class ClassItemManageServiceImpl implements IClassItemManageService, ICla
 			regenerateSystemFormula(vo.getPk_org(), vo.getPk_wa_class(), vo.getCyear(), vo.getCperiod());
 		}
 		// HR本地化：将有汇总项的公式全部重算
-		//generateTotalItemFormula(vo.getPk_org(), vo.getPk_wa_class(), vo.getCyear(), vo.getCperiod());
+		generateTotalItemFormula(vo.getPk_org(), vo.getPk_wa_class(), vo.getCyear(), vo.getCperiod());
 
 		//设计计算顺序
 		if(needResetCompuSeq(vo)){
