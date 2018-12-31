@@ -19,6 +19,23 @@
   </entry>	
   
   <entry>
+    <string>MalaysiaEPFNormal</string>
+    <function>
+      <displayName>MalaysiaEPFNormal</displayName>
+      <defaultName>6001formula;sealocal-000014</defaultName>
+      <hintMsgRes>6001formula;sealocal-000015</hintMsgRes>
+      <inputSigRes>6001formula;sealocal-000016</inputSigRes>
+      <pattern>MalaysiaEPFNormal\(\d,\w+\)</pattern>
+      <arguments>MalaysiaEPFNormal({0},{1})</arguments>
+       <parapanel>nc.ui.hr.func.WaParaAdjPanel</parapanel>
+       <convertor>nc.ui.hr.func.WaParaPanel_jdConvertor</convertor>
+      <group>WA</group>
+      <process>nc.impl.wa.func.MalaysiaEPFNormal</process>
+      <productCode>UPP6013func</productCode>
+    </function>
+  </entry>	
+  
+  <entry>
     <string>MalaysiaSOCSO</string>
     <function>
       <displayName>MalaysiaSOCSO</displayName>
@@ -64,22 +81,5 @@
       <process>nc.impl.wa.func.MalaysiaPCB</process>
       <productCode>UPP6013func</productCode>
     </function>
-  </entry>	
-  
-  <!-- 用于发放薪资项目的合计计算 -->
-  <entry>
-    <string>SumWaItem</string>
-    <function>
-      <displayName>SumWaItem</displayName>
-      <defaultName>SumWaItem</defaultName>
-      <hintMsgRes>SumWaItem</hintMsgRes>
-      <inputSigRes>SumWaItem</inputSigRes>
-      <pattern>SumWaItem\(\d,f_\d+\)</pattern>
-      <arguments>SumWaItem({0},{1})</arguments>
-      <parapanel>nc.ui.hr.itemsource.view.NullParaPanel</parapanel>
-      <group>WA</group>
-      <process>nc.impl.wa.func.SumWaItem</process>
-      <productCode>UPP6013func</productCode>
-    </function>
-  </entry>	
+  </entry>
  </linked-hash-map> 

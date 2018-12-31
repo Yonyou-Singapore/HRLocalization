@@ -94,6 +94,12 @@
 
 <formula>
   <customType>9</customType>
+  <functionName>MalaysiaEPFNormal</functionName>
+  <functionClass>nc.ui.wa.formular.func.MalaysiaEPFNormal</functionClass>
+</formula>
+
+<formula>
+  <customType>9</customType>
   <functionName>MalaysiaSOCSO</functionName>
   <functionClass>nc.ui.wa.formular.func.MalaysiaSOCSO</functionClass>
 </formula>

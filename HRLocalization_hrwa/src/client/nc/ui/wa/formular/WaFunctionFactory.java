@@ -180,6 +180,14 @@ public class WaFunctionFactory implements IFunctionFactory {
 					fvo.getReturntype());
 			items.add(malaysiaEPF);
 			
+			// 马来西亚EPF Normal Renumeration Contribution
+			fvo = WaFormulaXmlHelper.getFunctionVO("MalaysiaEPFNormal");
+			HRFormulaItem malaysiaEPFNormal = new HRFormulaItem(
+					fvo.getDisplayName(), fvo.getDefaultName(),
+					fvo.getInputSig(), fvo.getHintMsg(),
+					fvo.getReturntype());
+			items.add(malaysiaEPFNormal);
+			
 			// 马来西亚SOCSO
 			fvo = WaFormulaXmlHelper.getFunctionVO("MalaysiaSOCSO");
 			HRFormulaItem malaysiaSOCSO = new HRFormulaItem(
