@@ -4,6 +4,6 @@ import nc.ui.hr.formula.func.HrDigitFunc;
 
 public class MalaysiaEPF extends HrDigitFunc {
 	public MalaysiaEPF() {
-		this.numberOfParameters = 2;
+		this.numberOfParameters = 4;
 	}
 }

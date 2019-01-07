@@ -13,9 +13,9 @@ public class SeaLocalFormulaUtil {
 			for (WaClassItemVO item : items) {
 				// 假如不是减项 默认为增项
 				if (item.getIproperty().intValue() == PropertyEnumVO.MINUS.toIntValue()) {
-					sb.append(" - wa_data." + item.getItemkey());
+					sb.append(" - coalesce(wa_data." + item.getItemkey() + ",0)");
 				} else  {
-					sb.append(" + wa_data." + item.getItemkey());
+					sb.append(" + coalesce(wa_data." + item.getItemkey() + ",0)");
 				}
 			}
 			return sb.toString();

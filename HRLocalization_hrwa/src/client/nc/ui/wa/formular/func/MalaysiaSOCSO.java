@@ -4,6 +4,6 @@ import nc.ui.hr.formula.func.HrDigitFunc;
 
 public class MalaysiaSOCSO extends HrDigitFunc {
 	public MalaysiaSOCSO() {
-		this.numberOfParameters = 2;
+		this.numberOfParameters = 3;
 	}
 }

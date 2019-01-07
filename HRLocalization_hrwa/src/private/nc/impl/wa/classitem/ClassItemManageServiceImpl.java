@@ -211,7 +211,9 @@ public class ClassItemManageServiceImpl implements IClassItemManageService, ICla
 		
 		// HR本地化：将有汇总项的公式全部重算
 		generateTotalItemFormula(vo.getPk_org(), vo.getPk_wa_class(), vo.getCyear(), vo.getCperiod());
-
+		
+		// HR本地化：将所有EPF，EIS，SOCSO打勾项汇总到预置的薪资项目
+		
 		resetPaydataFlag(vo.getPk_wa_class(),vo.getCyear(),vo.getCperiod());
 
 		synParentClassItem(VOStatus.DELETED, vo);
@@ -939,12 +941,138 @@ public class ClassItemManageServiceImpl implements IClassItemManageService, ICla
 					continue;
 				}
 			}
+			
+			summingEPFNormalItems(items);
+			summingEPFAdditionalItems(items);
+			summingEISItems(items);
+			summingSOCSOItems(items);
+			
 			BaseDAO baseDAO = new BaseDAO();
 			baseDAO.updateVOArray(items, new String[] { WaClassItemVO.VFORMULA, WaClassItemVO.VFORMULASTR});
 			WaCacheUtils.synCache(items[0].getTableName());
 		} catch (Exception e) {
 			Logger.error(e.getMessage(), e);
 			throw new BusinessException(ResHelper.getString("60130classpower","060130classpower0179")/*@res "生成系统项目的默认公式失败！"*/);
+		}
+	}
+	
+	private void summingEPFNormalItems(WaClassItemVO[] items) {
+		for (WaClassItemVO parent : items) {
+			if (parent.getCode().equals("sealocal_epf_normal_base")) {
+				StringBuilder formulaSb = new StringBuilder();
+				StringBuilder formulaStrSb = new StringBuilder();
+				
+				// 清空vformula和vformulaStr字段
+				parent.setVformula(null);
+				parent.setVformulastr(null);
+				
+				// 遍历所有薪资发放项目，重构公式
+				for (WaClassItemVO child : items) {
+					if (child.getMy_isepf_n() != null && child.getMy_isepf_n().booleanValue()) {
+						if (child.getIproperty().intValue() == PropertyEnumVO.MINUS.toIntValue()) {
+							formulaSb.append(" - wa_data." + child.getItemkey());
+							formulaStrSb.append(" - wa_data." + child.getItemkey());
+						} else {
+							formulaSb.append(" + wa_data." + child.getItemkey());
+							formulaStrSb.append(" + wa_data." + child.getItemkey());
+						}
+					}
+				}
+				parent.setVformula(formulaSb.toString());
+				parent.setVformulastr(formulaStrSb.toString());
+			} else {
+				continue;
+			}
+		}
+	}
+	
+	private void summingEPFAdditionalItems(WaClassItemVO[] items) {
+		for (WaClassItemVO parent : items) {
+			if (parent.getCode().equals("sealocal_epf_bonus_base")) {
+				StringBuilder formulaSb = new StringBuilder();
+				StringBuilder formulaStrSb = new StringBuilder();
+				
+				// 清空vformula和vformulaStr字段
+				parent.setVformula(null);
+				parent.setVformulastr(null);
+				
+				// 遍历所有薪资发放项目，重构公式
+				for (WaClassItemVO child : items) {
+					if (child.getMy_isepf_a() != null && child.getMy_isepf_a().booleanValue()) {
+						if (child.getIproperty().intValue() == PropertyEnumVO.MINUS.toIntValue()) {
+							formulaSb.append(" - wa_data." + child.getItemkey());
+							formulaStrSb.append(" - wa_data." + child.getItemkey());
+						} else {
+							formulaSb.append(" + wa_data." + child.getItemkey());
+							formulaStrSb.append(" + wa_data." + child.getItemkey());
+						}
+					}
+				}
+				parent.setVformula(formulaSb.toString());
+				parent.setVformulastr(formulaStrSb.toString());
+			} else {
+				continue;
+			}
+		}
+	}
+	
+	private void summingEISItems(WaClassItemVO[] items) {
+		for (WaClassItemVO parent : items) {
+			if (parent.getCode().equals("sealocal_eis_base")) {
+				StringBuilder formulaSb = new StringBuilder();
+				StringBuilder formulaStrSb = new StringBuilder();
+				
+				// 清空vformula和vformulaStr字段
+				parent.setVformula(null);
+				parent.setVformulastr(null);
+				
+				// 遍历所有薪资发放项目，重构公式
+				for (WaClassItemVO child : items) {
+					if (child.getMy_iseis() != null && child.getMy_iseis().booleanValue()) {
+						if (child.getIproperty().intValue() == PropertyEnumVO.MINUS.toIntValue()) {
+							formulaSb.append(" - wa_data." + child.getItemkey());
+							formulaStrSb.append(" - wa_data." + child.getItemkey());
+						} else {
+							formulaSb.append(" + wa_data." + child.getItemkey());
+							formulaStrSb.append(" + wa_data." + child.getItemkey());
+						}
+					}
+				}
+				parent.setVformula(formulaSb.toString());
+				parent.setVformulastr(formulaStrSb.toString());
+			} else {
+				continue;
+			}
+		}
+	}
+	
+	private void summingSOCSOItems(WaClassItemVO[] items) {
+		for (WaClassItemVO parent : items) {
+			if (parent.getCode().equals("sealocal_socso_base")) {
+				StringBuilder formulaSb = new StringBuilder();
+				StringBuilder formulaStrSb = new StringBuilder();
+				
+				// 清空vformula和vformulaStr字段
+				parent.setVformula(null);
+				parent.setVformulastr(null);
+				
+				// 遍历所有薪资发放项目，重构公式
+				for (WaClassItemVO child : items) {
+					if (child.getMy_issocso() != null && child.getMy_issocso().booleanValue()) {
+						if (child.getIproperty().intValue() == PropertyEnumVO.MINUS.toIntValue()) {
+							formulaSb.append(" - wa_data." + child.getItemkey());
+							formulaStrSb.append(" - wa_data." + child.getItemkey());
+						} else {
+							formulaSb.append(" + wa_data." + child.getItemkey());
+							formulaStrSb.append(" + wa_data." + child.getItemkey());
+						}
+					}
+				}
+				parent.setVformula(formulaSb.toString());
+				parent.setVformulastr(formulaStrSb.toString());
+			} else {
+				continue;
+			}
 		}
 	}
 
