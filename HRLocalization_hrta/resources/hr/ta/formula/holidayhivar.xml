@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items>
+	<import resource=""/>
+	<!--人员基本信息-->
+	<!--<item name="人员基本信息" resid="hrpub_formula_000000" table-name="bd_psndoc"/>-->
+<!-- 	<item name="人员基本信息" resid="0holiday0001" table-name="hrholiday"> -->
+	<item name="人员基本信息" resid="0holiday0001" table-name="bd_psndoc">
+		<description resid="0holiday0001" value="人员基本信息"/>
+		<!--生成的content-->
+		<content>
+			<!--<content-creator-class name="nc.ui.hr.formula.variable.PsndocContentCreator"></content-creator-class>-->
+			<content-creator-class name="nc.ui.bd.holiday.view.HolidayPsndocContentCreator"></content-creator-class>
+		</content>
+	</item>
+	<item name="人员工作信息" table-name="hi_psnjob">
+		<description  value="人员工作信息"/>
+		<!--生成的content-->
+		<content>
+			<!--<content-creator-class name="nc.ui.hr.formula.variable.PsndocContentCreator"></content-creator-class>-->
+			<content-creator-class name="nc.ui.bd.holiday.view.HolidayPsnjobContentCreator"></content-creator-class>
+		</content>
+	</item>
+</items>
+	
