@@ -31,7 +31,7 @@ public class ImportEmployeePanel extends UIPanel {
             chooser = new UIFileChooser();
             chooser.removeChoosableFileFilter(chooser.getAcceptAllFileFilter());
             chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            FileFilter defaultFilter = new DefaultFileFilter(".xls", "XLS " + "filename" + " (.xls)");
+            FileFilter defaultFilter = new DefaultFileFilter(".xlsx", "XLSX " + "filename" + " (.xlsx)");
     		Object[] imageFormats = ImageIO.getReaderFormatNames();
     		HashSet<String> formats = new HashSet<String>();
     		for (int i = 0; i < imageFormats.length; i++) {
