@@ -62,6 +62,9 @@ public class MalaysiaEPF extends AbstractPreExcutorFormulaParse {
 		// Group D, when monthly wage is over 20000, the employee contribution is wage * 5.5%
 		sb.append(" when wa_data." + monthlySalary + " + wa_data." + bonus + " > 20000 and sealocal_epf_rates.group_name = 'GROUP D' then (wa_data." 
 				+ monthlySalary + " + wa_data." + bonus + ") * 0.055 ");
+		// Group E, when monthly wage is over 20000, the employee contribution is wage * 0.0%
+		sb.append(" when wa_data." + monthlySalary + " + wa_data." + bonus + " > 20000 and sealocal_epf_rates.group_name = 'GROUP E' then (wa_data." 
+				+ monthlySalary + " + wa_data." + bonus + ") * 0.0 ");
 		// Else, if wage is not over 20000, strictly follow the EPF table
 		sb.append(" else employee_cont end employee_cont ");
 		sb.append(" from sealocal_epf_rates where wa_data." + monthlySalary + " + wa_data." + bonus + " >= lower and wa_data." 
@@ -90,6 +93,9 @@ public class MalaysiaEPF extends AbstractPreExcutorFormulaParse {
 				+ monthlySalary + " + wa_data." + bonus + ") * 0.06 ");
 		// Group D, when monthly wage is over 20000, the employer contribution is RM5.00
 		sb.append(" when wa_data." + monthlySalary + " + wa_data." + bonus + " > 20000 and sealocal_epf_rates.group_name = 'GROUP D' then 5.00 ");
+		// Group E, when monthly wage is over 20000, the employer contribution is wage * 4%
+		sb.append(" when wa_data." + monthlySalary + " + wa_data." + bonus + " > 20000 and sealocal_epf_rates.group_name = 'GROUP E' then (wa_data." 
+				+ monthlySalary + " + wa_data." + bonus + ") * 0.04 ");
 		// Else, strictly follow the EPF table
 		sb.append(" else employer_cont end employer_cont ");
 		sb.append(" from sealocal_epf_rates where wa_data." + monthlySalary + " + wa_data." + bonus + " >= lower and wa_data." 
