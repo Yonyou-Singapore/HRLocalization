@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="gbk"?>
+<module name="nc.itf.hr.hrrp.HRhrrpEJB">
+	<public>
+		    <!-- 接口 -->
+	    <component priority="0" singleton="true" remote="true" tx="CMT" supportAlias="true">
+			<interface>nc.itf.hrrp.service.IBaseService</interface>
+			<implementation>nc.impl.hrrp.service.BaseServiceImpl</implementation>
+		</component>
+		 <component priority="0" singleton="true" remote="true" tx="CMT" supportAlias="true">
+			<interface>nc.itf.hrrp.service.IPdfOprator</interface>
+			<implementation>nc.impl.hrrp.service.PdfOprator</implementation>
+		</component>
+		 <component priority="0" singleton="true" remote="true" tx="CMT" supportAlias="true">
+			<interface>nc.itf.hrrp.service.IOfferOprator</interface>
+			<implementation>nc.impl.hrrp.service.OfferOprator</implementation>
+		</component>
+	</public>
+</module>
