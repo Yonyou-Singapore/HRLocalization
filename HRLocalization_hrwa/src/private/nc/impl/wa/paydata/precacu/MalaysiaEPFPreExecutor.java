@@ -43,10 +43,9 @@ public class MalaysiaEPFPreExecutor extends AbstractFormulaExecutor {
 	@SuppressWarnings("unchecked")
 	private List<MalaysiaVO_EPF> queryEPFItems(WaLoginContext context) {
 		List<MalaysiaVO_EPF> results = null;
-		String condition = " pk_wa_class = ? and creator = ?";
+		String condition = " pk_wa_class = ? ";
 		SQLParameter parameter = new SQLParameter();
 		parameter.addParam(context.getPk_wa_class());
-		parameter.addParam(context.getWaLoginVO().getCreator());
 		try {
 			results = (List<MalaysiaVO_EPF>) dao.retrieveByClause(MalaysiaVO_EPF.class, condition, parameter);
 		} catch (Exception e) {

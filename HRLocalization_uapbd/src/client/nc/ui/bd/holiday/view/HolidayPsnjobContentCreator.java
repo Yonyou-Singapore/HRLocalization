@@ -13,14 +13,13 @@ public class HolidayPsnjobContentCreator extends
 				AbstractContentCreator
 {
 
-	//平台的 如不能使用信息集，则只能写死，采用下面的方式
 	@Override
 	public Content[] createContents(Object... params) {
 		Content[] contents = new Content[1];
 		Content jobGradeContent = new Content();
-		jobGradeContent.setContentName("Job Grade");
+		jobGradeContent.setContentName(ResHelper.getString("common","sealocal-000001"));
 		jobGradeContent.setColName("JOBGRADE");
-		jobGradeContent.setDescription("Job Grade");
+		jobGradeContent.setDescription(ResHelper.getString("common","sealocal-000001"));
 		jobGradeContent.setRefModelClass(nc.ui.om.ref.JobGradeRefModel2.class.getName());
 		contents[0]=jobGradeContent;
 		return contents;

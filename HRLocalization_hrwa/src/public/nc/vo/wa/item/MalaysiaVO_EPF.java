@@ -19,7 +19,7 @@ public class MalaysiaVO_EPF extends SuperVO implements Serializable {
 	private static final long serialVersionUID = -2469378086660630880L;
 	
 	
-	private String creator;
+
 	private String pk_cacu_data;
 	private String pk_epfgroup;
 	private UFBoolean my_isvoluntaryepf;
@@ -27,13 +27,7 @@ public class MalaysiaVO_EPF extends SuperVO implements Serializable {
 	private String pk_wa_class;
 	
 	
-	public String getCreator() {
-		return creator;
-	}
 
-	public void setCreator(String creator) {
-		this.creator = creator;
-	}
 
 	public String getPk_cacu_data() {
 		return pk_cacu_data;
@@ -81,7 +75,6 @@ public class MalaysiaVO_EPF extends SuperVO implements Serializable {
 	
 	public static String constructTableName() {
 		String tableName = " (select  " +
-				" a.creator creator, " +
 				" a.pk_cacu_data pk_cacu_data, " +
 				" def.pk_defdoc pk_epfgroup, " +
 				" c.my_isvoluntaryepf my_isvoluntaryepf, " +
