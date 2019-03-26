@@ -217,6 +217,7 @@ public final class DataIOconstant
 	public static String DATE = "1";// 日期
 	public static String PSNCOUNT = "2";// 人数
 	public static String ITEMSUM = "3";// 项目合计
+	public static String FIRSTLINECONTENT = "4";// 首行内容
 
 	public static final String DATAOUT = "dataout";
 	public static final String DATAIN = "datain";

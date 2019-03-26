@@ -437,7 +437,7 @@ public class TxtExporterForBank extends DefaultExporter
 			if (getIntfaceInfs()[getReadIndex()] != null)
 			{
 				HrIntfaceVO itfVO = (HrIntfaceVO) getIntfaceInfs()[getReadIndex()].getParentVO();
-				int value = itfVO.getIiftop();
+				int value = itfVO.getIiftop2();
 				return (value == 1) ? true : false;
 			}
 		}
@@ -654,6 +654,26 @@ public class TxtExporterForBank extends DefaultExporter
 
 		return sum.toString();
 	}
+	
+	// HR本地化：添加一个可以取一些公共字符串的东西
+	protected String getFirstLineContent(String[] tabAndCol) {
+		HrIntfaceVO itfVO = (HrIntfaceVO) getIntfaceInfs()[getReadIndex()].getParentVO();
+		ArrayList<HashMap<String, Object>> datas = getAppModel().getResults().get(itfVO.getPk_dataio_intface());
+		
+		String key = tabAndCol[0] + tabAndCol[1];
+		String result = null;
+		if (datas != null && datas.size() > 0) {
+			HashMap<String, Object> entry = datas.get(0);
+			if (entry.containsKey(key)) {
+				if (entry.get(key) != null) {
+					result = entry.get(key) == null ? null : entry.get(key).toString();
+				}
+			} else {
+				ExceptionUtils.wrappBusinessException("The first line content item key does not exist!");
+			}
+		}
+		return result;
+	}
 
 	// 根据格式来格式化日期
 	private String formatDate(UFDate date, String dateFormat)
@@ -735,6 +755,16 @@ public class TxtExporterForBank extends DefaultExporter
 						String itemSum = getItemSum(stArrayTabAndCol);
 						itemSum = getStringDigit4TopLine(itemSum, data_top[i], isNeedDot(), false);
 						topLine.append(itemSum);
+					}
+				}
+				else if (data_top[i].getVcontent().equals(DataIOconstant.FIRSTLINECONTENT))
+				{// 首行内容
+					if (!StringUtils.isBlank(itemSumTableAndCol))
+					{
+						String[] stArrayTabAndCol = getTblAndCol(itemSumTableAndCol);
+						String firstLineContent = getFirstLineContent(stArrayTabAndCol);
+						firstLineContent = getStringStr4TopLine(firstLineContent, data_top[i]);
+						topLine.append(firstLineContent);
 					}
 				}
 				// 处理单位代号

@@ -37,9 +37,12 @@ public class FormatItemVO extends SuperVO
     private java.lang.Integer dr = 0;
     private nc.vo.pub.lang.UFDateTime ts;
     
-    // HR本地化对银行报盘改动：添加折行字段，日期格式
+    // HR本地化对银行报盘改动：添加折行字段，日期格式 by Ethan Wu
     private java.lang.Integer inextline = 0;
     private java.lang.String dateformat;
+    
+    // HR本地化对银行报盘改动：添加假如为零跳过选项 by Ethan Wu 2019-03-18
+    private java.lang.Integer iskipifzero = 0;
     
     public static final String IFID = "ifid";
     public static final String PK_DATAINTFACE_B = "pk_dataintface_b";
@@ -58,8 +61,10 @@ public class FormatItemVO extends SuperVO
     public static final String IIFORDER = "iiforder";
     public static final String VFORMULASTR = "vformulastr";
     
-    // HR本地化对银行报盘改动：添加折行字段
+    // HR本地化对银行报盘改动：添加折行字段 by Ethan Wu
     public static final String INEXTLINE = "inextline";
+//    public static final String DATEFORMAT = "dateformat";
+//    public static final String ISKIPIFZERO = "iskipifzero";
     
     /**
      * <p>
@@ -481,6 +486,7 @@ public class FormatItemVO extends SuperVO
         this.vseparator = newVseparator;
     }
 
+    // 新增字段的getter和setter by Ethan Wu
     // HR本地化需求：折行字段的getter和setter start
 	public java.lang.Integer getInextline() {
 		return inextline;
@@ -501,5 +507,13 @@ public class FormatItemVO extends SuperVO
 	}
 	// HR本地化需求：日期格式的getter和setter end
 	
-	
+    // HR本地化需求：为零跳过的getter和setter start
+	public java.lang.Integer getIskipifzero() {
+		return iskipifzero;
+	}
+
+	public void setIskipifzero(java.lang.Integer iskipifzero) {
+		this.iskipifzero = iskipifzero;
+	}
+	// HR本地化需求：为零跳过的getter和setter end
 }

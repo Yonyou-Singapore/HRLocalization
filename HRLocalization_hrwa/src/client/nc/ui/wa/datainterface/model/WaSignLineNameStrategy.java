@@ -53,6 +53,7 @@ public class WaSignLineNameStrategy implements ModuleItemStrategy{
 		tmpitem.setIfldwidth(Integer.valueOf(20));
 		itms.add(tmpitem);
 		
+		// 本地化改动：添加汇总项和首行值 start
 		tmpitem = new DataIOItemVO();
 		tmpitem.setVname("Summary Item");
 		tmpitem.setPrimaryKey(DataIOconstant.ITEMSUM);
@@ -60,7 +61,15 @@ public class WaSignLineNameStrategy implements ModuleItemStrategy{
 		tmpitem.setIitemtype((Integer)FieldTypeEnum.DEC.value());
 		tmpitem.setIfldwidth(Integer.valueOf(20));
 		itms.add(tmpitem);
-
+		
+		tmpitem = new DataIOItemVO();
+		tmpitem.setVname("First Line Content");
+		tmpitem.setPrimaryKey(DataIOconstant.FIRSTLINECONTENT);
+		tmpitem.setIflddecimal(Integer.valueOf(0));
+		tmpitem.setIitemtype((Integer)FieldTypeEnum.STR.value());
+		tmpitem.setIfldwidth(Integer.valueOf(101));
+		itms.add(tmpitem);
+		// 本地化改动：添加汇总项和首行值 end
 
 		DataIOItemVO[] allitemstmp = new DataIOItemVO[itms.size()];
 		return itms.toArray(allitemstmp);
