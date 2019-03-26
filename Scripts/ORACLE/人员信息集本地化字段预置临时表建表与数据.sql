@@ -55,4 +55,7 @@ INSERT INTO hr_infoset_item_sealocal VALUES(N'MY', N'my_totalzakat', N'Total Zak
 INSERT INTO hr_infoset_item_sealocal VALUES(N'MY', N'my_totalpcb', N'Total PCB (previous employer)', NULL, NULL, NULL, NULL, NULL, 2, NULL, 28, 8, N'hrlocal-000032', N'6007psn', 'Y', 'N');
 INSERT INTO hr_infoset_item_sealocal VALUES(N'MY', N'my_isvoluntaryepf', N'Is Voluntary EPF', NULL, NULL, NULL, NULL, NULL, 4, NULL, 1, 0, N'hrlocal-000034', N'6007psn', 'Y', 'N');
 INSERT INTO hr_infoset_item_sealocal VALUES(N'MY', N'my_nepfrate_employee', N'EPF Rate (Employee)', NULL, NULL, NULL, NULL, NULL, 2, NULL, 28, 8, N'hrlocal-000035', N'6007psn', 'Y', 'N');
+insert into hr_infoset_item_sealocal (COUNTRY, ITEM_CODE, ITEM_NAME, ITEM_NAME2, ITEM_NAME3, ITEM_NAME4, ITEM_NAME5, ITEM_NAME6, DATA_TYPE, REF_MODEL_NAME, MAX_LENGTH, PRECISE, RESID, RESPATH, NULLABLE, UNIQUE_FLAG)
+values ('MY', 'my_openingdate', 'Openning Date', null, null, null, null, null, 2, null, 28, 8, 'hrlocal-000032', '6007psn', 'N', 'N');
+
 commit;
