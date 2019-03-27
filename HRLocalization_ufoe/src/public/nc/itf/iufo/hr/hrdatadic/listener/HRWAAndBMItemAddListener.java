@@ -29,7 +29,7 @@ import nc.vo.wa.item.WaItemVO;
  ***************************************************************************/
 
 public class HRWAAndBMItemAddListener implements IBusinessListener {
-	private BaseDAO baseDao;
+	private BaseDAO baseDao; 
 
 	/****************************************************************************
 	 * {@inheritDoc}<br>
