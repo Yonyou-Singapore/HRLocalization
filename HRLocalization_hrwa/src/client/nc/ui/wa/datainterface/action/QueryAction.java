@@ -223,17 +223,24 @@ public class QueryAction extends nc.ui.hr.uif2.action.QueryAction
 			for (int i=0; i<objs.size(); i++) {
 				DataInterfaceVo vo = new DataInterfaceVo(objs.get(i));
 				if (getModel().getContext().getNodeCode().equals(DataIOconstant.NODE_BANK)) {
+					boolean toSkip = false;
 					for (int k=0; items != null && k<items.length; k++) {
-						if (itemVOs[k].getIskipifzero().intValue() == 1 && (vo.getAttributeValue(items[k].getKey()) == null || new UFDouble((double) vo.getAttributeValue(items[k].getKey())).equals(UFDouble.ZERO_DBL) )) {
-							continue;
+						if (itemVOs[k].getIskipifzero().intValue() == 1 && (vo.getAttributeValue(items[k].getKey()) == null || ((UFDouble) vo.getAttributeValue(items[k].getKey())).equals(UFDouble.ZERO_DBL) )) {
+							toSkip = true;
 						}
 						
-						if ((Integer.valueOf(DataFromEnum.SINGLE.getEnumValue().getValue()).intValue() == itemVOs[k].getIsourcetype().intValue()) && items[k].getKey() != null && vos[i].getAttributeValue(items[k].getKey()) == null)
+						if ((Integer.valueOf(DataFromEnum.SINGLE.getEnumValue().getValue()).intValue() == itemVOs[k].getIsourcetype().intValue()) && items[k].getKey() != null && vo.getAttributeValue(items[k].getKey()) == null)
 						{
 							vo.setAttributeValue(items[k].getKey(),itemVOs[k].getVcontent());
 						}
+					}
+					if (toSkip) {
+						continue;
+					} else {
 						arrList.add(vo);
 					}
+				} else {
+					arrList.add(vo);
 				}
 				
 			}

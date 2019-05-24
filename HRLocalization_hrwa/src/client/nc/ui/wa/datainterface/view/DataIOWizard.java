@@ -135,6 +135,7 @@ public class DataIOWizard
 						// 之前系统只截取了UI发生变化的行，但是为了顺序正常工作，要把所有VO重新整理一遍
 						// 这边是首行
 						CircularlyAccessibleValueObject[] headLines = ioItemsPanel.getSignLinePanel().getBillListPanel().getBodyBillModel().getBodyValueVOs(IfsettopVO.class.getName());
+						CircularlyAccessibleValueObject[] changedHeadVOs = ioItemsPanel.getSignLinePanel().getBillListPanel().getBodyBillModel().getBodyValueChangeVOs(IfsettopVO.class.getName());
 						for (int i = 0; headLines != null && i < headLines.length; i++)
 						{
 							((IfsettopVO) headLines[i]).setIseq(i + 1);
@@ -148,6 +149,7 @@ public class DataIOWizard
 						
 						// 这边是尾行
 						CircularlyAccessibleValueObject[] tailLines = ioItemsPanel.getSignLinePanel2().getBillListPanel().getBodyBillModel().getBodyValueVOs(IfsettopVO.class.getName());
+						CircularlyAccessibleValueObject[] changedTailVOs = ioItemsPanel.getSignLinePanel2().getBillListPanel().getBodyBillModel().getBodyValueChangeVOs(IfsettopVO.class.getName());
 						for (int i = 0; tailLines != null && i < tailLines.length; i++) {
 							((IfsettopVO) tailLines[i]).setIseq(i + 1);
 							((IfsettopVO) tailLines[i]).setIifsum((Integer) BooleanEnum.NO.value());
@@ -164,6 +166,17 @@ public class DataIOWizard
 						}
 						for (CircularlyAccessibleValueObject obj : tailLines) {
 							lineVOs.add(obj);
+						}
+						// 处理删除VO的情况
+						for (int i = 0; changedHeadVOs != null && i < changedHeadVOs.length; i++) {
+							if (changedHeadVOs[i].getStatus() == VOStatus.DELETED) {
+								lineVOs.add(changedHeadVOs[i]);
+							}
+						}
+						for (int i = 0; changedTailVOs != null && i < changedTailVOs.length; i++) {
+							if (changedTailVOs[i].getStatus() == VOStatus.DELETED) {
+								lineVOs.add(changedTailVOs[i]);
+							}
 						}
 						aggVO.setTableVO(DataIOconstant.HR_IFSETTOP, lineVOs.toArray(new CircularlyAccessibleValueObject[0]));
 					}

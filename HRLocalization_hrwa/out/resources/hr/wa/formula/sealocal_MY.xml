@@ -8,8 +8,8 @@
       <defaultName>6001formula;sealocal-000002</defaultName>
       <hintMsgRes>6001formula;sealocal-000003</hintMsgRes>
       <inputSigRes>6001formula;sealocal-000004</inputSigRes>
-      <pattern>MalaysiaEPF\(\d,f_\d+,f_\d+,\w+\)</pattern>
-      <arguments>MalaysiaEPF({0},{1},{2},{3})</arguments>
+      <pattern>MalaysiaEPF\(\d,f_\d+,f_\d+,\w+,\d\)</pattern>
+      <arguments>MalaysiaEPF({0},{1},{2},{3},{4})</arguments>
        <parapanel>nc.ui.hr.func.WaParaAdjPanel</parapanel>
        <convertor>nc.ui.hr.func.WaParaPanel_jdConvertor</convertor>
       <group>Localization</group>
@@ -25,8 +25,8 @@
       <defaultName>6001formula;sealocal-000014</defaultName>
       <hintMsgRes>6001formula;sealocal-000015</hintMsgRes>
       <inputSigRes>6001formula;sealocal-000016</inputSigRes>
-      <pattern>MalaysiaEPFNormal\(\d,f_\d+,\w+\)</pattern>
-      <arguments>MalaysiaEPFNormal({0},{1},{2})</arguments>
+      <pattern>MalaysiaEPFNormal\(\d,f_\d+,\w+,\d\)</pattern>
+      <arguments>MalaysiaEPFNormal({0},{1},{2},{3})</arguments>
        <parapanel>nc.ui.hr.func.WaParaAdjPanel</parapanel>
        <convertor>nc.ui.hr.func.WaParaPanel_jdConvertor</convertor>
       <group>WA</group>
