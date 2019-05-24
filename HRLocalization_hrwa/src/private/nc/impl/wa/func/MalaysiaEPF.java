@@ -24,12 +24,13 @@ public class MalaysiaEPF extends AbstractPreExcutorFormulaParse {
 		String monthlySalary = arguments[1];
 		String bonus = arguments[2];
 		String epfGroup = arguments[3];
+		String bonusOver5K = arguments[4];
 		String sql = null;
 		
 		if (option.equals("0")) {	// Handle employee contribution
 			sql = getEmployeeContribution(monthlySalary, bonus,epfGroup);
 		} else if (option.equals("1")) { // Handle employer contribution
-			sql = getEmployerContribution(monthlySalary, bonus, epfGroup);
+			sql = getEmployerContribution(monthlySalary, bonus, epfGroup, bonusOver5K);
 		}
 		
 		fvo.setReplaceStr(sql);
@@ -47,9 +48,12 @@ public class MalaysiaEPF extends AbstractPreExcutorFormulaParse {
 	// Calculating the Employee EPF Contribution
 	private String getEmployeeContribution(String monthlySalary, String bonus, String epfGroup) {
 		StringBuffer sb = new StringBuffer();
-		sb.append(" (select ");
+		sb.append(" (select case ");
 		// Take into consideration of the voluntary contribution scenario
-		sb.append(" case when wa_cacu_data.cacu_value <> -1 then wa_cacu_data.cacu_value / 100 * upper ");
+		// 1. Total salary is within 20000
+		sb.append(" when wa_cacu_data.cacu_value <> -1 and (wa_data."+ monthlySalary + " + wa_data." + bonus + ") <= 20000 then wa_cacu_data.cacu_value / 100 * upper ");
+		// 2. Total salary exceeds 20000
+		sb.append(" when wa_cacu_data.cacu_value <> -1 then wa_cacu_data.cacu_value / 100 * (wa_data."+ monthlySalary + " + wa_data." + bonus + ") ");
 		// Group A, when monthly wage is over 20000, the employee contribution is wage * 11%
 		sb.append(" when wa_data." + monthlySalary + " + wa_data." + bonus + " > 20000 and sealocal_epf_rates.group_name = 'GROUP A' then (wa_data." 
 				+ monthlySalary + " + wa_data." + bonus + ") * 0.11 ");
@@ -74,15 +78,19 @@ public class MalaysiaEPF extends AbstractPreExcutorFormulaParse {
 	}
 	
 	// Calculating the Employer EPF 
-	private String getEmployerContribution(String monthlySalary, String bonus, String epfGroup) {
+	private String getEmployerContribution(String monthlySalary, String bonus, String epfGroup, String bonusOver5K) {
 		StringBuffer sb = new StringBuffer();
-		sb.append(" select ");
-		// Group A, when monthly wage is no more than 5000 and bonus + monthly wage is greater than 5000, contribution is wage * 13%
-		sb.append(" case when wa_data." + monthlySalary + " <= 5000 and wa_data." + monthlySalary + " + wa_data." + bonus 
+		sb.append(" (select case ");
+		if (bonusOver5K.equals("1")) {
+		// 2019-05-17 Elken项目暂时取消5000校验 by Ethan Wu start
+		//Group A, when monthly wage is no more than 5000 and bonus + monthly wage is greater than 5000, contribution is wage * 13%
+		sb.append(" when wa_data." + monthlySalary + " <= 5000 and wa_data." + monthlySalary + " + wa_data." + bonus 
 				+ " > 5000 and sealocal_epf_rates.group_name = 'GROUP A' then (wa_data." + monthlySalary + " + wa_data." + bonus + ") * 0.13 ");
 		// Group C, when monthly wage is no more than 5000 and bonus + monthly wage is greater than 5000, contribution is wage * 6.5%
 		sb.append(" when wa_data." + monthlySalary + " <= 5000 and " + monthlySalary + " + wa_data." + bonus 
 				+ " > 5000 and sealocal_epf_rates.group_name = 'GROUP C' then (wa_data." + monthlySalary + " + wa_data." + bonus + ") * 0.065 ");
+		// 2019-05-17 Elken项目暂时取消5000校验 by Ethan Wu end
+		}
 		// Group A, when monthly wage is over 20000, the employer contribution is wage * 12%
 		sb.append(" when wa_data." + monthlySalary + " + wa_data." + bonus + " > 20000 and sealocal_epf_rates.group_name = 'GROUP A' then (wa_data." 
 				+ monthlySalary + " + wa_data." + bonus + ") * 0.12 ");
@@ -100,7 +108,7 @@ public class MalaysiaEPF extends AbstractPreExcutorFormulaParse {
 		sb.append(" else employer_cont end employer_cont ");
 		sb.append(" from sealocal_epf_rates where wa_data." + monthlySalary + " + wa_data." + bonus + " >= lower and wa_data." 
 				+ monthlySalary + " + wa_data." + bonus + " <= upper ");
-		sb.append(" and group_name = " + epfGroup + " ");
+		sb.append(" and group_name = " + epfGroup + " )");
 		return sb.toString();
 	}
 	
