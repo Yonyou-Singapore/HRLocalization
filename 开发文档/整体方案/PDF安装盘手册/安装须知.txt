@@ -1,0 +1,21 @@
+1.此安装盘只用于新增hrrp模块
+2.安装时setup.bat(windows), setup.sh(linux)
+	2.1部署中间件，启服
+	2.2使用超级管理员升级数据库
+3.升级数据库成功后登陆系统管理员增补hrrp模块
+4.分配职责等等。。。
+5.配置本模块相关配置，如pdf配置需要指定pdf文件所在目录。指定目录为绝对路径，格式为C:nchome/pdf/..
+6.pdf配置文件中sql字段支持自定义sql，视图等等，灵活取数
+7.。。。
+
+需要注意的是2升级完之后执行语句 
+select count(*) from md_class m where m.defaulttablename like 'pdf%', 
+如果有数，表示升级成功，升级元数据成功
+如果查询为空，表示升级失败，需要手动升级。手动升级步骤为
+
+1.安装盘安装(可省略，第一步已完成)
+2.NCHOME\ncscript\hr\hrrp\L_0\dbcreate\ORACLE\00001
+NCHOME\ncscript\hr\hrrp\L_0\billtemplet\basicsetting\pub_billtemplet， 为脚本路径，执行。
+3.登录系统管理员升级元数据，元数据路径为NCHOME\modules\hrrp\METADATA\pdf， 需要复制到本地进行升级。
+4.使用系统管理员增补模块。
+其余步骤同上。

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding='gb2312'?>
+	<items docType="SDP_SCRIPT_ITEM">
+	<item>
+		<itemKey>0008</itemKey>
+		<itemName>PDF_FIELD</itemName>
+		<itemRule>PDF_FIELD</itemRule>
+		<sysField></sysField>
+		<corpField></corpField>
+		<grpField>format</grpField>
+		<fixedWhere>format='1001ZZ10000000000U6H'</fixedWhere>
+	</item>	
+</items>

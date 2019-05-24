@@ -3,7 +3,7 @@ package nc.impl.wa.paydata.precacu;
 /**
  * PCB Group 计税
  */
-import java.math.BigDecimal;
+import java.math.BigDecimal;  
 import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,6 +18,8 @@ import nc.bs.dao.BaseDAO;
 import nc.bs.dao.DAOException;
 import nc.bs.logging.Logger;
 import nc.bs.mw.sqltrans.TempTable;
+import nc.impl.wa.classitem.ClassitemDAO;
+import nc.impl.wa.func.SeaLocalFormulaUtil;
 import nc.impl.wa.paydata.caculate.AbstractFormulaExecutor;
 import nc.impl.wa.paydata.tax.IMalaysiaPCBTaxInfPreProcess;
 import nc.jdbc.framework.ConnectionFactory;
@@ -33,9 +35,11 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.pubapp.pattern.pub.SqlBuilder;
+import nc.vo.wa.classitem.WaClassItemVO;
 import nc.vo.wa.item.MalaysiaVO_PCB;
 import nc.vo.wa.item.MalaysiaVO_PCB_Rate;
 import nc.vo.wa.item.MalaysiaVO_PCB_para;
+import nc.vo.wa.item.UFDoubleScaleUtils;
 import nc.vo.wa.pub.WaLoginContext;
 
 public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implements
@@ -282,10 +286,12 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 		//K2
 		k2 = this.getK2(stableParas.get("TQ"),k, k1, kt, n);
 		//如果 K+k1>6000  K=6000, k1=0
-		if(UFDoubleUtils.isGreaterThan(UFDoubleUtils.add(k, k1), stableParas.get("TQ"))) {
-			Logger.error("===PCB===如果 K+k1>6000  K=6000, k1=0");
+		//如果K+K1+Kt>6000, K=6000, K, Kt=0, modify by weiningc 20190129 
+		if(UFDoubleUtils.isGreaterThan(UFDoubleUtils.add(k, k1, kt), stableParas.get("TQ"))) {
+			Logger.error("===PCB===如果 K+k1+kt>" + stableParas.get("TQ") + ",K=," + stableParas.get("TQ") + ",k1=0,kt=0");
 			k = stableParas.get("TQ");
 			k1 = UFDouble.ZERO_DBL;
+			kt = UFDouble.ZERO_DBL;
 		}
 		
 		//计算P
@@ -349,13 +355,13 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 		UFDouble totalyear_decu1 = UFDoubleUtils.add(UFDoubleUtils.sub(y, k), 
 				UFDoubleUtils.sub(y1, k1), 
 				UFDoubleUtils.multiply(UFDoubleUtils.sub(y2, k2), new UFDouble(n)),
-				UFDoubleUtils.sub(vo.getYt(), vo.getKt()));//第一次的时候yt和kt为0
+				UFDoubleUtils.sub(vo.getYt(), kt));//第一次的时候yt和kt为0
 		
 		UFDouble totoalyearaddP = UFDoubleUtils.sub(totalyear_decu1, P2).setScale(2, UFDouble.ROUND_FLOOR);;//额外收入重新算出的P
 		//第二次计算P(有additional 收入)
 		Logger.error("======PCB caclute additional P=====[∑(Y – K) + (Y1 – K1) + [(Y2 – K2) n] + (Yt – Kt)] – [D + S + DU + SU + QC + (∑LP + LP1)]");
 		Logger.error("======PCB=====[∑(" + y + "-" + k + ") + (" + y1 + "-" + k1 + ") + [(" + y2 + "-" + k2 + ")*" + n + "] + (" +
-				vo.getYt() + "-" + vo.getKt() + ")] - [" + d + "+" + s + "+" + du + "+" + su + "+" + qc + "+" + lp + "+" + vo.getLp1() + ")]");
+				vo.getYt() + "-" + kt + ")] - [" + d + "+" + s + "+" + du + "+" + su + "+" + qc + "+" + lp + "+" + vo.getLp1() + ")]");
 		Logger.error("======PCB=====" + totoalyearaddP);
 		
 		//重新找费率表
@@ -385,6 +391,17 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 		
 	}
 	
+	/**
+	 * 根据薪资项目属性重新取Y1
+	 * @param vo
+	 * @param y1
+	 * @return
+	 */
+	private UFDouble reFetchY1(MalaysiaVO_PCB vo, UFDouble y1) {
+		
+		return null;
+	}
+
 	private UFDouble getSvalue(MalaysiaVO_PCB vo, Map<String, UFDouble> stableParas) {
 		if("02".equals(my_pcbcategoryandgroup.get(vo.getPcbgroup()))) {
 			return stableParas.get("S");
@@ -433,24 +450,7 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 	 * @return
 	 */
 	public UFDouble getPrecisson(UFDouble value) {
-		BigDecimal bd = value.toBigDecimal();
-		if(bd == null || BigDecimal.ZERO.compareTo(bd) == 1){
-			return new UFDouble(BigDecimal.ZERO.setScale(2));
-		}
-		bd = bd.setScale(2,UFDouble.ROUND_FLOOR);
-		String strBd = bd.toString();
-		String strLastBit = strBd.substring(strBd.length()-1,strBd.length());
-		BigDecimal bdTemp = BigDecimal.ZERO;
-		bdTemp.setScale(2);
-		int iLastBit = Integer.valueOf(strLastBit);
-		if(iLastBit%5 != 0){
-			bdTemp = BigDecimal.valueOf(iLastBit).divide(BigDecimal.valueOf(100));
-			bdTemp = bdTemp.multiply(BigDecimal.valueOf(-1));
-			bdTemp = bdTemp.add(iLastBit>5 ? new BigDecimal("0.1") : new BigDecimal("0.05"));
-		}
-		bd = bd.add(bdTemp);
-		return new UFDouble(bd);
-
+		return UFDoubleScaleUtils.setScaleForSpecial2(value);
 	}
 
 	/**
@@ -539,16 +539,50 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 	private List<MalaysiaVO_PCB> queryPCBKnownItems(
 			MalaysiaTaxFormulaVO malaysiaFormulaVO, WaLoginContext context) {
 		List<MalaysiaVO_PCB> results = null;
-		String condition = " pk_wa_class = ? and creator = ?";
+		String condition = " pk_wa_class = ?";
 		SQLParameter parameter = new SQLParameter();
 		parameter.addParam(context.getPk_wa_class());
-		parameter.addParam(context.getWaLoginVO().getCreator());
 		try {
+			//y1 场景：薪资项目增加属性，如用于normal pcb计算和additional pcb计算，并且有增减属性,需要重新计算y1
+			this.setPcbTableNameForY1AndYt(context);
+			
 			results = (List<MalaysiaVO_PCB>) dao.retrieveByClause(MalaysiaVO_PCB.class, condition, parameter);
 		} catch (Exception e) {
 			ExceptionUtils.wrapException(e.getMessage(), e);
 		}
 		return results;
+	}
+
+	private void setPcbTableNameForY1AndYt(WaLoginContext context) {
+		ClassitemDAO dao = new ClassitemDAO();
+		try {
+			WaClassItemVO[] normalpcb = dao.queryItemInfoVO(context.getPk_org(),  context.getPk_wa_class()
+					, context.getCyear(), context.getCperiod(), " wa_classitem.my_ispcb_n = 'Y' ");
+			WaClassItemVO[] additionalpcb = dao.queryItemInfoVO(context.getPk_org(),  context.getPk_wa_class()
+					, context.getCyear(), context.getCperiod(), " wa_classitem.my_ispcb_a = 'Y' ");
+			String y1 = SeaLocalFormulaUtil.getConcatString(normalpcb);
+			String yt = SeaLocalFormulaUtil.getConcatString(additionalpcb);
+			//处理+号
+			y1 = this.removeOtherSymbol(y1, "y1");
+			yt = this.removeOtherSymbol(yt, "yt");
+			MalaysiaVO_PCB.setSumY1(y1);
+			MalaysiaVO_PCB.setSumYt(yt);
+		} catch (BusinessException e) {
+			ExceptionUtils.wrapException(e.getMessage(), e);
+		}
+		
+	}
+
+	private String removeOtherSymbol(String y1, String alias) {
+		if(y1 == null || "".equals(y1)) {
+			return null;
+		}
+		if(y1.trim().startsWith("+")) {
+			return "sum("+ y1.substring(y1.indexOf("+") + 1) + ")" + alias + ",";
+		}
+		
+		return "sum(" + y1 + ")" + alias + ",";
+		
 	}
 
 	@Override

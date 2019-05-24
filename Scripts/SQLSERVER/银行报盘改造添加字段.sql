@@ -10,3 +10,6 @@ alter table hr_dataintface_b add dateformat VARCHAR(101);
 -- 标志行VO添加折行选项并标记是首行还是尾行
 alter table hr_ifsettop add inextline INT NULL;
 alter table hr_ifsettop add itoplineposition INT NULL;
+
+-- 2019-03-18新添加字段
+alter table hr_dataintface_b add iskipifzero INT NULL;
