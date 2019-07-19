@@ -58,4 +58,5 @@ INSERT INTO hr_infoset_item_sealocal VALUES(N'MY', N'my_nepfrate_employee', N'EP
 insert into hr_infoset_item_sealocal (COUNTRY, ITEM_CODE, ITEM_NAME, ITEM_NAME2, ITEM_NAME3, ITEM_NAME4, ITEM_NAME5, ITEM_NAME6, DATA_TYPE, REF_MODEL_NAME, MAX_LENGTH, PRECISE, RESID, RESPATH, NULLABLE, UNIQUE_FLAG)
 values ('MY', 'my_openingdate', 'Openning Date', null, null, null, null, null, 2, null, 28, 8, 'hrlocal-000032', '6007psn', 'N', 'N');
 
+-- Insert Singapore Fields
 commit;
