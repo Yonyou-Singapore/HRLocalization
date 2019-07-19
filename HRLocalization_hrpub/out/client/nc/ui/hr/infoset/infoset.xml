@@ -150,12 +150,16 @@
 		<property name="actions">
 			<list>
 				<ref bean="addLocalizationFieldsMY" />
+				<ref bean="addLocalizationFieldsSG" />
 			</list>
 		</property>
   </bean>
   
   <!-- HR本地化开发需求：添加马来西亚预置字段 -->
   <bean id="addLocalizationFieldsMY" class="nc.ui.hr.infoset.action.AddMalaysiaFieldsAction">
+  	<property name="model" ref="infoSetModel" />
+  </bean>
+  <bean id="addLocalizationFieldsSG" class="nc.ui.hr.infoset.action.AddSingaporeFieldsAction">
   	<property name="model" ref="infoSetModel" />
   </bean>
 
