@@ -19,14 +19,19 @@ import nc.constant.hrrp.report.Constant.FORMAT;
 import nc.impl.pubapp.pattern.database.DataAccessUtils;
 import nc.itf.hrrp.service.IBaseService;
 import nc.itf.hrrp.service.IPdfOprator;
+import nc.vo.hrrp.pdfrep.HrrpFormat;
+import nc.vo.hrrp.pdfrep.ReadonlyEnum;
+import nc.vo.hrrp.pdfrep.TotalRangeEnum;
 import nc.vo.hrrp.report.AggReport;
 import nc.vo.hrrp.report.Field;
 import nc.vo.hrrp.report.Report;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pubapp.pattern.data.IRowSet;
+import nc.vo.pubapp.pattern.exception.ExceptionUtils;
 import nc.vo.pubapp.pattern.model.entity.bill.AbstractBill;
 
+import org.apache.commons.lang.StringUtils;
 import org.granite.lang.util.Strings;
 
 import com.itextpdf.text.Chunk;
@@ -48,7 +53,13 @@ import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 
 /**
- * <p>Title: PdfOprator</P> <p>Description: </p>
+ * <p>
+ * Title: PdfOprator
+ * </P>
+ * <p>
+ * Description:
+ * </p>
+ * 
  * @author
  * @version 1.0
  * @since 2014-10-11
@@ -70,18 +81,19 @@ public class PdfOprator implements IPdfOprator {
 		else if (strWhr.trim().length() < 1)
 			strWhr = "";
 		else if (!strWhr.toLowerCase().startsWith(" where"))
-			strWhr = " where " + strWhr;//.replace("'", "''");
+			strWhr = " where " + strWhr;// .replace("'", "''");
 		return strWhr;
 	}
 
 	/**
-	 * @param strWhr the strWhr to set
+	 * @param strWhr
+	 *            the strWhr to set
 	 */
 	public void setStrWhr(String strWhr) {
 		if (strWhr == null)
 			strWhr = "";
 		else if (!strWhr.toLowerCase().startsWith(" where"))
-			strWhr = " where " + strWhr;//.replace("'", "''");
+			strWhr = " where " + strWhr;// .replace("'", "''");
 		;
 		this.strWhr = strWhr;
 	}
@@ -94,11 +106,12 @@ public class PdfOprator implements IPdfOprator {
 	}
 
 	/**
-	 * @param frMap the frMap to set
+	 * @param frMap
+	 *            the frMap to set
 	 */
 	public void setFrMap(Map<String, Field> frMap) {
 		this.frMap = frMap;
-	} 
+	}
 
 	/**
 	 * @return the aggvo
@@ -108,7 +121,8 @@ public class PdfOprator implements IPdfOprator {
 	}
 
 	/**
-	 * @param aggvo the aggvo to set
+	 * @param aggvo
+	 *            the aggvo to set
 	 */
 	public void setAggvo(AggReport aggvo) {
 		this.aggvo = aggvo;
@@ -122,41 +136,50 @@ public class PdfOprator implements IPdfOprator {
 	}
 
 	/**
-	 * <p>闁哄倽顫夌涵鍫曞触瀹ュ泦鐐烘晬濮濆崓fBuild</p>
+	 * <p>
+	 * pdf build
+	 * </p>
+	 * 
 	 * @author
-	 * @throws IOException 
-	 * @throws DocumentException 
+	 * @throws IOException
+	 * @throws DocumentException
 	 * @throws Exception
 	 */
-	public byte[] pdfBuild() throws BusinessException, IOException, DocumentException {
+	public byte[] pdfBuild() throws BusinessException, IOException,
+			DocumentException {
 
 		if (aggvo == null)
-			throw new BusinessException("Config Error");// 闂佹澘绉堕悿鍡椻攦閹邦厽寮撻悹浣稿⒔閿燂拷?
+			throw new BusinessException("Config Error");// 
 		String tarPath = aggvo.getParentVO().getOutput();
 		String srcPath = aggvo.getParentVO().getInput();
 		try {
 			FileInputStream fi = new FileInputStream(new File(srcPath));
 			fi.close();
 		} catch (FileNotFoundException ex) {
-			throw new BusinessException("Read Input File Error:" + srcPath);// 婵☆垪鍓濆姗�寮崶锔筋偨闂佹寧鐟ㄩ敓锟�?
+			throw new BusinessException("Read Input File Error:" + srcPath);// 
 		}
-//		try {
-//			FileOutputStream fo = new FileOutputStream(new File(tarPath));
-//			fo.close();
-//		} catch (FileNotFoundException ex) {
-//			throw new BusinessException("Create Temp File Error:" + tarPath + ".pdf");// 濞戞挸鐡ㄥ鍌涙綇閹惧啿姣夐柡鍌氭矗濞嗐垽鏌ㄥ▎鎺濆殩
-//		}
+		// try {
+		// FileOutputStream fo = new FileOutputStream(new File(tarPath));
+		// fo.close();
+		// } catch (FileNotFoundException ex) {
+		// throw new BusinessException("Create Temp File Error:" + tarPath +
+		// ".pdf");// 
+		// }
 		Report rp = aggvo.getParentVO();
 		Field[] fields = (Field[]) aggvo.getChildren(Field.class);
 		BaseFont bfThailand = null;
 		try {
-			// bfChinese = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
-			bfThailand = BaseFont.createFont(getClass().getResource(Constant.REPCONSTANT.FONT_NAME).toString(),
-					BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+			// bfChinese = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H",
+			// BaseFont.NOT_EMBEDDED);
+			bfThailand = BaseFont.createFont(
+					getClass().getResource(Constant.REPCONSTANT.FONT_NAME)
+							.toString(), BaseFont.IDENTITY_H,
+					BaseFont.NOT_EMBEDDED);
 		} catch (Exception ex) {
 			try {
-				bfThailand = BaseFont.createFont(Constant.REPCONSTANT.FONT_SYS_PATH, BaseFont.IDENTITY_H,
-						BaseFont.NOT_EMBEDDED);
+				bfThailand = BaseFont.createFont(
+						Constant.REPCONSTANT.FONT_SYS_PATH,
+						BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 			} catch (Exception ex1) {
 			}
 		}
@@ -164,28 +187,29 @@ public class PdfOprator implements IPdfOprator {
 		for (Field field : fields) {
 			frMap.put(field.getName(), field);
 		}
-		List<String> lstTemp = new ArrayList<String>();// 濞戞挸鐡ㄥ鍌炲棘閸ワ附顐介柣鈺婂枛閿燂拷?
+		List<String> lstTemp = new ArrayList<String>();// 
 		if (rp.getProcname() != null && rp.getProcname().length() > 0)
-			lstData = getDatas(rp.getProcname() + " '" + getStrWhr() + "'");// 闁轰胶澧楀畵浣糕攦?
+			lstData = getDatas(rp.getProcname() + " '" + getStrWhr() + "'");//
 		// lstData=getDatasByProc(rp.getProcname(),strWhr);
 		else
-			lstData = getDatas(rp.getSql()+" "+getStrWhr());// 闁轰胶澧楀畵浣糕攦?
+			lstData = getDatas(rp.getSql() + " " + getStrWhr());// 
 		if (lstData == null) {
-			throw new BusinessException("Data Has ERROR:"+rp.getSql()+" "+getStrWhr());// 闁轰胶澧楀畵浣圭▔閾忓厜鏁�
+			throw new BusinessException("Data Has ERROR:" + rp.getSql() + " "
+					+ getStrWhr());//
 		}
-//		if("1".equals("1"))
-//		throw new BusinessException("debug");
+		// if("1".equals("1"))
+		// throw new BusinessException("debug");
 		if (lstData.size() < 1)
 			throw new BusinessException("Data Is Null");
 		rp.setPagenum(rp.getPagenum() == null ? 1 : rp.getPagenum());
-		pageTotal = (lstData.size() + rp.getPagenum() - 1) / rp.getPagenum();// 闁诡剙顭烽妴澶愬极?
+		pageTotal = (lstData.size() + rp.getPagenum() - 1) / rp.getPagenum();// 
 		int count = pageTotal;
-		//字体大小  fontsize add by weiningc start
-		float textSize = this.qryDefaultFontSize();
-		//end
-		if (Constant.BOOL.NO.equals(rp.getIspage()))// 濞戞挸绉撮崹搴€亜?
+		// 字体大小 fontsize add by weiningc start
+		float textSize = 0.0f;
+		// end
+		if (Constant.BOOL.NO.equals(rp.getIspage()))// 
 			count = 1;
-		for (int i = 0; i < count; i++) {// 闁轰胶澧楀畵浣广亜?
+		for (int i = 0; i < count; i++) {// 
 			FileInputStream in = new FileInputStream(new File(srcPath));
 			String strPath = tarPath + "_" + i + ".pdf";
 			FileOutputStream outTemp = new FileOutputStream(new File(strPath));
@@ -201,10 +225,11 @@ public class PdfOprator implements IPdfOprator {
 			}
 			for (String key : keys) {
 				if (frMap.get(key) != null) {
-					textSize = 8;
+//					textSize = 8;
 					try {
-						textSize = Float.parseFloat(frMap.get(key).getSplfmt());// PdfUtils.getDefaultTextSize(item);
+						textSize = Float.parseFloat(frMap.get(key).getFontsize().toString());// PdfUtils.getDefaultTextSize(item);
 					} catch (Exception exp) {
+						ExceptionUtils.wrappBusinessException(exp.getMessage());
 					}
 					if (bfThailand != null)
 						form.setFieldProperty(key, "textfont", bfThailand, null);
@@ -217,30 +242,34 @@ public class PdfOprator implements IPdfOprator {
 					// -------------------------------------------------------
 					//
 					int prepage = this.getPrepageno(i);
-					
-					String val = fillData(frMap.get(key), i, prepage, rp.getPagenum());// FILLDATA
 
-					if (Constant.BOOL.TEXT.equals(frMap.get(key).getReadonly())) {
-						List<FieldPosition> pos = form.getFieldPositions(key);
-						FieldPosition p = pos.get(0);
-						PdfContentByte content = pdfs.getOverContent(p.page);
-						Item item = form.getFieldItem(key);
-						ColumnText ct = new ColumnText(content);
-						Rectangle rect = p.position;
-						Font thaiFont = new Font(bfThailand, textSize);
-						Chunk ck = new Chunk(val, thaiFont);
-						ct.setSimpleColumn(new Phrase(ck), rect.getLeft(), rect.getBottom(), rect.getRight(),
-								rect.getTop(), 10,// 闂傜绐�
-								PdfUtils.getItemAlignment(item));
-						ct.go();
-						form.removeField(key);
-					} else {
-						form.setField(key, val);
-						if (Constant.BOOL.YES.equals(frMap.get(key).getReadonly()))// 閸欘亣顕�
-							form.setFieldProperty(key, "setfflags", PdfFormField.FF_READ_ONLY, null);
-						form.renameField(key, key + "_" + i);
-						form.removeField(key);
-					}
+					String val = fillData(frMap.get(key), i, prepage,
+							rp.getPagenum());// FILLDATA
+
+//					if (Constant.BOOL.TEXT.equals(frMap.get(key).getReadonly())) {
+//						List<FieldPosition> pos = form.getFieldPositions(key);
+//						FieldPosition p = pos.get(0);
+//						PdfContentByte content = pdfs.getOverContent(p.page);
+//						Item item = form.getFieldItem(key);
+//						ColumnText ct = new ColumnText(content);
+//						Rectangle rect = p.position;
+//						Font thaiFont = new Font(bfThailand, textSize);
+//						Chunk ck = new Chunk(val, thaiFont);
+//						ct.setSimpleColumn(new Phrase(ck), rect.getLeft(),
+//								rect.getBottom(), rect.getRight(),
+//								rect.getTop(), 10,// 
+//								PdfUtils.getItemAlignment(item));
+//						ct.go();
+//						form.removeField(key);
+//					} else {
+					form.setField(key, val);
+					if (ReadonlyEnum.ONLYREAD.value().equals(frMap.get(key)
+							.getReadonly()))// 
+						form.setFieldProperty(key, "setfflags",
+								PdfFormField.FF_READ_ONLY, null);
+					form.renameField(key, key + "_" + i);
+					form.removeField(key);
+//					}
 				}
 				// form.renameField(key, key + "_" + i);
 				// form.removeField(key);
@@ -262,18 +291,21 @@ public class PdfOprator implements IPdfOprator {
 			FileInputStream inTemp = new FileInputStream(fTemp);
 			PdfReader pdfr = new PdfReader(inTemp);
 			// 濡炪倝娼ч敓锟�?
-			rp.setCopypageno(rp.getCopypageno() == null ? 1 : rp.getCopypageno());
+			rp.setCopypageno(rp.getCopypageno() == null ? 1 : rp
+					.getCopypageno());
 			if (i == 1) {
 				for (int j = 1, cnt = rp.getCopypageno(); j < cnt; j++) {
 					pdfc.addPage(pdfc.getImportedPage(pdfr, j));
 				}
 			}
 			// 闁告帒妫濋妴澶愬礃閸涱収鍟�
-			PdfImportedPage ppage = pdfc.getImportedPage(pdfr, rp.getCopypageno());
+			PdfImportedPage ppage = pdfc.getImportedPage(pdfr,
+					rp.getCopypageno());
 			pdfc.addPage(ppage);
 			// 濡炪倝娼ч敓锟�?
 			if (i == lstTemp.size()) {
-				for (int j = rp.getCopypageno() + 1, cnt = pdfr.getNumberOfPages() + 1; j < cnt; j++) {
+				for (int j = rp.getCopypageno() + 1, cnt = pdfr
+						.getNumberOfPages() + 1; j < cnt; j++) {
 					pdfc.addPage(pdfc.getImportedPage(pdfr, j));
 				}
 			}
@@ -293,97 +325,130 @@ public class PdfOprator implements IPdfOprator {
 		fret.delete();
 		return bts;
 	}
-	
+
 	/**
 	 * 获取前一页
+	 * 
 	 * @param i
 	 * @return
 	 */
 	private int getPrepageno(int i) {
-		if(i == 0) {
+		if (i == 0) {
 			return -1;
 		}
-		return i-1;
+		return i - 1;
 	}
 
 	/**
-	 * 默认字体大小  font size
+	 * 默认字体大小 font size
+	 * 
 	 * @return
 	 */
 	private float qryDefaultFontSize() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("select def.memo from bd_defdoc def, bd_defdoclist defl");
-	    sb.append(" where def.pk_defdoclist = defl.pk_defdoclist and defl.code = 'pdfformat'");
-	    sb.append(" and def.code = '14' and def.enablestate = 2");
-	    DataAccessUtils util = new DataAccessUtils();
-	    IRowSet rowset = util.query(sb.toString());
-	    String frontsize = null;
-	    while(rowset.next()) {
-	    	frontsize = rowset.getString(0);
-	    }
-	    if(frontsize != null) {
-	    	return Float.valueOf(frontsize);
-	    }
-	    return 8L;//默认字体大小为8
+		sb.append(" where def.pk_defdoclist = defl.pk_defdoclist and defl.code = 'pdfformat'");
+		sb.append(" and def.code = '14' and def.enablestate = 2");
+		DataAccessUtils util = new DataAccessUtils();
+		IRowSet rowset = util.query(sb.toString());
+		String frontsize = null;
+		while (rowset.next()) {
+			frontsize = rowset.getString(0);
+		}
+		if (frontsize != null) {
+			return Float.valueOf(frontsize);
+		}
+		return 8L;// 默认字体大小为8
 	}
 
 	/**
-	 * <p>闁哄倽顫夌涵鍫曞触瀹ュ泦鐐烘晬濮濈垊llData</p>
+	 * <p>
+	 * 闁哄倽顫夌涵鍫曞触瀹ュ泦鐐烘晬濮濈垊llData
+	 * </p>
+	 * 
 	 * @param field
-	 * @param nowPage 当前页
-	 * @param prepage 前一页
-	 * @param pageCnt 总页数
+	 * @param nowPage
+	 *            当前页
+	 * @param prepage
+	 *            前一页
+	 * @param pageCnt
+	 *            总页数
 	 * @return
 	 * @author
 	 */
 	private String fillData(Field field, int nowPage, int prepage, int pageCnt) {
-		if (lstData == null || lstData.size() < 1)
+		if (lstData == null || lstData.size() < 1) {
 			return "";
-		if (FORMAT.NONE.equals(field.getFormat()))// 闁告鍠�?
+		}
+		// 原值
+		if (HrrpFormat.SRCVALUE.value().equals(field.getFormat())) {
 			return field.getDbfield();
-		if (FORMAT.PAGE_NOW.equals(field.getFormat()))// 鐟滅増鎸告晶鐘炽亜閻㈢數鍨�
-			return (nowPage + 1) + "";
-		if (FORMAT.TOTAL.equals(field.getFormat()))// 闁诡剙顭烽妴澶愬极?
-			return pageTotal + "";
+		}
+//		if (FORMAT.PAGE_NOW.equals(field.getFormat()))// 当前页
+//			return (nowPage + 1) + "";
+//		if (FORMAT.TOTAL.equals(field.getFormat()))// 总页数
+//			return pageTotal + "";
 		field.setDbrow(field.getDbrow() == null ? 1 : field.getDbrow());
+		
 		// -1表示当前页累计
-		if (field.getDbrow() == -1) {
+		if (TotalRangeEnum.CURRENTPAGE.value().equals(field.getTotaltype())) {
 			double sum = 0;
-			for (int i = nowPage * pageCnt; i < Math.min(lstData.size(), (nowPage + 1) * pageCnt); i++) {
+			for (int i = nowPage * pageCnt; i < Math.min(lstData.size(),
+					(nowPage + 1) * pageCnt); i++) {
 				try {
-					sum += Double.parseDouble(lstData.get(i).get(field.getDbfield()).toString());
+					sum += Double.parseDouble(lstData.get(i)
+							.get(field.getDbfield()).toString());
 				} catch (Exception e) {
 					return "0";
 				}
 			}
-			return getNumberFormat(field, sum + "");
+			String currentvalue = getNumberFormat(field, sum + "");
+			//空格分割
+			if (HrrpFormat.SPLITSPACE.value().equals(field.getFormat())) {
+				return this.getSplitSpace(currentvalue, field);
+			}
+			return currentvalue;
 		}
-		//-2表示前一页累计合计
-		if(field.getDbrow() == -2) {
-			if(prepage == -1) {//表示第一页
+		// -2表示前一页累计合计
+		if (TotalRangeEnum.BEFOREPAGE.value().equals(field.getTotaltype())) {
+			if (prepage == -1) {// 表示第一页
 				return "0";
 			}
 			double sum = 0;
-			for (int i = 0; i < Math.min(lstData.size(), (prepage + 1) * pageCnt); i++) {
+			for (int i = 0; i < Math.min(lstData.size(), (prepage + 1)
+					* pageCnt); i++) {
 				try {
-					sum += Double.parseDouble(lstData.get(i).get(field.getDbfield()).toString());
+					sum += Double.parseDouble(lstData.get(i)
+							.get(field.getDbfield()).toString());
 				} catch (Exception e) {
 					return "0";
 				}
 			}
-			return getNumberFormat(field, sum + "");
+			String currentvalue = getNumberFormat(field, sum + "");
+			//空格分割
+			if (HrrpFormat.SPLITSPACE.value().equals(field.getFormat())) {
+				return this.getSplitSpace(currentvalue, field);
+			}
+			return currentvalue;
 		}
-		//-3表示总累计
-		if(field.getDbrow() == -3) {
+		// -3表示总累计
+		if (TotalRangeEnum.TOTALPAGE.value().equals(field.getTotaltype())) {
 			double currsum = 0;
-			for (int i = 0; i < Math.min(lstData.size(), (nowPage + 1) * pageCnt); i++) {
+			for (int i = 0; i < Math.min(lstData.size(), (nowPage + 1)
+					* pageCnt); i++) {
 				try {
-					currsum += Double.parseDouble(lstData.get(i).get(field.getDbfield()).toString());
+					currsum += Double.parseDouble(lstData.get(i)
+							.get(field.getDbfield()).toString());
 				} catch (Exception e) {
 					return "0";
 				}
 			}
-			return getNumberFormat(field, currsum + "");
+			String currentvalue = getNumberFormat(field, currsum + "");
+			//空格分割
+			if (HrrpFormat.SPLITSPACE.value().equals(field.getFormat())) {
+				return this.getSplitSpace(currentvalue, field);
+			}
+			return currentvalue;
 		}
 		int row = 0;
 		row = field.getDbrow() + nowPage * pageCnt - 1;
@@ -391,8 +456,17 @@ public class PdfOprator implements IPdfOprator {
 		Object val;
 		if (row > lstData.size() - 1)
 			return "";
-		if (field.getDbfield() == null)
+		if (field.getDbfield() == null) {
+			//当前页
+			if(HrrpFormat.SPLIT_CURRENTPAGE.value().equals(field.getFormat())) {
+				return String.valueOf(nowPage+1);
+			}
+			//总页数
+			if(HrrpFormat.SPLIT_TOTALPAGE.value().equals(field.getFormat())) {
+				return String.valueOf(pageTotal);
+			}
 			return "";
+		}
 		val = lstData.get(row).get(field.getDbfield().toLowerCase());
 		if (val == null)
 			return "";
@@ -401,88 +475,95 @@ public class PdfOprator implements IPdfOprator {
 			return "";
 		if (field.getFormat() == null || "~".equals(field.getFormat()))
 			return valStr;
-		if (FORMAT.DATA.equals(field.getFormat()))// 闁告鍠愰弳鐔煎箲?
-		{
-			if (field.getDicnum() == null)
-				return valStr;
-			for (int i = 0, cnt = (field.getDicnum() + valStr.length()); i > cnt; i--) {
-				valStr = "0" + valStr;
-			}
+		boolean issplitblank = StringUtils.isBlank(field.getSplfmt()) ? true : false;
+		if(issplitblank) {
 			return valStr;
 		}
-
-		if (FORMAT.BOOL.equals(field.getFormat()))// 閻㈩垰鍟敓锟�?闁告瑯鍨堕崢銈夊触閸繂绀嬮悗娑欘殘椤戜線骞嬮鍕悼)
+		//格式分割
+		if (HrrpFormat.SPLITSEGMENT.value().equals(field.getFormat()))
 		{
-			if (field.getCutnum() != null) {
-				int cut = field.getCutnum();
-				valStr = valStr.substring(cut - 1, cut);
-			}
-			if ("yes".equals(valStr.toLowerCase()))
-				return "Yes";
-			else if ("no".equals(valStr.toLowerCase()))
-				return "No";
-			else
-				return "1".equals(valStr) ? "Yes" : "No";
+			return this.getSplitSegment(valStr, field);
+			
 		}
-		if (FORMAT.DATE.equals(field.getFormat()))// 闁哄啨鍎查敓锟�?
-		{
-			UFDate ufd;
-			try {
-				ufd = new UFDate(valStr);
-			} catch (Exception ex) {
-				return "";
-			}
-			int year = ufd.getYear();
-			// if(isDateAdd)
-			// year+=543;//娴ｆ稑宸�
-			return ufd.getDay() + "-" + ufd.getMonth() + "-" + year;
+		//空格分割
+		else if (HrrpFormat.SPLITSPACE.value().equals(field.getFormat())) {
+			return this.getSplitSpace(valStr, field);
 		}
-		if (FORMAT.SINGLE.equals(field.getFormat()))// 闁告娲栭悺褏绮�?
-		{
-			int cut = field.getCutnum();
-			if (valStr.length() < cut)
-				return "";
-			try {
-				return valStr.substring(cut - 1, cut);
-			} catch (Exception ex) {
-				return "";
-			}
+		//当前页
+		else if(HrrpFormat.SPLIT_CURRENTPAGE.value().equals(field.getFormat())) {
+			return String.valueOf(nowPage);
 		}
-		if (FORMAT.SPLITE.equals(field.getFormat()))// 闁告帒妫楅敓锟�?
-		{
-			String[] sps = field.getSplfmt().split(",");
-			char[] rts = valStr.toCharArray();
-			List<String> lst = new ArrayList<String>();
-			for (char c : rts) {
-				lst.add(c + "");
-			}
-			int i = 0;
-			for (String sp : sps) {
-				int ins = Integer.parseInt(sp) + i;
-				if (ins > lst.size())
-					break;
-				lst.add(ins, " ");
-				i++;
-
-			}
-			valStr = Strings.toString(lst).replaceAll(",", "");
-			return valStr;
-		}
-		if (FORMAT.SPACE.equals(field.getFormat())) {
-			if (valStr == null)
-				return "";
-			String[] vals = valStr.split(" ");
-			int cut = field.getCutnum();
-			if (cut == -1)
-				return vals[Math.max(vals.length - 1, 0)];
-			return vals[Math.max(cut - 1, 0)];
+		//总页数
+		else if(HrrpFormat.SPLIT_TOTALPAGE.value().equals(field.getFormat())) {
+			return String.valueOf(pageTotal);
 		}
 		return getNumberFormat(field, valStr);
 
 	}
+	
+
+	private String getSplitSpace(String valStr, Field field) {
+		if (valStr == null) {
+			return "";
+		}
+		StringBuffer sb = new StringBuffer();
+		// 空格分割
+		char[] charArraySpace = valStr.toCharArray();
+		
+		for (char arr : charArraySpace) {
+			sb.append(arr + this.getSpaces(field.getSplfmt()));
+		}
+		// String[] vals = valStr.split(" ");
+		// int cut = field.getCutnum();
+		// if (cut == -1)
+		// return vals[Math.max(vals.length - 1, 0)];
+		return sb.toString();
+	}
+
+	private String getSplitSegment(String valStr, Field field) {
+		if (valStr == null) {
+			return "";
+		}
+		StringBuffer sb = new StringBuffer();
+		// 空格分割
+		char[] charArraySpace = valStr.toCharArray();
+		for (char arr : charArraySpace) {
+			sb.append(arr + field.getSplfmt());
+		}
+		// String[] vals = valStr.split(" ");
+		// int cut = field.getCutnum();
+		// if (cut == -1)
+		// return vals[Math.max(vals.length - 1, 0)];
+		return sb.toString();
+	}
 
 	/**
-	 * <p>闁哄倽顫夌涵鍫曞触瀹ュ泦鐐烘晬濮濐摣tNumberFormat</p>
+	 * 空格间距
+	 * @param spaces
+	 * @return
+	 */
+	public static String getSpaces(String spaces) {
+		String text = "";
+		if(StringUtils.isBlank(spaces)) {
+			return text;
+		}
+		int spacenum = 0;
+		try{
+			spacenum = Integer.parseInt(spaces);
+		} catch (NumberFormatException e) {
+			ExceptionUtils.wrappBusinessException("当为空格分割的时候，分割格式必须是整数!");
+		}
+		for (int x = 0; x < spacenum; x++) {
+			text += " ";
+		}
+		return text;
+	}
+
+	/**
+	 * <p>
+	 * number format
+	 * </p>
+	 * 
 	 * @param field
 	 * @param val
 	 * @return
@@ -508,13 +589,13 @@ public class PdfOprator implements IPdfOprator {
 		if (fmt.endsWith("."))
 			fmt = fmt.substring(0, fmt.length() - 1);
 		DecimalFormat df = new DecimalFormat(sbDic.toString());
-		if (FORMAT.NUMBER.equals(field.getFormat())) {// 濞戞挶鍊撶紞鍛焊韫囨梹娈�
+		if (field.getDicnum() != null && field.getDicnum() == 2) {// 两位小数
 			return getNumFormat(df.format(dbval));
-		} else if (FORMAT.INT.equals(field.getFormat())) {// 闁轰礁鐡ㄩ敓锟�?
+		} else if (HrrpFormat.SPLIT_INTEGER.value().equals(field.getFormat())) {// 整数
 			return getNumFormat(new DecimalFormat("#0").format(dbval)) + "";
-		} else if (FORMAT.DECIMAL.equals(field.getFormat())) {// 閻忓繐绻戦弳鐔告媴?
+		} /*else if (FORMAT.DECIMAL.equals(field.getFormat())) {// 小数
 			return df.format(dbval).split("\\.")[1];
-		} else if (FORMAT.TAIWEN.equals(field.getFormat())) {// 婵炲澧楅敓锟�?
+		}*/ else if (FORMAT.TAIWEN.equals(field.getFormat())) {// 泰文
 			return getTaiwen(df.format(dbval));// getTaiwen("12345678.91")
 		} else
 			return dbval + "";
@@ -522,8 +603,12 @@ public class PdfOprator implements IPdfOprator {
 	}
 
 	/**
-	 * <p>閺傝纭堕崥宥囆為敍姝tNumFormat</p>
-	 * <p>閺傝纭堕幓蹇氬牚閿涙熬鎷�?閸欓攱鐗稿蹇撳瀻閸撳弶鏆熼敓锟�?/p>
+	 * <p>
+	 * 閺傝纭堕崥宥囆為敍姝tNumFormat
+	 * </p>
+	 * <p>
+	 * 閺傝纭堕幓蹇氬牚閿涙熬鎷�?閸欓攱鐗稿蹇撳瀻閸撳弶鏆熼敓锟�?/p>
+	 * 
 	 * @param val
 	 * @return
 	 */
@@ -545,7 +630,10 @@ public class PdfOprator implements IPdfOprator {
 	}
 
 	/**
-	 * <p>Taiwen</p>
+	 * <p>
+	 * Taiwen
+	 * </p>
+	 * 
 	 * @param val
 	 * @return
 	 * @author
@@ -583,13 +671,14 @@ public class PdfOprator implements IPdfOprator {
 			}
 		}
 		if (isInt)
-			strRet.append("鍠旀牏绠熷枖芯绗�");
+			strRet.append("泰文整数格式");
 		else
-			strRet.append("鍠旑�跨瑮鍠斾晶绔惧枖鍕︾");
+			strRet.append("泰文小数格式");
 		return strRet.toString();
 	}
 
-	private String getTC(char c, int wei, int len, boolean isPre0, boolean large0) {
+	private String getTC(char c, int wei, int len, boolean isPre0,
+			boolean large0) {
 		String strRet = "";
 		wei = wei % 10;
 		if (len > 1 && wei == 1)
@@ -712,7 +801,10 @@ public class PdfOprator implements IPdfOprator {
 	}
 
 	/**
-	 * <p>闁哄倽顫夌涵鍫曞触瀹ュ泦鐐烘晬濮濐摣tDatas</p>
+	 * <p>
+	 * 闁哄倽顫夌涵鍫曞触瀹ュ泦鐐烘晬濮濐摣tDatas
+	 * </p>
+	 * 
 	 * @param sqlStr
 	 * @return
 	 * @author
