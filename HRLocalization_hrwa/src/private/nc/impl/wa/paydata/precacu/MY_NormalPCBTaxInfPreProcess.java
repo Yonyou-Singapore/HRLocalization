@@ -3,12 +3,11 @@ package nc.impl.wa.paydata.precacu;
 /**
  * PCB Group 计税
  */
-import java.math.BigDecimal;  
-import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +52,7 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 	public MY_NormalPCBTaxInfPreProcess() {
 		if(dao == null) {
 			dao = new BaseDAO();
-			initData();
+			initData(); 
 		}
 	}
 	
@@ -76,11 +75,12 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 			sb = new SqlBuilder();
 			sb.append("pk_defdoclist", deflistpks.toArray(new String[0]));
 			sb.append(" and dr = 0");
-			NCObject[] defvos = MDPersistenceService.lookupPersistenceQueryService().queryBillOfNCObjectByCond(DefdocVO.class, sb.toString(), false);
-			if(defvos != null && defvos.length >0 
-					&& defvos[0].getContainmentObject() instanceof DefdocVO) {
-			for(NCObject defvo : defvos) {
-				my_pcbcategoryandgroup.put(((DefdocVO)defvo.getContainmentObject()).getPk_defdoc(), ((DefdocVO)defvo.getContainmentObject()).getCode());
+//			NCObject[] defvos = MDPersistenceService.lookupPersistenceQueryService().queryBillOfNCObjectByCond(DefdocVO.class, sb.toString(), false);
+			//使用BaseDAO查询自定义项
+			Collection<DefdocVO> defvos = new BaseDAO().retrieveByClause(DefdocVO.class, sb.toString()	);
+			if(defvos != null && defvos.size() >0) {
+				for(DefdocVO defvo : defvos) {
+					my_pcbcategoryandgroup.put(defvo.getPk_defdoc(), defvo.getCode());
 				}
 			}
 			} catch(Exception e) {
@@ -102,7 +102,8 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 
 	}
 	
-	/**这里需要创建临时表,批量更新
+	/**
+	 * 这里需要创建临时表,批量更新
 	 * 更新 wa_cacu_data
 	 * @param cacuOtherPCBItem
 	 * @throws BusinessException 
@@ -283,11 +284,11 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 			k = vo.getK();
 			lp = vo.getLp();
 		}
-		//K2
-		k2 = this.getK2(stableParas.get("TQ"),k, k1, kt, n);
+		//K2 第一次计算时kt为0
+		k2 = this.getK2(stableParas.get("TQ"),k, k1, UFDouble.ZERO_DBL, n);
 		//如果 K+k1>6000  K=6000, k1=0
 		//如果K+K1+Kt>6000, K=6000, K, Kt=0, modify by weiningc 20190129 
-		if(UFDoubleUtils.isGreaterThan(UFDoubleUtils.add(k, k1, kt), stableParas.get("TQ"))) {
+		if(UFDoubleUtils.isGreaterThan(UFDoubleUtils.add(k, k1, UFDouble.ZERO_DBL), stableParas.get("TQ"))) {
 			Logger.error("===PCB===如果 K+k1+kt>" + stableParas.get("TQ") + ",K=," + stableParas.get("TQ") + ",k1=0,kt=0");
 			k = stableParas.get("TQ");
 			k1 = UFDouble.ZERO_DBL;
@@ -329,9 +330,15 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 				UFDoubleUtils.add(z, x)).setScale(2, UFDouble.ROUND_FLOOR);
 		UFDouble mtd = UFDoubleUtils.div(tempmtd, new UFDouble(n + 1));
 		Logger.error("====PCB==== ([(P – M) R + B] – (Z + X))/n + 1");
-		Logger.error("====PCB====([(" + P + "-" + pabrange.getPcb_m() + ")*" + pabrange.getPcb_rate() + "+" + decucationclass + "] - ("
+		Logger.error("====PCB====([(" + P + "-" + pabrange.getPcb_m() + ")*" + UFDoubleUtils.div(pabrange.getPcb_rate(),new UFDouble(100)) + "+" + decucationclass + "] - ("
 				+ z + "+" + x + ")) / " + (n+1));
 		Logger.error("====PCB====MTD: " + mtd);
+		//如果mtd<10, 则为0 add by weiningc 20190516 start
+		if(UFDoubleUtils.isLessThan(mtd, new UFDouble(10))) {
+			mtd = UFDouble.ZERO_DBL;
+			Logger.error("====PCB====MTD少于10,置位零, MTD:" + UFDouble.ZERO_DBL);
+		}
+		//end
 		//计算Net MTD: MTD - zakat
 		UFDouble netmtd = UFDoubleUtils.sub(mtd, z);
 		if(UFDoubleUtils.isLessThan(netmtd, UFDouble.ZERO_DBL) && 
@@ -352,6 +359,17 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 		netmtd = netmtd.setScale(2, UFDouble.ROUND_FLOOR);
 		//计算additional remuneration : X + [Step [2.13] x (n + 1)]
 		UFDouble totalmonth_decu = UFDoubleUtils.add(x, UFDoubleUtils.multiply(mtd, new UFDouble(n+1)));
+		//K2 第二次计算额外收入时，Kt不为0
+		k2 = this.getK2(stableParas.get("TQ"),k, k1, kt, n); 
+		//如果 K+k1>6000  K=6000, k1=0 
+		//如果K+K1+Kt>6000, K=6000, K, Kt=0, modify by weiningc 20190129 
+		if(UFDoubleUtils.isGreaterThan(UFDoubleUtils.add(k, k1, UFDouble.ZERO_DBL), stableParas.get("TQ"))) {
+			Logger.error("===PCB===如果 K+k1+kt>" + stableParas.get("TQ") + ",K=," + stableParas.get("TQ") + ",k1=0,kt=0");
+			k = stableParas.get("TQ");
+			k1 = UFDouble.ZERO_DBL;
+			kt = UFDouble.ZERO_DBL;
+		}
+		
 		UFDouble totalyear_decu1 = UFDoubleUtils.add(UFDoubleUtils.sub(y, k), 
 				UFDoubleUtils.sub(y1, k1), 
 				UFDoubleUtils.multiply(UFDoubleUtils.sub(y2, k2), new UFDouble(n)),
@@ -374,10 +392,13 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 				UFDoubleUtils.div(range2.getPcb_rate(),new UFDouble(100))), decucationclass).setScale(2, UFDouble.ROUND_FLOOR);
 		UFDouble additonmtd = UFDoubleUtils.add(UFDoubleUtils.sub(tempmtd2, totalmonth_decu), z).setScale(2, UFDouble.ROUND_FLOOR);
 		if(UFDoubleUtils.isLessThan(additonmtd, new UFDouble(10))) {
+			Logger.error("====PCB====Additionl MTD:" + additonmtd);
+			//add by weininc 20190516 start
 			additonmtd = UFDouble.ZERO_DBL;
+			Logger.error("====PCB====Additionl MTD少于10,置位零, MTD:" + UFDouble.ZERO_DBL);
 		}
 		Logger.error("======PCB==additional mtd===Total tax for a year = (P – M) x R + B");
-		Logger.error("====PCB==additional mtd====([(" + totoalyearaddP + "-" + range2.getPcb_m() + ")*" + range2.getPcb_rate() + "+" + decucationclass + "]");
+		Logger.error("====PCB==additional mtd====([(" + totoalyearaddP + "-" + range2.getPcb_m() + ")*" + UFDoubleUtils.div(range2.getPcb_rate(),new UFDouble(100)) + "+" + decucationclass + "]");
 		Logger.error("Total tax for a year: " + tempmtd2);
 		Logger.error("Additional MTD=Step [3.3] - Step [3.1] + ZAKAT");
 		Logger.error(tempmtd2 + "-" + totalmonth_decu + " + " + z);
@@ -493,10 +514,13 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 	private UFDouble getK2(UFDouble qt, UFDouble k, UFDouble k1, UFDouble kt,
 			Integer n) {
 		UFDouble uf1 = UFDoubleUtils.div(UFDoubleUtils.sub(qt, UFDoubleUtils.add(k, k1, kt)), new UFDouble(n));
+		//如果uf1小于零， 则取零， 其它的取本身,这个值不能小于零
+		uf1 = UFDoubleUtils.isLessThan(uf1, UFDouble.ZERO_DBL) ? UFDouble.ZERO_DBL : uf1;
 		UFDouble uf2 = k1;
 		UFDouble k2 =  UFDoubleUtils.isGreaterThan(uf1, uf2) ? uf2 : uf1.setScale(2, UFDouble.ROUND_FLOOR);
 		//输出公式
-		Logger.error("K2:[[6000 – (∑K + K1 + Kt)] / n]");
+//		Logger.error("K2:[[6000 – (∑K + K1 + Kt)] / n]");
+		Logger.error("K2:[[" + qt + "– (∑K + K1 + Kt)] / n]");
 		Logger.error("[" + qt + "-" + "(" + k + "+" + k1 + "+" + kt + ") ]" + "/" + n);
 		Logger.error("K2: " + k2);
 		
