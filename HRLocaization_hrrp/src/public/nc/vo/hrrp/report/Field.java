@@ -58,6 +58,11 @@ public static final String SPLFMT="splfmt";
 *时间戳
 */
 public static final String TS="ts";
+
+public static final String TOTALTYPE = "totaltype";
+
+public static final String FONTSIZE = "fontsize";
+
 /** 
 * 获取截取字符
 *
@@ -274,8 +279,23 @@ public void setTs ( UFDateTime ts) {
 this.setAttributeValue( Field.TS,ts);
  } 
 
+public void setTotaltype(String totaltype) {
+	this.setAttributeValue(Field.TOTALTYPE, totaltype);
+}
 
-  @Override
+public void setFontsize(Integer fontsize) {
+	this.setAttributeValue(Field.FONTSIZE, fontsize);
+}
+
+public String getTotaltype() {
+	return (String)this.getAttributeValue( Field.TOTALTYPE);
+}
+
+public Integer getFontsize() {
+	return (Integer)this.getAttributeValue( Field.FONTSIZE);
+}
+
+@Override
   public IVOMeta getMetaData() {
     return VOMetaFactory.getInstance().getVOMeta("hrrp.Field");
   }
