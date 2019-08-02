@@ -328,7 +328,7 @@ public class DataIOQueryServiceImpl implements IDataIOQueryService
 			{
 				// Commented on 2018-11-27: Remove the restriction where employee bank must be the same as company's
 				HrIntfaceVO vo = (HrIntfaceVO) aggVOs[i].getParentVO();
-				cond = " t_bank.pk_banktype like '%%'";
+//				cond = " t_bank.pk_banktype like '%%'";
 				datas = queryWaDataByCondBank(context, sqlBuffer.toString(), cond);
 				// Added on 2018-11-27 by Ethan, to avoid null pointer.
 				if (datas != null || datas.size() > 0) {
