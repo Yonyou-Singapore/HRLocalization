@@ -482,9 +482,6 @@ public class TxtExporterForBank extends DefaultExporter
 			if (getIntfaceInfs()[getReadIndex()] != null)
 			{
 				ret = (IfsettopVO[]) getIntfaceInfs()[getReadIndex()].getTableVO(DataIOconstant.HR_IFSETTOP);
-				if (ret == null) {
-					return null;
-				}
 				ArrayList<IfsettopVO> temp = new ArrayList<IfsettopVO>(Arrays.asList(ret));
 				for (int i = temp.size() - 1; i >= 0; i--) {
 					if (temp.get(i).getItoplineposition().equals(toplinePosition)) {

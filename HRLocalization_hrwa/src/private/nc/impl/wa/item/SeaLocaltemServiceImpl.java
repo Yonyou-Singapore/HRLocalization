@@ -53,13 +53,14 @@ public class SeaLocaltemServiceImpl implements ISeaLocalItemManageService  {
 	}
 
 	@Override
-	public void saveBactchItemForSeaLocal(WaItemVO vo) throws BusinessException {
+	public void saveBactchItemForSeaLocal(WaItemVO vo, String countryitem) throws BusinessException {
 		//0.校验是否需要插入海外公共薪资项目.
-		if(!validateIsNeedInertSeaItem()) {
+		if(!validateIsNeedInertSeaItem(countryitem)) {
 			throw new BusinessException("Already exist sea local common salary item, can't create again.");
 		}
 		//1.查询映射VO
-		Collection<SeaLocalCommonItemVO> sealocals = dao.retrieveByClause(SeaLocalCommonItemVO.class, " 1=1 ", "itemkey asc");
+		Collection<SeaLocalCommonItemVO> sealocals = dao.
+				retrieveByClause(SeaLocalCommonItemVO.class, " 1=1 and item_code like '" + countryitem +"%'", "itemkey asc");
 		//2.构造插入的公共薪资项目
 		WaItemVO[] batchvos = this.constructBatchWaItemVOForInsert(sealocals, vo);
 		HrBatchService service = new HrBatchService("Waitem");
@@ -156,13 +157,14 @@ public class SeaLocaltemServiceImpl implements ISeaLocalItemManageService  {
 
 	/**
 	 * 是否需要插入海外公共薪资项目校验
+	 * @param countryitem 
 	 * @return
 	 */
-	private Boolean validateIsNeedInertSeaItem() {
+	private Boolean validateIsNeedInertSeaItem(String countryitem) {
 		SqlBuilder sb = new SqlBuilder();
 		sb.append("select 1 from wa_item where itemkey like ");
 		sb.append("'");
-		sb.append(SeaLocalCommonItemVO.SEALOCAL_FLAG);
+		sb.append(countryitem + "%");
 		sb.append("'");
 		try {
 			Object result = dao.executeQuery(sb.toString(), new ColumnProcessor());

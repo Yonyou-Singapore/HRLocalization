@@ -24,6 +24,8 @@ public class TotalRangeEnum extends MDEnum{
 public static final TotalRangeEnum CURRENTPAGE= MDEnum.valueOf(TotalRangeEnum.class, "-1");
 public static final TotalRangeEnum BEFOREPAGE= MDEnum.valueOf(TotalRangeEnum.class, "-2");
 public static final TotalRangeEnum TOTALPAGE= MDEnum.valueOf(TotalRangeEnum.class, "-3");
+public static final TotalRangeEnum TOTALNUMBERPAGE= MDEnum.valueOf(TotalRangeEnum.class, "-4");
+
 	
 
 } 

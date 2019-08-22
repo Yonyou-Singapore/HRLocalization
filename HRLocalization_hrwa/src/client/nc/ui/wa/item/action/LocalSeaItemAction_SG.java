@@ -10,6 +10,7 @@ import nc.bs.framework.common.NCLocator;
 import nc.funcnode.ui.action.INCAction;
 import nc.hr.utils.ResHelper;
 import nc.itf.hr.wa.ISeaLocalItemManageService;
+import nc.md.model.IEnumValue;
 import nc.ui.pub.beans.MessageDialog;
 import nc.ui.pub.beans.UIDialog;
 import nc.ui.uif2.NCAction;
@@ -23,21 +24,21 @@ import nc.vo.wa.localenum.CountryItemEnum;
  *
  */
 @SuppressWarnings("restriction")
-public class LocalSeaItemAction_MY extends NCAction{
+public class LocalSeaItemAction_SG extends NCAction{
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static final String MALAYSIA = "my";
+	private static final String SINGAPORE = "sg";
 	private AbstractAppModel model;
 	
-	public LocalSeaItemAction_MY() {
+	public LocalSeaItemAction_SG() {
 		super();
 		this.setBtnName(ResHelper.getString("SinaporeItem60",
-				"Sinaporeitem-002")/* @res "Malaysia" */);
-		putValue(INCAction.CODE, "MYFields");
-		putValue(Action.SHORT_DESCRIPTION, "Add System Preset Fields for Malaysia");
+				"Sinaporeitem-003")/* @res "Singapore" */);
+		putValue(INCAction.CODE, "SGFields");
+		putValue(Action.SHORT_DESCRIPTION, "Add System Preset Fields for Singapore");
 	}
 	
 	@Override
@@ -51,7 +52,7 @@ public class LocalSeaItemAction_MY extends NCAction{
 				"Confirm this selected cagegory?") == UIDialog.ID_OK;
 		if(selectedData != null && issure && issure_category) {
 			NCLocator.getInstance().lookup(ISeaLocalItemManageService.class)
-				.saveBactchItemForSeaLocal(selectedData, CountryItemEnum.getCode(MALAYSIA));
+				.saveBactchItemForSeaLocal(selectedData, CountryItemEnum.getCode(SINGAPORE));
 		}
 	}
 

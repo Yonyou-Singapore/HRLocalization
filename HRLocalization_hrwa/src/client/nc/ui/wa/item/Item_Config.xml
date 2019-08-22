@@ -71,7 +71,8 @@
 				<ref bean="displayAction" />
 				<ref bean="nullaction" />
 				<ref bean="PrintGroupListAction"/>
-				<ref bean="nullaction" />
+				<ref bean="nullaction"/>
+				<ref bean="AddCountryItemAction"/>
 			</list>
 		</property>
 	</bean>
@@ -169,6 +170,33 @@
 			</list>
 		</property>
 	</bean>
+	
+	<!-- 薪资项目按照国家添加组按钮 国家薪资项目 add by weiningc 20190731 start-->
+	<bean id="AddCountryItemAction" class="nc.funcnode.ui.action.MenuAction">
+		<property name="code" value="addcountryitem"></property> 
+		<property name="name">
+			<bean class="nc.ui.uif2.I18nFB">
+				<property name="resDir" value="SinaporeItem60" />
+				<property name="defaultValue" value="Country Item Setting" />
+				<property name="resId" value="Sinaporeitem-001" />
+			</bean>
+		</property>
+		<property name="actions">
+			<list>
+				<ref bean="localSeaItemAction_MY" />
+				<ref bean="nullaction" />
+				<ref bean="localSeaItemAction_SG" />
+			</list>
+		</property>
+	</bean>
+	<bean id="localSeaItemAction_MY" class="nc.ui.wa.item.action.LocalSeaItemAction_MY">
+		<property name="model" ref="ManageAppModel" />
+	</bean>
+	<bean id="localSeaItemAction_SG" class="nc.ui.wa.item.action.LocalSeaItemAction_SG">
+		<property name="model" ref="ManageAppModel" />
+	</bean>
+	<!-- end -->
+	
 	<!-- 列表打印 -->
 	<bean id="PrintGroupListAction" class="nc.funcnode.ui.action.GroupAction">
 		<property name="code" value="print"></property> 
@@ -238,26 +266,6 @@
 		</property>  
 	</bean>
 	
-	<!--增加按钮，批量预置公共薪资项目-->
-	<!-- <bean id="localizationFieldsMenuAction" class="nc.funcnode.ui.action.MenuAction">
-  	<property name="code" value="localFieldsGroup" />
-		<property name="name">
-			<bean class="nc.ui.uif2.I18nFB">
-				<property name="resDir" value="6007psn" />
-				<property name="resId" value="hrlocal-000000" />
-				<property name="defaultValue" value="Localization Fields" />
-			</bean>
-		</property>
-		<property name="actions">
-			<list>
-				<ref bean="localSeaItemFieldsActionMY" />
-			</list>
-		</property>
-    </bean> -->
-	<!-- <bean id="localSeaItemFieldsActionMY" class="nc.ui.wa.item.action.LocalSeaItemAction_MY">
-		<property name="model" ref="ManageAppModel"/>
-	</bean> -->
-	<!--  -->
 	
 	<bean id="saveAddAction" class="nc.ui.wa.item.action.SaveAddItemAction">	
 		<property name="model" ref="ManageAppModel"/>

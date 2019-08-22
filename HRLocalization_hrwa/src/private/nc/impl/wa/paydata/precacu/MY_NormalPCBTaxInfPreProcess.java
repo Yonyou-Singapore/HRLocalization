@@ -246,6 +246,7 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 		UFDouble k1 = vo.getK1();
 		UFDouble k2 = UFDouble.ZERO_DBL;
 		UFDouble lp = UFDouble.ZERO_DBL;
+		UFDouble currentzakat = vo.getCurrentzakat() == null ? UFDouble.ZERO_DBL : vo.getCurrentzakat();
 		//S
 		if(vo.getPcbgroup() != null) {
 			s = this.getSvalue(vo, stableParas);
@@ -340,7 +341,7 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 		}
 		//end
 		//计算Net MTD: MTD - zakat
-		UFDouble netmtd = UFDoubleUtils.sub(mtd, z);
+		UFDouble netmtd = UFDoubleUtils.sub(mtd, currentzakat);
 		if(UFDoubleUtils.isLessThan(netmtd, UFDouble.ZERO_DBL) && 
 				(UFDouble.ZERO_DBL.equals(vo.getYt()) || vo.getYt() == null)) {
 			wacacumap.put(vo.getPk_cacu_data(), this.getPrecisson(UFDouble.ZERO_DBL));
@@ -390,7 +391,8 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 		UFDouble tempmtd2 = UFDoubleUtils.add(UFDoubleUtils.multiply(
 				UFDoubleUtils.sub(totoalyearaddP,  range2.getPcb_m()), 
 				UFDoubleUtils.div(range2.getPcb_rate(),new UFDouble(100))), decucationclass).setScale(2, UFDouble.ROUND_FLOOR);
-		UFDouble additonmtd = UFDoubleUtils.add(UFDoubleUtils.sub(tempmtd2, totalmonth_decu), z).setScale(2, UFDouble.ROUND_FLOOR);
+		UFDouble additonmtd = UFDoubleUtils.add(UFDoubleUtils.sub(tempmtd2, totalmonth_decu), currentzakat).setScale(2, UFDouble.ROUND_FLOOR);
+		Logger.error("====PCB====currentzakat:" + currentzakat);
 		if(UFDoubleUtils.isLessThan(additonmtd, new UFDouble(10))) {
 			Logger.error("====PCB====Additionl MTD:" + additonmtd);
 			//add by weininc 20190516 start
@@ -400,12 +402,19 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 		Logger.error("======PCB==additional mtd===Total tax for a year = (P – M) x R + B");
 		Logger.error("====PCB==additional mtd====([(" + totoalyearaddP + "-" + range2.getPcb_m() + ")*" + UFDoubleUtils.div(range2.getPcb_rate(),new UFDouble(100)) + "+" + decucationclass + "]");
 		Logger.error("Total tax for a year: " + tempmtd2);
-		Logger.error("Additional MTD=Step [3.3] - Step [3.1] + ZAKAT");
-		Logger.error(tempmtd2 + "-" + totalmonth_decu + " + " + z);
+		Logger.error("Additional MTD=Step [3.3] - Step [3.1] + CURRENTZAKAT");
+		Logger.error(tempmtd2 + "-" + totalmonth_decu + " + " + currentzakat);
 		Logger.error(additonmtd);
 		
 		//last
 		UFDouble pcb = UFDoubleUtils.add(netmtd, additonmtd);
+		//扣减当前currentzakat
+		pcb = UFDoubleUtils.sub(pcb, currentzakat);
+		if(UFDoubleUtils.isLessThan(pcb, new UFDouble(UFDouble.ZERO_DBL))) {
+			pcb = UFDouble.ZERO_DBL;
+			Logger.error("===========PCB小于0，置位0==========" + " ,PCB: " + pcb);
+		} 
+		
 		Logger.error("===========最终PCB==========" + " ,PCB: " + pcb);
 		
 		wacacumap.put(vo.getPk_cacu_data(), this.getPrecisson(pcb));

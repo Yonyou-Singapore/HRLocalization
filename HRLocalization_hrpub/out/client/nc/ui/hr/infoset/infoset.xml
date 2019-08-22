@@ -150,6 +150,7 @@
 		<property name="actions">
 			<list>
 				<ref bean="addLocalizationFieldsMY" />
+				<ref bean="separatorAction" />
 				<ref bean="addLocalizationFieldsSG" />
 			</list>
 		</property>

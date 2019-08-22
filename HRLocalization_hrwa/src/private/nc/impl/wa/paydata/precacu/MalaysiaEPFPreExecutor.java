@@ -31,13 +31,13 @@ public class MalaysiaEPFPreExecutor extends AbstractFormulaExecutor {
 	@Override
 	public void excute(Object arguments, WaLoginContext context)
 			throws BusinessException {
-		System.out.println("Enter executor");
+//		System.out.println("Enter executor");
 		// Query necessary items from personnel information table
 		List<MalaysiaVO_EPF> result = this.queryEPFItems(context);
 		
 		this.updateCacudata(result);
 		// Prepare temporary table
-		System.out.println(result.toString());
+//		System.out.println(result.toString());
 	}
 	
 	@SuppressWarnings("unchecked")

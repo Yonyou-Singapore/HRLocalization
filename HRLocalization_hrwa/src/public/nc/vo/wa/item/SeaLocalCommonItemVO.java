@@ -7,67 +7,65 @@ public class SeaLocalCommonItemVO extends SuperVO {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final String SEALOCAL_FLAG = "sealocal%";
-
-	public static final String SEALOCAL_BS = "sealocal_bs";// Basic Salary
-	public static final String SEALOCAL_TA = "sealocal_ta";// Total Allowance
-	public static final String SEALOCAL_TB = "sealocal_tb";// Total bonus
-	public static final String SEALOCAL_NPL = "sealocal_npl";// NPL
-	public static final String SEALOCAL_OT = "sealocal_ot";// Total OT
-	public static final String SEALOCAL_EPF_ER = "sealocal_epf_er";// EPF(employer)
-	public static final String SEALOCAL_EPF_EE = "sealocal_epf_ee";// EPF(employee)
-	public static final String SEALOCAL_EIS_ER = "sealocal_eis_er";
-	public static final String SEALOCAL_EIS_EE = "sealocal_eis_ee";
-	public static final String SEALOCAL_SOCSO_EYER = "sealocal_socso_eyer";
-	public static final String SEALOCAL_SOCSO_EYEE = "sealocal_socso_eyee";
-	public static final String SEALOCAL_PCB = "sealocal_pcb";
-	public static final String SEALOCAL_ZAKAT = "sealocal_zakat";
-	public static final String SEALOCAL_PAY = "sealocal_pay";// NET PAY
-	public static final String SEALOCAL_Y1 = "sealocal_Y1";// Taxable
+	public static final String MY_BS = "my_bs";// Basic Salary
+	public static final String MY_TA = "my_ta";// Total Allowance
+	public static final String MY_TB = "my_tb";// Total bonus
+	public static final String MY_NPL = "my_npl";// NPL
+	public static final String MY_OT = "my_ot";// Total OT
+	public static final String MY_EPF_ER = "my_epf_er";// EPF(employer)
+	public static final String MY_EPF_EE = "my_epf_ee";// EPF(employee)
+	public static final String MY_EIS_ER = "my_eis_er";
+	public static final String MY_EIS_EE = "my_eis_ee";
+	public static final String MY_SOCSO_EYER = "my_socso_eyer";
+	public static final String MY_SOCSO_EYEE = "my_socso_eyee";
+	public static final String MY_PCB = "my_pcb";
+	public static final String MY_ZAKAT = "my_zakat";
+	public static final String MY_PAY = "my_pay";// NET PAY
+	public static final String MY_Y1 = "my_Y1";// Taxable
 															// Income(Normal)(Y1)
-	public static final String SEALOCAL_YT = "sealocal_Yt";// Taxable
+	public static final String MY_YT = "my_Yt";// Taxable
 															// Income(Additional)(Yt)
-	public static final String SEALOCAL_TI = "sealocal_ti";// Taxable Income
-	public static final String SEALOCAL_EPF_NR = "sealocal_epf_nr";// EPF(Normal
+	public static final String MY_TI = "my_ti";// Taxable Income
+	public static final String MY_EPF_NR = "my_epf_nr";// EPF(Normal
 																	// remuneration)
-	public static final String SEALOCAL_EPF_AR = "sealocal_epf_ar";// EPF(Addtional
+	public static final String MY_EPF_AR = "my_epf_ar";// EPF(Addtional
 																	// remuneration)
-	public static final String SEALOCAL_K1 = "sealocal_K1";// Normal
+	public static final String MY_K1 = "my_K1";// Normal
 															// remuneration¡¯s
 															// EPF and Other
 															// Approved
 															// Funds(K1)
-	public static final String SEALOCAL_KT = "sealocal_Kt";// Additional
+	public static final String MY_KT = "my_Kt";// Additional
 															// remuneration¡¯s
 															// EPF (Kt)
-	public static final String SEALOCAL_K1KT = "sealocal_K1Kt";// Taxable
+	public static final String MY_K1KT = "my_K1Kt";// Taxable
 																// Deduction(K1+Kt)
-	public static final String SEALOCAL_LP1 = "sealocal_LP1";// Taxable Option
+	public static final String MY_LP1 = "my_LP1";// Taxable Option
 																// Deduction(LP1)
-	public static final String SEALOCAL_CF_EPF_ER = "sealocal_cf_epf_er";// CF
+	public static final String MY_CF_EPF_ER = "my_cf_epf_er";// CF
 																			// EPF(employer)
-	public static final String SEALOCAL_CF_EPF_EE = "sealocal_cf_epf_ee";// CF
+	public static final String MY_CF_EPF_EE = "my_cf_epf_ee";// CF
 																			// EPF(employee)
-	public static final String SEALOCAL_CF_EIS_ER = "sealocal_cf_eis_er";
-	public static final String SEALOCAL_CF_EIS_EE = "sealocal_cf_eis_ee";
-	public static final String sealocal_cf_socso_er = "sealocal_cf_socso_er";
-	public static final String SEALOCAL_CF_SOCSO_EE = "sealocal_cf_socso_ee";
-	public static final String SEALOCAL_X = "sealocal_X";// CF PCB(X)
-	public static final String SEALOCAL_Y = "sealocal_Y";// CF Taxable Income(Y)
-	public static final String SEALOCAL_K = "sealocal_K";// CF Taxable
+	public static final String MY_CF_EIS_ER = "my_cf_eis_er";
+	public static final String MY_CF_EIS_EE = "my_cf_eis_ee";
+	public static final String my_cf_socso_er = "my_cf_socso_er";
+	public static final String MY_CF_SOCSO_EE = "my_cf_socso_ee";
+	public static final String MY_X = "my_X";// CF PCB(X)
+	public static final String MY_Y = "my_Y";// CF Taxable Income(Y)
+	public static final String MY_K = "my_K";// CF Taxable
 															// Deduction(K)
-	public static final String SEALOCAL_LP = "sealocal_LP";// CF Taxable Option
+	public static final String MY_LP = "my_LP";// CF Taxable Option
 															// Deduction(LP)
-	public static final String SEALOCAL_Z = "sealocal_Z";// CF ZAKAT(Z)
-	public static final String SEALOCAL_YTD_EPF_ER = "sealocal_ytd_epf_er";// YTD
+	public static final String MY_Z = "my_Z";// CF ZAKAT(Z)
+	public static final String MY_YTD_EPF_ER = "my_ytd_epf_er";// YTD
 																			// EPF(employer)
-	public static final String SEALOCAL_YTD_EPF_EE = "sealocal_ytd_epf_ee";// YTD
+	public static final String MY_YTD_EPF_EE = "my_ytd_epf_ee";// YTD
 																			// EPF(employee)
-	public static final String SEALOCAL_YTD_EIS_ER = "sealocal_ytd_eis_er";
-	public static final String SEALOCAL_YTD_EIS_EE = "sealocal_ytd_eis_ee";
-	public static final String SEALOCAL_YTD_SOCSO_ER = "sealocal_ytd_socso_er";
-	public static final String sealocal_ytd_socso_er = "sealocal_ytd_epf_ee";
-	public static final String SEALOCAL_YTD_PCB = "sealocal_ytd_pcb";// YTD PCB
+	public static final String MY_YTD_EIS_ER = "my_ytd_eis_er";
+	public static final String MY_YTD_EIS_EE = "my_ytd_eis_ee";
+	public static final String MY_YTD_SOCSO_ER = "my_ytd_socso_er";
+	public static final String my_ytd_socso_er = "my_ytd_epf_ee";
+	public static final String MY_YTD_PCB = "my_ytd_pcb";// YTD PCB
 
 	private String item_code;
 	private String item_name;

@@ -42,6 +42,7 @@ public class MalaysiaVO_PCB extends SuperVO implements Serializable{
 	private UFDouble k;
 	private UFDouble lp;
 	private UFDouble z;
+	private UFDouble currentzakat;
 	
 	private UFDouble children;
 	private UFDouble totalpayable;
@@ -145,6 +146,14 @@ public class MalaysiaVO_PCB extends SuperVO implements Serializable{
 
 	public void setZ(UFDouble z) {
 		this.z = z;
+	}
+	
+	public UFDouble getCurrentzakat() {
+		return currentzakat;
+	}
+
+	public void setCurrentzakat(UFDouble currentzakat) {
+		this.currentzakat = currentzakat;
 	}
 
 	public UFDouble getChildren() {
@@ -286,6 +295,7 @@ public class MalaysiaVO_PCB extends SuperVO implements Serializable{
 			       + " wa_data.f_531 k,"
 			       + " wa_data.f_532 lp,"
 			       + " wa_data.f_533 z,"
+			       + " wa_data.f_512 currentzakat,"
 			       + " p.my_numberofchildren children,"
 			       + " p.my_totalpayable totalpayable,"
 			       + " p.my_totalepf totalepf,"
@@ -300,7 +310,7 @@ public class MalaysiaVO_PCB extends SuperVO implements Serializable{
                    + " c.creator 			 creator,"
                    + " c.pk_cacu_data        pk_cacu_data,"
                    + " hiorg.begindate       begindate,"
-                   + " p.my_openingdata 	 openingdate"
+                   + " p.my_openingdate 	 openingdate"
 			  + " from wa_cacu_data c"
 			 + " inner join wa_data wa_data"
 			   + "  on c.pk_wa_data = wa_data.pk_wa_data"
@@ -311,10 +321,10 @@ public class MalaysiaVO_PCB extends SuperVO implements Serializable{
 			 + " left join hi_psnorg hiorg"
 			    + " on hiorg.pk_psndoc = p.pk_psndoc " 
 			 + " group by wa_data.f_519,wa_data.f_520 ,wa_data.f_522 ,wa_data.f_529 ,wa_data.f_530 ,"
-             + " wa_data.f_531 ,wa_data.f_532 ,wa_data.f_533 ,p.my_numberofchildren ,p.my_totalpayable ,p.my_totalepf ,"
+             + " wa_data.f_531 ,wa_data.f_532 ,wa_data.f_533,wa_data.f_512 ,p.my_numberofchildren ,p.my_totalpayable ,p.my_totalepf ,"
              + " p.my_taxexemption ,p.my_totalpcb ,p.my_isspouseworking ,p.my_isdisabled ,p.my_isspousedisabled ,"
              + " p.my_category ,p.my_pcbgroup ,wa_data.pk_wa_class ,c.creator ,"
-             + " c.pk_cacu_data ,hiorg.begindate ,p.my_openingdata) ";
+             + " c.pk_cacu_data ,hiorg.begindate ,p.my_openingdate) ";
 		return tablename;
 	}
 
