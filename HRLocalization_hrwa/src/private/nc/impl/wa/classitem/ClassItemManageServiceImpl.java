@@ -946,6 +946,10 @@ public class ClassItemManageServiceImpl implements IClassItemManageService, ICla
 			summingEPFAdditionalItems(items);
 			summingEISItems(items);
 			summingSOCSOItems(items);
+			//PCB 的Y1和Yt得合计到某个薪资项目上 add by weiningc 20190822 start
+			summingPCBNormalItems(items);
+			summingPCBAdditionalItems(items);
+			//end
 			
 			BaseDAO baseDAO = new BaseDAO();
 			baseDAO.updateVOArray(items, new String[] { WaClassItemVO.VFORMULA, WaClassItemVO.VFORMULASTR});
@@ -956,6 +960,66 @@ public class ClassItemManageServiceImpl implements IClassItemManageService, ICla
 		}
 	}
 	
+	private void summingPCBAdditionalItems(WaClassItemVO[] items) {
+		for (WaClassItemVO parent : items) {
+			if (parent.getCode().equals("sealocal_pcb_additional")) {
+				StringBuilder formulaSb = new StringBuilder();
+				StringBuilder formulaStrSb = new StringBuilder();
+				
+				// 清空vformula和vformulaStr字段
+				parent.setVformula(null);
+				parent.setVformulastr(null);
+				
+				// 遍历所有薪资发放项目，重构公式
+				for (WaClassItemVO child : items) {
+					if (child.getMy_ispcb_a() != null && child.getMy_ispcb_a().booleanValue()) {
+						if (child.getIproperty().intValue() == PropertyEnumVO.MINUS.toIntValue()) {
+							formulaSb.append(" - wa_data." + child.getItemkey());
+							formulaStrSb.append(" - wa_data." + child.getItemkey());
+						} else {
+							formulaSb.append(" + wa_data." + child.getItemkey());
+							formulaStrSb.append(" + wa_data." + child.getItemkey());
+						}
+					}
+				}
+				parent.setVformula(formulaSb.toString());
+				parent.setVformulastr(formulaStrSb.toString());
+			} else {
+				continue;
+			}
+		}
+	}
+
+	private void summingPCBNormalItems(WaClassItemVO[] items) {
+		for (WaClassItemVO parent : items) {
+			if (parent.getCode().equals("sealocal_pcb_normal")) {
+				StringBuilder formulaSb = new StringBuilder();
+				StringBuilder formulaStrSb = new StringBuilder();
+				
+				// 清空vformula和vformulaStr字段
+				parent.setVformula(null);
+				parent.setVformulastr(null);
+				
+				// 遍历所有薪资发放项目，重构公式
+				for (WaClassItemVO child : items) {
+					if (child.getMy_ispcb_n() != null && child.getMy_ispcb_n().booleanValue()) {
+						if (child.getIproperty().intValue() == PropertyEnumVO.MINUS.toIntValue()) {
+							formulaSb.append(" - wa_data." + child.getItemkey());
+							formulaStrSb.append(" - wa_data." + child.getItemkey());
+						} else {
+							formulaSb.append(" + wa_data." + child.getItemkey());
+							formulaStrSb.append(" + wa_data." + child.getItemkey());
+						}
+					}
+				}
+				parent.setVformula(formulaSb.toString());
+				parent.setVformulastr(formulaStrSb.toString());
+			} else {
+				continue;
+			}
+		}
+	}
+
 	private void summingEPFNormalItems(WaClassItemVO[] items) {
 		for (WaClassItemVO parent : items) {
 			if (parent.getCode().equals("sealocal_epf_normal_base")) {
