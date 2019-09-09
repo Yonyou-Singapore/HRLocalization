@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<linked-hash-map>	 
+  <entry>
+    <string>SingaporeCPF</string>
+    <function>
+      <displayName>SingaporeCPF</displayName>
+      <defaultName>6001formula;sealocal-000020</defaultName>
+      <hintMsgRes>6001formula;sealocal-000021</hintMsgRes>
+      <inputSigRes>6001formula;sealocal-000022</inputSigRes>
+      <pattern>SingaporeCPF\(\d,\d,f_\d+,f_\d+,f_\d+,f_\d+\)</pattern>
+      <arguments>SingaporeCPF({0},{1},{2},{3},{4},{5})</arguments>
+      <parapanel>nc.ui.hr.func.WaParaAdjPanel</parapanel>
+      <convertor>nc.ui.hr.func.WaParaPanel_jdConvertor</convertor>
+      <group>WA</group>
+      <process>nc.impl.wa.func.SingaporeCPF</process>
+      <productCode>UPP6013func</productCode>
+    </function>
+  </entry>
+ </linked-hash-map> 

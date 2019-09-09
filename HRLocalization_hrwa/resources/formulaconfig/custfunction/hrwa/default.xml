@@ -116,4 +116,11 @@
   <functionClass>nc.ui.wa.formular.func.MalaysiaPCB</functionClass>
 </formula>
 
+<formula>
+  <customType>9</customType>
+  <functionName>SingaporeCPF</functionName>
+  <functionClass>nc.ui.wa.formular.func.SingaporeCPF</functionClass>
+</formula>
+
+
 </formula-array>
