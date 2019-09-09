@@ -171,6 +171,7 @@ public class WaFunctionFactory implements IFunctionFactory {
 					fvo.getReturntype());
 			items.add(lastMonWorkDays);
 			
+			
 			// 本地化公式
 			// 马来西亚EPF
 			fvo = WaFormulaXmlHelper.getFunctionVO("MalaysiaEPF");
@@ -211,6 +212,15 @@ public class WaFunctionFactory implements IFunctionFactory {
 					fvo.getInputSig(), fvo.getHintMsg(),
 					fvo.getReturntype());
 			items.add(malaysiaPCB);
+			
+			//新加坡本地化HR公式
+			//CPF
+			fvo = WaFormulaXmlHelper.getFunctionVO("SingaporeCPF");
+			HRFormulaItem SingaporeCPF = new HRFormulaItem(
+					fvo.getDisplayName(), fvo.getDefaultName(),
+					fvo.getInputSig(), fvo.getHintMsg(),
+					fvo.getReturntype());
+			items.add(SingaporeCPF);
 			// }
 
 		} catch (Exception e) {

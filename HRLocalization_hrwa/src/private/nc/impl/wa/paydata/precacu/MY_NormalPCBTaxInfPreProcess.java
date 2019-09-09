@@ -391,7 +391,8 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 		UFDouble tempmtd2 = UFDoubleUtils.add(UFDoubleUtils.multiply(
 				UFDoubleUtils.sub(totoalyearaddP,  range2.getPcb_m()), 
 				UFDoubleUtils.div(range2.getPcb_rate(),new UFDouble(100))), decucationclass).setScale(2, UFDouble.ROUND_FLOOR);
-		UFDouble additonmtd = UFDoubleUtils.add(UFDoubleUtils.sub(tempmtd2, totalmonth_decu), currentzakat).setScale(2, UFDouble.ROUND_FLOOR);
+//		UFDouble additonmtd = UFDoubleUtils.add(UFDoubleUtils.sub(tempmtd2, totalmonth_decu), z).setScale(2, UFDouble.ROUND_FLOOR);
+		UFDouble additonmtd = UFDoubleUtils.sub(tempmtd2, UFDoubleUtils.add(totalmonth_decu, z)).setScale(2, UFDouble.ROUND_FLOOR);
 		Logger.error("====PCB====currentzakat:" + currentzakat);
 		if(UFDoubleUtils.isLessThan(additonmtd, new UFDouble(10))) {
 			Logger.error("====PCB====Additionl MTD:" + additonmtd);
@@ -402,8 +403,8 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 		Logger.error("======PCB==additional mtd===Total tax for a year = (P ¨C M) x R + B");
 		Logger.error("====PCB==additional mtd====([(" + totoalyearaddP + "-" + range2.getPcb_m() + ")*" + UFDoubleUtils.div(range2.getPcb_rate(),new UFDouble(100)) + "+" + decucationclass + "]");
 		Logger.error("Total tax for a year: " + tempmtd2);
-		Logger.error("Additional MTD=Step [3.3] - Step [3.1] + CURRENTZAKAT");
-		Logger.error(tempmtd2 + "-" + totalmonth_decu + " + " + currentzakat);
+		Logger.error("Additional MTD=Step [3.3] - (Step [3.1] + CFZAKAT)");
+		Logger.error(tempmtd2 + "-(" + totalmonth_decu + " + " + z + ")");
 		Logger.error(additonmtd);
 		
 		//last

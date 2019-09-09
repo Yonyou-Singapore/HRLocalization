@@ -41,8 +41,8 @@ public class MalaysiaVO_PCB extends SuperVO implements Serializable{
 	private UFDouble y;
 	private UFDouble k;
 	private UFDouble lp;
-	private UFDouble z;
-	private UFDouble currentzakat;
+	private UFDouble z;//这个是CF ZAKAT 本年度本期以前
+	private UFDouble currentzakat;//当前月份的zakat
 	
 	private UFDouble children;
 	private UFDouble totalpayable;
@@ -69,7 +69,7 @@ public class MalaysiaVO_PCB extends SuperVO implements Serializable{
 	private static String sumYt;//aditional pcb
 	
 	public UFDouble getY1() {
-		return y1;
+		return y1; 
 	}
 
 	public void setY1(UFDouble y1) {

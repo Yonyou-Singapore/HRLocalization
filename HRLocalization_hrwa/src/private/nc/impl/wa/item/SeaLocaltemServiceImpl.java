@@ -4,7 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import nc.bs.businessevent.BusinessEvent;
 import nc.bs.businessevent.EventDispatcher;
@@ -33,8 +35,6 @@ import nc.vo.wa.paydata.DataVO;
 import nc.vo.wa.pub.HRWACommonConstants;
 import nc.vo.wa.repay.ReDataVO;
 import nc.vo.wabm.util.WaCacheUtils;
-
-import org.apache.commons.lang.StringUtils;
 
 /**
  * 
@@ -130,7 +130,12 @@ public class SeaLocaltemServiceImpl implements ISeaLocalItemManageService  {
 	 */
 	private WaItemVO[] constructBatchWaItemVOForInsert(Collection<SeaLocalCommonItemVO> sealocals, WaItemVO waitemvo) {
 		List<WaItemVO> itemvoslist = new ArrayList<WaItemVO>();
+		//去重  以防自定义项的薪资项目重了, 如果真的重复薪资项目进入database删除起来很麻烦
+		Set<String> existitemkeys = new HashSet<String>();
 		for(SeaLocalCommonItemVO vo : sealocals) {
+			if(existitemkeys.contains(vo.getItemkey())) {
+				continue;
+			}
 			WaItemVO itemvo = new WaItemVO();
 			
 			//pk_org,pk_group, categoryid
@@ -150,6 +155,7 @@ public class SeaLocaltemServiceImpl implements ISeaLocalItemManageService  {
 			itemvo.setTotalitem(null);
 			
 			itemvoslist.add(itemvo);
+			existitemkeys.add(vo.getItemkey());
 			
 		}
 		return itemvoslist.toArray(new WaItemVO[0]);

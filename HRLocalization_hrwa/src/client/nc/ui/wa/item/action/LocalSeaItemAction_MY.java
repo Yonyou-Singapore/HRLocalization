@@ -34,8 +34,7 @@ public class LocalSeaItemAction_MY extends NCAction{
 	
 	public LocalSeaItemAction_MY() {
 		super();
-		this.setBtnName(ResHelper.getString("SinaporeItem60",
-				"Sinaporeitem-002")/* @res "Malaysia" */);
+		this.setBtnName("Malaysia items");
 		putValue(INCAction.CODE, "MYFields");
 		putValue(Action.SHORT_DESCRIPTION, "Add System Preset Fields for Malaysia");
 	}

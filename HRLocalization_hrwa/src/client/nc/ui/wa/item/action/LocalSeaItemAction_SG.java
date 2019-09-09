@@ -35,8 +35,7 @@ public class LocalSeaItemAction_SG extends NCAction{
 	
 	public LocalSeaItemAction_SG() {
 		super();
-		this.setBtnName(ResHelper.getString("SinaporeItem60",
-				"Sinaporeitem-003")/* @res "Singapore" */);
+		this.setBtnName("Singapore items");
 		putValue(INCAction.CODE, "SGFields");
 		putValue(Action.SHORT_DESCRIPTION, "Add System Preset Fields for Singapore");
 	}

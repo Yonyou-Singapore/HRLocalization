@@ -166,6 +166,9 @@ public class DataCaculateService extends AbstractCaculateService {
 				formaulas.add(waClassItemVO);
 				continue;
 			}
+			if(!"f_634".equals(waClassItemVO.getItemkey())) {
+				continue;
+			}
 			//end
 			doCaculateSingle(waClassItemVO);
 
