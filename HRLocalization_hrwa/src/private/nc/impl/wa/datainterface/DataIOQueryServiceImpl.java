@@ -407,10 +407,12 @@ public class DataIOQueryServiceImpl implements IDataIOQueryService
 		} 
 		
 		StringBuffer sb1 = new StringBuffer();
-		sb1.append(" select * from wa_data where checkflag = 'Y' and pk_psndoc in (" + psndocPks.toString() + ") and ");
+		//注释掉审核标志， 导出的时候会校验是否发放 add by weiningc 20190916 start
+		sb1.append(" select * from wa_data where  pk_psndoc in (" + psndocPks.toString() + ") and ");
 		sb1.append(" cperiod = '" + context.getCperiod() + "' and cyear = '" + context.getCyear());
 		sb1.append("' and pk_org = '" + context.getPk_org() + "' and pk_wa_class = '" + context.getClassPK() + "' ");
 		sb1.append(" and dr = 0");
+		//end
 		ArrayList<DataVO> wadataVOs = null;
 		try {
 			wadataVOs = (ArrayList<DataVO>) queryBS.executeQuery(sb1.toString(), new BeanListProcessor(DataVO.class));
