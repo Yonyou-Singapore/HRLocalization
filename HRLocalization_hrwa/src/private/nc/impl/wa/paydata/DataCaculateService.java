@@ -166,9 +166,15 @@ public class DataCaculateService extends AbstractCaculateService {
 				formaulas.add(waClassItemVO);
 				continue;
 			}
-			if(!"f_634".equals(waClassItemVO.getItemkey())) {
+			//TEST
+			if("f_709".equals(waClassItemVO.getItemkey())) {
+				formaulas.add(waClassItemVO);
 				continue;
 			}
+			//TEST END 不清楚这个是干什么? 注释掉
+//			if(!"f_634".equals(waClassItemVO.getItemkey())) {
+//				continue;
+//			}
 			//end
 			doCaculateSingle(waClassItemVO);
 
@@ -330,8 +336,8 @@ public class DataCaculateService extends AbstractCaculateService {
 			}
 			updateDigits(itemVO);
 		} catch (Exception e) {
-			Logger.error(e.getMessage(),e);
-			throw new BusinessException(ResHelper.getString("60130paydata","060130paydata0444")/*@res "薪资项目:"*/ + itemVO.getMultilangName() + ResHelper.getString("60130paydata","060130paydata0445")/*@res "公式设置错误。 请检查。"*/);
+//			Logger.error(e.getMessage(),e);
+			throw new BusinessException(ResHelper.getString("60130paydata","060130paydata0444")/*@res "薪资项目:"*/ + itemVO.getMultilangName() + ResHelper.getString("60130paydata","060130paydata0445")/*@res "公式设置错误。 请检查。"*/ + e.getMessage());
 		}
 	}
 

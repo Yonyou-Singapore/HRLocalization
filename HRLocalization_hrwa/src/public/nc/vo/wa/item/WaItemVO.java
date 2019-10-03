@@ -104,6 +104,16 @@ public class WaItemVO extends SuperVO
 	private nc.vo.pub.lang.UFBoolean my_isnplrate;
 	private nc.vo.pub.lang.UFBoolean my_isotrate;
 	
+	//添加新加坡本地化字段 20190918 start
+	// EPF字段修改 添加my_isepf_n, my_isepf_a, my_ispcb_n, my_ispcb_a
+	private nc.vo.pub.lang.UFBoolean sg_isow;
+	private nc.vo.pub.lang.UFBoolean sg_isaw;
+	private nc.vo.pub.lang.UFBoolean sg_inpe;
+	private String sg_iir8acat;
+	private String sg_iapp8acat;
+	private String sg_prorate;
+	//end
+	
 	// 添加汇总功能相关字段2018-11-08
 	private nc.vo.pub.lang.UFBoolean g_istotalitem;
 	private java.lang.String g_totaltoitem;
@@ -226,6 +236,14 @@ public class WaItemVO extends SuperVO
 	public static final String MY_ISPCB_A = "my_ispcb_a";
 	public static final String MY_ISNPLRATE = "my_isnplrate";
 	public static final String MY_ISOTRATE = "my_isotrate";
+	
+	//Singapore 字段
+	public static final String SG_ISOW = "sg_isow";
+	public static final String SG_ISAW = "sg_isaw";
+	public static final String SG_INPE = "sg_inpe";
+	public static final String SG_IIR8ACAT = "sg_iir8acat";
+	public static final String SG_IAPP8ACAT = "sg_iapp8acat";
+	public static final String G_IPRORATEMETHOD = "g_iproratemethod";
 	
 	// 添加
 	public static final String G_ISTOTALITEM = "g_istotalitem";
@@ -1579,6 +1597,49 @@ public class WaItemVO extends SuperVO
 	public void setMy_ispcb_a(nc.vo.pub.lang.UFBoolean my_ispcb_a) {
 		this.my_ispcb_a = my_ispcb_a;
 	}
+	
+	
+
+	public nc.vo.pub.lang.UFBoolean getSg_isow() {
+		return sg_isow;
+	}
+
+	public void setSg_isow(nc.vo.pub.lang.UFBoolean sg_isow) {
+		this.sg_isow = sg_isow;
+	}
+
+	public nc.vo.pub.lang.UFBoolean getSg_isaw() {
+		return sg_isaw;
+	}
+
+	public void setSg_isaw(nc.vo.pub.lang.UFBoolean sg_isaw) {
+		this.sg_isaw = sg_isaw;
+	}
+
+	public nc.vo.pub.lang.UFBoolean getSg_inpe() {
+		return sg_inpe;
+	}
+
+	public void setSg_inpe(nc.vo.pub.lang.UFBoolean sg_inpe) {
+		this.sg_inpe = sg_inpe;
+	}
+
+	public String getSg_iir8acat() {
+		return sg_iir8acat;
+	}
+
+	public void setSg_iir8acat(String sg_iir8acat) {
+		this.sg_iir8acat = sg_iir8acat;
+	}
+
+	public String getSg_iapp8acat() {
+		return sg_iapp8acat;
+	}
+
+	public void setSg_iapp8acat(String sg_iapp8acat) {
+		this.sg_iapp8acat = sg_iapp8acat;
+	}
+
 
 	// 汇总功能相关的getter和setter
 	public nc.vo.pub.lang.UFBoolean getG_istotalitem() {

@@ -4,6 +4,6 @@ import nc.ui.hr.formula.func.HrDigitFunc;
 
 public class SingaporeCPF extends HrDigitFunc {
 	public SingaporeCPF() {
-		this.numberOfParameters = 6;
+		this.numberOfParameters = 7;
 	}
 }

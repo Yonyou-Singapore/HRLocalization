@@ -1,7 +1,5 @@
 package nc.vo.wa.localenum;
 
-import nc.md.model.IEnumValue;
-import nc.md.model.impl.MDEnum;
 
 public enum CountryItemEnum{
 

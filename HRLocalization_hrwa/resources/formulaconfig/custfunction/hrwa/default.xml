@@ -122,5 +122,18 @@
   <functionClass>nc.ui.wa.formular.func.SingaporeCPF</functionClass>
 </formula>
 
+<!-- AW Ceilling -->
+<formula>
+  <customType>9</customType>
+  <functionName>SG_AWceilling</functionName>
+  <functionClass>nc.ui.wa.formular.func.SG_AWceilling</functionClass>
+</formula>
+<!-- Before current year -->
+<formula>
+  <customType>9</customType>
+  <functionName>BeforeCurrentYearSum</functionName>
+  <functionClass>nc.ui.wa.formular.func.BeforeCurrentYearSum</functionClass>
+</formula>
+
 
 </formula-array>

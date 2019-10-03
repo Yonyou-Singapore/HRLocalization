@@ -216,12 +216,26 @@ public class WaFunctionFactory implements IFunctionFactory {
 			//新加坡本地化HR公式
 			//CPF
 			fvo = WaFormulaXmlHelper.getFunctionVO("SingaporeCPF");
-			HRFormulaItem SingaporeCPF = new HRFormulaItem(
+			HRFormulaItem singaporeCPF = new HRFormulaItem(
 					fvo.getDisplayName(), fvo.getDefaultName(),
 					fvo.getInputSig(), fvo.getHintMsg(),
 					fvo.getReturntype());
-			items.add(SingaporeCPF);
+			items.add(singaporeCPF);
 			// }
+			//SG_AWceilling
+			fvo = WaFormulaXmlHelper.getFunctionVO("SG_AWceilling");
+			HRFormulaItem sg_AWceilling = new HRFormulaItem(
+					fvo.getDisplayName(), fvo.getDefaultName(),
+					fvo.getInputSig(), fvo.getHintMsg(),
+					fvo.getReturntype());
+			items.add(sg_AWceilling);
+			//BeforeCurrentYearSum
+			fvo = WaFormulaXmlHelper.getFunctionVO("BeforeCurrentYearSum");
+			HRFormulaItem beforeCurrentYearSum = new HRFormulaItem(
+					fvo.getDisplayName(), fvo.getDefaultName(),
+					fvo.getInputSig(), fvo.getHintMsg(),
+					fvo.getReturntype());
+			items.add(beforeCurrentYearSum);
 
 		} catch (Exception e) {
 			Logger.error(e.getMessage(), e);

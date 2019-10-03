@@ -1,15 +1,31 @@
 package nc.impl.wa.func;
 
-import nc.vo.hr.func.FunctionReplaceVO;
+import nc.impl.wa.paydata.precacu.sg.SingaporeFormulaVO;
+import nc.impl.wa.paydata.precacu.sg.SingaporeTaxPreExcutor;
+import nc.impl.wa.paydata.tax.SingaporePayRollFormulaUtil;
 import nc.vo.pub.BusinessException;
+import nc.vo.wa.paydata.IFormula;
+import nc.vo.wa.pub.WaLoginContext;
 
-public class SingaporeCPF extends AbstractWAFormulaParse {
+/**
+ * 
+ * @author weiningc
+ *
+ */
+public class SingaporeCPF extends AbstractPreExcutorFormulaParse {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Override
-	public FunctionReplaceVO getReplaceStr(String formula)
+	public void excute(Object formula, WaLoginContext context)
 			throws BusinessException {
-		// TODO Auto-generated method stub
-		return null;
+		SingaporeFormulaVO singaporetaxVO = SingaporePayRollFormulaUtil.translate2FormulaVO(getFunctionVO(),formula.toString());
+		IFormula excutor = new SingaporeTaxPreExcutor();
+		excutor.excute(singaporetaxVO, getContext());
 	}
+
 
 }

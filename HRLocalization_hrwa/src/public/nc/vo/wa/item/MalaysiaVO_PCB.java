@@ -63,6 +63,7 @@ public class MalaysiaVO_PCB extends SuperVO implements Serializable{
 	
 	private UFDate begindate;
 	private UFDate openingdate;
+	private UFDouble my_totalzakat;
 	
 	//sql  Ù–‘
 	private static String sumY1;//normal pcb
@@ -276,6 +277,14 @@ public class MalaysiaVO_PCB extends SuperVO implements Serializable{
 		this.openingdate = openingdate;
 	}
 
+	public UFDouble getMy_totalzakat() {
+		return my_totalzakat;
+	}
+
+	public void setMy_totalzakat(UFDouble my_totalzakat) {
+		this.my_totalzakat = my_totalzakat;
+	}
+
 	@Override
 	public String getTableName() {
 		return constructTableName();
@@ -310,7 +319,8 @@ public class MalaysiaVO_PCB extends SuperVO implements Serializable{
                    + " c.creator 			 creator,"
                    + " c.pk_cacu_data        pk_cacu_data,"
                    + " hiorg.begindate       begindate,"
-                   + " p.my_openingdate 	 openingdate"
+                   + " p.my_openingdate 	 openingdate,"
+                   + " p.my_totalzakat my_totalzakat"
 			  + " from wa_cacu_data c"
 			 + " inner join wa_data wa_data"
 			   + "  on c.pk_wa_data = wa_data.pk_wa_data"
@@ -324,7 +334,7 @@ public class MalaysiaVO_PCB extends SuperVO implements Serializable{
              + " wa_data.f_531 ,wa_data.f_532 ,wa_data.f_533,wa_data.f_512 ,p.my_numberofchildren ,p.my_totalpayable ,p.my_totalepf ,"
              + " p.my_taxexemption ,p.my_totalpcb ,p.my_isspouseworking ,p.my_isdisabled ,p.my_isspousedisabled ,"
              + " p.my_category ,p.my_pcbgroup ,wa_data.pk_wa_class ,c.creator ,"
-             + " c.pk_cacu_data ,hiorg.begindate ,p.my_openingdate) ";
+             + " c.pk_cacu_data ,hiorg.begindate ,p.my_openingdate, p.my_totalzakat) ";
 		return tablename;
 	}
 
