@@ -14,6 +14,7 @@ import java.util.Map;
 
 import nc.bs.dao.DAOException;
 import nc.bs.framework.common.NCLocator;
+import nc.bs.logging.Logger;
 import nc.constant.hrrp.report.Constant;
 import nc.constant.hrrp.report.Constant.FORMAT;
 import nc.impl.pubapp.pattern.database.DataAccessUtils;
@@ -391,7 +392,10 @@ public class PdfOprator implements IPdfOprator {
 		field.setDbrow(field.getDbrow() == null ? 1 : field.getDbrow());
 		
 		// -1琛ㄧず褰撳墠椤电疮璁�
+		//当前页累计
+		Logger.info("===TotalType===" + field.getTotaltype());
 		if (TotalRangeEnum.CURRENTPAGE.value().equals(field.getTotaltype())) {
+			Logger.info("===当前页累计===Field: " + field.getName() + " ,DBField: " + field.getDbfield());
 			double sum = 0;
 			for (int i = nowPage * pageCnt; i < Math.min(lstData.size(),
 					(nowPage + 1) * pageCnt); i++) {
@@ -402,6 +406,7 @@ public class PdfOprator implements IPdfOprator {
 					return "0";
 				}
 			}
+			Logger.info("===当前页累计=== SUM: " + sum + " ,Size: " + lstData.size() + " NowPage: " + nowPage);
 			String currentvalue = getNumberFormat(field, sum + "");
 			//绌烘牸鍒嗗壊
 			if (HrrpFormat.SPLITSPACE.value().equals(field.getFormat())) {

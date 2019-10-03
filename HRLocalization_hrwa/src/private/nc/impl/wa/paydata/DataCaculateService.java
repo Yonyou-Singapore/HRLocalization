@@ -158,19 +158,19 @@ public class DataCaculateService extends AbstractCaculateService {
 
 		List<WaClassItemVO> formaulas = new ArrayList<WaClassItemVO>();
 		for (WaClassItemVO waClassItemVO : classItemVOs) {
-			//PCB 函数放在最后计算 add by weiningc 20190128 start
-			if((waClassItemVO.getIfromflag() != null && 
-					waClassItemVO.getIfromflag() == 0 && 
-					waClassItemVO.getVformulastr() != null &&
-					waClassItemVO.getVformulastr().indexOf("MalaysiaPCB") > 0) || UFBoolean.TRUE.equals(waClassItemVO.getIssysformula())) {
-				formaulas.add(waClassItemVO);
-				continue;
-			}
+//			//PCB 函数放在最后计算 add by weiningc 20190128 start
+//			if((waClassItemVO.getIfromflag() != null && 
+//					waClassItemVO.getIfromflag() == 0 && 
+//					waClassItemVO.getVformulastr() != null &&
+//					waClassItemVO.getVformulastr().indexOf("MalaysiaPCB") > 0) || UFBoolean.TRUE.equals(waClassItemVO.getIssysformula())) {
+//				formaulas.add(waClassItemVO);
+//				continue;
+//			}
 			//TEST
-			if("f_709".equals(waClassItemVO.getItemkey())) {
-				formaulas.add(waClassItemVO);
-				continue;
-			}
+//			if("f_709".equals(waClassItemVO.getItemkey())) {
+//				formaulas.add(waClassItemVO);
+//				continue;
+//			}
 			//TEST END 不清楚这个是干什么? 注释掉
 //			if(!"f_634".equals(waClassItemVO.getItemkey())) {
 //				continue;
@@ -186,24 +186,24 @@ public class DataCaculateService extends AbstractCaculateService {
 
 		}
 		//最后再计算PCB相关函数,但是需要再系统函数之前计算PCB add by weiningc 20190128 start 重新排序
-		if(formaulas.size() > 0) {
-			Collections.sort(formaulas,new Comparator<WaClassItemVO>(){
-	            public int compare(WaClassItemVO arg0, WaClassItemVO arg1) {
-	                return arg0.getIssysformula().compareTo(arg1.getIssysformula());
-	            }
-	        });
-			//end
-			
-			for(WaClassItemVO waClassItemVO : formaulas) {
-				doCaculateSingle(waClassItemVO);
-
-				// 特殊人员数据调整
-				updateSepecalItem(waClassItemVO);
-
-				// 对于代缴税特殊处理f2扣款合计
-				updateF2(waClassItemVO);
-			}
-		}
+//		if(formaulas.size() > 0) {
+//			Collections.sort(formaulas,new Comparator<WaClassItemVO>(){
+//	            public int compare(WaClassItemVO arg0, WaClassItemVO arg1) {
+//	                return arg0.getIssysformula().compareTo(arg1.getIssysformula());
+//	            }
+//	        });
+//			//end
+//			
+//			for(WaClassItemVO waClassItemVO : formaulas) {
+//				doCaculateSingle(waClassItemVO);
+//
+//				// 特殊人员数据调整
+//				updateSepecalItem(waClassItemVO);
+//
+//				// 对于代缴税特殊处理f2扣款合计
+//				updateF2(waClassItemVO);
+//			}
+//		}
 		//end
 
 	}

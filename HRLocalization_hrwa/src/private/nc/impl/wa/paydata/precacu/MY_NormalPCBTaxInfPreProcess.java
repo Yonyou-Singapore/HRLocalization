@@ -312,14 +312,12 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 		MalaysiaVO_PCB_Rate pabrange = this.matchPcbRateAndRange(P, raterange, vo);
 		//MTD= ([(P – M) R + B] – (Z + X))/n + 1
 		//计算Z,X
-		UFDouble z = UFDouble.ZERO_DBL;
-		UFDouble x = UFDouble.ZERO_DBL;
+		UFDouble z = vo.getZ() == null ? UFDouble.ZERO_DBL : vo.getZ();
+		UFDouble x = vo.getX() == null ? UFDouble.ZERO_DBL : vo.getX();
+		UFDouble mytotalzakat = vo.getMy_totalzakat() == null ? UFDouble.ZERO_DBL : vo.getMy_totalzakat();
 		if(iscurrenroll || isopenningdata) {
-			z = vo.getZ();
-			x = UFDoubleUtils.add(vo.getX(), vo.getTotalpcb());
-		} else {
-			z = vo.getZ();
-			x = vo.getX();
+			z = UFDoubleUtils.add(z, mytotalzakat);
+			x = UFDoubleUtils.add(x, vo.getTotalpcb());
 		}
 		//扣税类别
 		UFDouble decucationclass = this.getDeductionClass(vo, pabrange);
@@ -342,13 +340,14 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 		//end
 		//计算Net MTD: MTD - zakat
 		UFDouble netmtd = UFDoubleUtils.sub(mtd, currentzakat);
+		Logger.error("====PCB====netMTD=MTD-currentzakat = " + mtd + "-" + currentzakat);
 		if(UFDoubleUtils.isLessThan(netmtd, UFDouble.ZERO_DBL) && 
 				(UFDouble.ZERO_DBL.equals(vo.getYt()) || vo.getYt() == null)) {
 			wacacumap.put(vo.getPk_cacu_data(), this.getPrecisson(UFDouble.ZERO_DBL));
 			return;
 		} else if(UFDoubleUtils.isLessThan(netmtd, UFDouble.ZERO_DBL) &&
 				UFDoubleUtils.isGreaterThan(vo.getYt(), UFDouble.ZERO_DBL)) {
-			netmtd = mtd;
+//			netmtd = mtd;  这里如果小于零，不处理,继续算法
 		} else if(!UFDoubleUtils.isLessThan(netmtd, UFDouble.ZERO_DBL) && !UFDoubleUtils.isGreaterThan(vo.getYt(), UFDouble.ZERO_DBL)) {
 			wacacumap.put(vo.getPk_cacu_data(), this.getPrecisson(netmtd));
 			Logger.error("PCB==========" + " ,最终的netMTD: " + this.getPrecisson(netmtd) + " ,Z:" + z);
@@ -409,8 +408,8 @@ public class MY_NormalPCBTaxInfPreProcess extends AbstractFormulaExecutor implem
 		
 		//last
 		UFDouble pcb = UFDoubleUtils.add(netmtd, additonmtd);
-		//扣减当前currentzakat
-		pcb = UFDoubleUtils.sub(pcb, currentzakat);
+		//扣减当前currentzakat net MTD已经减过当月zakat， 这里不再减.
+//		pcb = UFDoubleUtils.sub(pcb, currentzakat);
 		if(UFDoubleUtils.isLessThan(pcb, new UFDouble(UFDouble.ZERO_DBL))) {
 			pcb = UFDouble.ZERO_DBL;
 			Logger.error("===========PCB小于0，置位0==========" + " ,PCB: " + pcb);

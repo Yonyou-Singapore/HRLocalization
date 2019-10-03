@@ -101,7 +101,30 @@ public class PdfDownloadForMalaysiaAction extends BaseAction {
 		}
 		return pcbcon.toString();
 	}
+	
+	@Action(method = "POST")
+	public void exportEaformForMYPdf() throws Exception {
+		String reportName = "EA Form(MALAY)";
+		this.response.setContentType("application/pdf");
+		this.response.addHeader("Content-Disposition", "attachment;filename="
+				+ reportName + ".pdf");
+		try {
+			OutputStream stream = this.response.getOutputStream();
+			IContext context = RepSessionProxy.getCurrentSession()
+					.getCurrentContext();
+			SWChartContext chartContext = new SWChartContext((Context) context);
+			String condition = this.buildEpfQryCond(chartContext);
+			outputPcbPdf(stream, condition, reportName);
+			stream.flush();
+		} catch (Exception e) {
+			Logger.error(
+					NCLangRes4VoTransl.getNCLangRes().getStrByID("1413003_0",
+							"01413003-0392"), e);
 
+			throw e;
+		}
+	}
+	
 	@Action(method = "POST")
 	public void exportEaformPdf() throws Exception {
 		String reportName = "EA Form";
