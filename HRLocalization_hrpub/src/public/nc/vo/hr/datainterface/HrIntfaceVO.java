@@ -35,13 +35,18 @@ public class HrIntfaceVO extends SuperVO
     private java.lang.Integer iseparator;
     private java.lang.Integer iiftop;
     private java.lang.Integer toplineposition;
-    private java.lang.Integer toplinenum;
+    private java.lang.Integer toplinenum; 
     
     // Add an extra flag line start
     private java.lang.Integer iiftop2;
     private java.lang.Integer toplineposition2;
     private java.lang.Integer toplinenum2;
     // Add an extra flag line end
+    //add by weiningc 20200214 start
+    private java.lang.String salaryschema;//用于银行报盘薪资方案过滤
+    private java.lang.String filenamesetting;//用于银行报盘导出文件名称设置
+    private java.lang.Integer displaystopsalary;//用于显示停薪人员.
+    //end
     
     private java.lang.String vmemo;
     private java.lang.String operatorid;
@@ -94,7 +99,11 @@ public class HrIntfaceVO extends SuperVO
     public static final String IHEADADJUSTBODY = "iheadadjustbody";
     public static final String DATE1 = "date1";
     public static final String DATE2 = "date2";
-    
+    //add by weiningc 20200214 start
+    public static final String SALARYSCHEMA = "salaryschema";
+    public static final String FILENAMESETTING = "filenamesetting";
+    public static final String DISPLAYSTOPSALARY = "displaystopsalary";
+    //end
     /**
      * <p>
      * 返回表名称.
@@ -882,4 +891,30 @@ public class HrIntfaceVO extends SuperVO
 		this.toplinenum2 = toplinenum2;
 	}
 	// Add getter setter for Bank Upload end
+
+	public java.lang.String getSalaryschema() {
+		return salaryschema;
+	}
+
+	public void setSalaryschema(java.lang.String salaryschema) {
+		this.salaryschema = salaryschema;
+	}
+
+	public java.lang.String getFilenamesetting() {
+		return filenamesetting;
+	}
+
+	public void setFilenamesetting(java.lang.String filenamesetting) {
+		this.filenamesetting = filenamesetting;
+	}
+
+	public java.lang.Integer getDisplaystopsalary() {
+		return displaystopsalary;
+	}
+
+	public void setDisplaystopsalary(java.lang.Integer displaystopsalary) {
+		this.displaystopsalary = displaystopsalary;
+	}
+	
+	
 }

@@ -1,6 +1,9 @@
 package nc.ui.wa.datainterface.action;
 
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.Action;
 
@@ -112,10 +115,21 @@ public class OutDataAction extends HrAction {
 		}
 
 		AggHrIntfaceVO[] vos = null;
+		HashMap<String, String> filtermap = new HashMap<String, String>();
 		if (getModel().getContext().getNodeCode()
 				.equals(DataIOconstant.NODE_BANK)) {
 			vos = (AggHrIntfaceVO[]) ((BillManageModel) getModel()).getData()
 					.toArray(new AggHrIntfaceVO[0]);
+			//如果txt文件为空, 则不导出文件 add by weiningc 20200219 start
+			HashMap<String, ArrayList<HashMap<String, Object>>> exportresults = ioMainPanel.getAppModel().getResults();
+			for(Map.Entry<String, ArrayList<HashMap<String, Object>>> entry : exportresults.entrySet()) {
+				if(entry.getValue() == null) {
+					filtermap.put(entry.getKey(), null);
+				} else {
+					filtermap.put(entry.getKey(), "Not Blank");
+				}
+			}
+			//end
 		} else {
 			AggHrIntfaceVO aggVO = (AggHrIntfaceVO) this.getModel()
 					.getSelectedData();
@@ -124,6 +138,15 @@ public class OutDataAction extends HrAction {
 
 		// HrIntfaceVO itfVO = null;
 		for (int i = 0; vos != null && i < vos.length; i++) {
+			//如果txt文件为空, 则不导出文件 add by weiningc 20200219 start
+			if (getModel().getContext().getNodeCode()
+					.equals(DataIOconstant.NODE_BANK)) {
+				String blankflag = vos[i].getParentVO().getPrimaryKey();
+				if(filtermap.get(blankflag) == null) {
+					continue;
+				}
+			}
+			//end
 			// itfVO = (HrIntfaceVO) vos[i].getParentVO();
 			// ArrayList<HashMap<String, Object>> datas = ((DataIOAppModel)
 			// getModel())

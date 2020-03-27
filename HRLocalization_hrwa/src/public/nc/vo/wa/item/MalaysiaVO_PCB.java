@@ -65,6 +65,9 @@ public class MalaysiaVO_PCB extends SuperVO implements Serializable{
 	private UFDate openingdate;
 	private UFDouble my_totalzakat;
 	
+	//增加人员主键
+	private String pk_psndoc;
+	
 	//sql 属性
 	private static String sumY1;//normal pcb
 	private static String sumYt;//aditional pcb
@@ -285,6 +288,14 @@ public class MalaysiaVO_PCB extends SuperVO implements Serializable{
 		this.my_totalzakat = my_totalzakat;
 	}
 
+	public String getPk_psndoc() {
+		return pk_psndoc;
+	}
+
+	public void setPk_psndoc(String pk_psndoc) {
+		this.pk_psndoc = pk_psndoc;
+	}
+
 	@Override
 	public String getTableName() {
 		return constructTableName();
@@ -319,8 +330,9 @@ public class MalaysiaVO_PCB extends SuperVO implements Serializable{
                    + " c.creator 			 creator,"
                    + " c.pk_cacu_data        pk_cacu_data,"
                    + " hiorg.begindate       begindate,"
-                   + " p.my_openingdate 	 openingdate,"
-                   + " p.my_totalzakat my_totalzakat"
+                   + " p.my_openingdata 	 openingdate,"
+                   + " p.my_totalzakat my_totalzakat,"
+                   + " c.pk_psndoc"
 			  + " from wa_cacu_data c"
 			 + " inner join wa_data wa_data"
 			   + "  on c.pk_wa_data = wa_data.pk_wa_data"
@@ -334,7 +346,7 @@ public class MalaysiaVO_PCB extends SuperVO implements Serializable{
              + " wa_data.f_531 ,wa_data.f_532 ,wa_data.f_533,wa_data.f_512 ,p.my_numberofchildren ,p.my_totalpayable ,p.my_totalepf ,"
              + " p.my_taxexemption ,p.my_totalpcb ,p.my_isspouseworking ,p.my_isdisabled ,p.my_isspousedisabled ,"
              + " p.my_category ,p.my_pcbgroup ,wa_data.pk_wa_class ,c.creator ,"
-             + " c.pk_cacu_data ,hiorg.begindate ,p.my_openingdate, p.my_totalzakat) ";
+             + " c.pk_cacu_data ,hiorg.begindate ,p.my_openingdata, p.my_totalzakat, c.pk_psndoc) ";
 		return tablename;
 	}
 

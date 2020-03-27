@@ -64,6 +64,52 @@ public class PdfDownloadForMalaysiaAction extends BaseAction {
 			throw e;
 		}
 	}
+	
+	@Action(method = "POST")
+	public void exportIRAS8APdf() throws Exception {
+		String reportName = "IRAS8A";
+		this.response.setContentType("application/pdf");
+		this.response.addHeader("Content-Disposition", "attachment;filename="
+				+ reportName + ".pdf");
+		try {
+			OutputStream stream = this.response.getOutputStream();
+			IContext context = RepSessionProxy.getCurrentSession()
+					.getCurrentContext();
+			SWChartContext chartContext = new SWChartContext((Context) context);
+			String condition = this.buildPcbQryCond(chartContext);
+			outputPcbPdf(stream, condition, reportName);
+			stream.flush();
+		} catch (Exception e) {
+			Logger.error(
+					NCLangRes4VoTransl.getNCLangRes().getStrByID("1413003_0",
+							"01413003-0392"), e);
+
+			throw e;
+		}
+	}
+	
+	@Action(method = "POST")
+	public void exportAppendix8APdf() throws Exception {
+		String reportName = "Appendix 8A";
+		this.response.setContentType("application/pdf");
+		this.response.addHeader("Content-Disposition", "attachment;filename="
+				+ reportName + ".pdf");
+		try {
+			OutputStream stream = this.response.getOutputStream();
+			IContext context = RepSessionProxy.getCurrentSession()
+					.getCurrentContext();
+			SWChartContext chartContext = new SWChartContext((Context) context);
+			String condition = this.buildPcbQryCond(chartContext);
+			outputPcbPdf(stream, condition, reportName);
+			stream.flush();
+		} catch (Exception e) {
+			Logger.error(
+					NCLangRes4VoTransl.getNCLangRes().getStrByID("1413003_0",
+							"01413003-0392"), e);
+
+			throw e;
+		}
+	}
 
 	private String buildPcbQryCond(SWChartContext chartContext) {
 		StringBuffer pcbcon = new StringBuffer();
@@ -84,12 +130,12 @@ public class PdfDownloadForMalaysiaAction extends BaseAction {
 							.append(cyear.get(0)).append("'");
 				}
 				// 公司名代替薪资方案code
-				if (attr.getFilterCode().indexOf("name") >= 0) {
-					ArrayList<String> orgname = (ArrayList<String>) attr
-							.getValues();
-					pcbcon.append(" and orgname").append(" = '")
-							.append(orgname.get(0)).append("'");
-				}
+//				if (attr.getFilterCode().indexOf("name") >= 0) {
+//					ArrayList<String> orgname = (ArrayList<String>) attr
+//							.getValues();
+//					pcbcon.append(" and orgname").append(" = '")
+//							.append(orgname.get(0)).append("'");
+//				}
 				// cperiod
 //				if ("CPERIOD".equalsIgnoreCase(attr.getFilterCode())) {
 //					ArrayList<String> cperiod = (ArrayList<String>) attr
@@ -231,6 +277,9 @@ public class PdfDownloadForMalaysiaAction extends BaseAction {
 				} catch (IOException e) {
 					AppDebug.error(e);
 				}
+			}
+			if(null != stream) {
+				stream.close();
 			}
 		}
 

@@ -31,6 +31,7 @@ import nc.pub.templet.converter.util.helper.ExceptionUtils;
 import nc.vo.bd.psn.PsndocVO;
 import nc.vo.hi.pub.HICommonValue;
 import nc.vo.hr.datainterface.AggHrIntfaceVO;
+import nc.vo.hr.datainterface.BooleanEnum;
 import nc.vo.hr.datainterface.FormatItemVO;
 import nc.vo.hr.datainterface.HrIntfaceVO;
 import nc.vo.hr.datainterface.IfsettopVO;
@@ -52,6 +53,7 @@ import nc.vo.wa.pub.WaLoginContext;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.mozilla.javascript.edu.emory.mathcs.backport.java.util.Arrays;
 
 import com.ctc.wstx.util.ExceptionUtil;
 
@@ -325,11 +327,32 @@ public class DataIOQueryServiceImpl implements IDataIOQueryService
 
 			String cond = "";
 			if (context.getNodeCode().equals(DataIOconstant.NODE_BANK))
-			{
+			{	
 				// Commented on 2018-11-27: Remove the restriction where employee bank must be the same as company's
 				HrIntfaceVO vo = (HrIntfaceVO) aggVOs[i].getParentVO();
-				cond = " t_bank.pk_banktype like '%%'";
-				datas = queryWaDataByCondBank(context, sqlBuffer.toString(), cond);
+				//查询的时候按照银行报盘选择的薪资方案进行过滤  add by weiningc start
+				String salaryschema = vo.getSalaryschema();
+				if(!StringUtils.isBlank(salaryschema)) {
+					String[] splits = salaryschema.split(",");
+					List asList = Arrays.asList(splits);
+					String pk_wa_class = null;
+					if(!StringUtils.isBlank(context.getPk_prnt_class())) {
+						pk_wa_class = context.getPk_prnt_class();
+					}else {
+						pk_wa_class = context.getPk_wa_class();
+					}
+					Logger.info("Bank Report pk_wa_class: " + pk_wa_class);
+					Logger.info("Bank Report Config waclass :" + asList.toString());
+					if(!asList.contains(pk_wa_class)) {
+						continue;
+					}
+				} else {
+					continue;
+				}
+				//end
+				
+				cond = " t_bank.pk_banktype like '%%'"; 
+				datas = queryWaDataByCondBank(context, sqlBuffer.toString(), cond, aggVOs[i]);
 				// Added on 2018-11-27 by Ethan, to avoid null pointer.
 				if (datas != null || datas.size() > 0) {
 					datas = mergeLocalTableWithWaData(datas, context);
@@ -646,7 +669,7 @@ public class DataIOQueryServiceImpl implements IDataIOQueryService
 		return (ArrayList<HashMap<String, Object>>) dao.executeQuery(sbSql.toString(), new MapListProcessor());
 	}
 
-	public ArrayList<HashMap<String, Object>> queryWaDataByCondBank(WaLoginContext context, String condition, String innerCondition) throws BusinessException
+	public ArrayList<HashMap<String, Object>> queryWaDataByCondBank(WaLoginContext context, String condition, String innerCondition, AggHrIntfaceVO aggVO) throws BusinessException
 	{
 		// IItemQueryService service =
 		// NCLocator.getInstance().lookup(IItemQueryService.class);
@@ -735,22 +758,42 @@ public class DataIOQueryServiceImpl implements IDataIOQueryService
 					"and  t_bank.accnum = wa_data.pk_bankaccbas"+bankaccount+" and t_bank.payacc ="+bankaccount+")");
 
 
-
-			if (context.getWaLoginVO().getBatch() != null
-					&& context.getWaLoginVO().getBatch() > 100) {
-				sbSql.append(" where wa_data.pk_org='" + context.getPk_org()
-						+ "' and wa_data.pk_wa_class in (select pk_childclass from wa_inludeclass where pk_parentclass = '"
-						+ context.getPk_prnt_class() + "' and cyear = '" + context.getWaYear()
-						+ "' and cperiod = '" + context.getWaPeriod() + "' and batch > 100 )"
-						+ " and wa_data.cyear='" + context.getWaYear()
-						+ "' and wa_data.cperiod='" + context.getWaPeriod()
-						+ "' and wa_data.stopflag='N' ");
+			//add by weiningc 20200302 start
+			Integer displaystopslary = (Integer) aggVO.getParentVO().getAttributeValue(HrIntfaceVO.DISPLAYSTOPSALARY);
+			//end
+			if(displaystopslary != null && displaystopslary == 1) {
+				if (context.getWaLoginVO().getBatch() != null
+						&& context.getWaLoginVO().getBatch() > 100) {
+					sbSql.append(" where wa_data.pk_org='" + context.getPk_org()
+							+ "' and wa_data.pk_wa_class in (select pk_childclass from wa_inludeclass where pk_parentclass = '"
+							+ context.getPk_prnt_class() + "' and cyear = '" + context.getWaYear()
+							+ "' and cperiod = '" + context.getWaPeriod() + "' and batch > 100 )"
+							+ " and wa_data.cyear='" + context.getWaYear()
+							+ "' and wa_data.cperiod='" + context.getWaPeriod() + "'");
+				} else {
+					sbSql.append(" where wa_data.pk_org='" + context.getPk_org()
+							+ "' and wa_data.pk_wa_class = '"
+							+ context.getPk_wa_class() + "' and wa_data.cyear='"
+							+ context.getWaYear() + "' and wa_data.cperiod='"
+							+ context.getWaPeriod() + "'");
+				}
 			} else {
-				sbSql.append(" where wa_data.pk_org='" + context.getPk_org()
-						+ "' and wa_data.pk_wa_class = '"
-						+ context.getPk_wa_class() + "' and wa_data.cyear='"
-						+ context.getWaYear() + "' and wa_data.cperiod='"
-						+ context.getWaPeriod() + "' and wa_data.stopflag='N' ");
+				if (context.getWaLoginVO().getBatch() != null
+						&& context.getWaLoginVO().getBatch() > 100) {
+					sbSql.append(" where wa_data.pk_org='" + context.getPk_org()
+							+ "' and wa_data.pk_wa_class in (select pk_childclass from wa_inludeclass where pk_parentclass = '"
+							+ context.getPk_prnt_class() + "' and cyear = '" + context.getWaYear()
+							+ "' and cperiod = '" + context.getWaPeriod() + "' and batch > 100 )"
+							+ " and wa_data.cyear='" + context.getWaYear()
+							+ "' and wa_data.cperiod='" + context.getWaPeriod()
+							+ "' and wa_data.stopflag='N' ");
+				} else {
+					sbSql.append(" where wa_data.pk_org='" + context.getPk_org()
+							+ "' and wa_data.pk_wa_class = '"
+							+ context.getPk_wa_class() + "' and wa_data.cyear='"
+							+ context.getWaYear() + "' and wa_data.cperiod='"
+							+ context.getWaPeriod() + "' and wa_data.stopflag='N' ");
+				}
 			}
 
 			if (condition != null && !condition.trim().equals(""))

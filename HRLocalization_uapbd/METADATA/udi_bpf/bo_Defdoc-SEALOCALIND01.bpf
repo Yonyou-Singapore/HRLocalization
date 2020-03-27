@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component conRouterType="手动" createIndustry="0"
+	createTime="2020-03-10 18:10:27" creator="" description=""
+	displayName="PPH21_Deduction_Group(自定义档案)Business Operation " fromSourceBmf="true"
+	gencodestyle="NC传统样式" help="" id="5d37b376-62b7-11ea-bb33-b9fa97a392d9"
+	industry="0" industryChanged="false" industryIncrease="false"
+	industryName="基础行业" isSource="false" isbizmodel="true" mainEntity=""
+	modifier="" modifyIndustry="0" modifyTime="2020-03-10 18:10:27"
+	name="bo_Defdoc-SEALOCALIND01" namespace="uap" ownModule="uapbd"
+	preLoad="false" programcode="" resModuleName="bo_Defdoc-SEALOCALIND01"
+	resid="" version="1" versionType="0">
+	<celllist>
+		<busioperation componentID="5d37b376-62b7-11ea-bb33-b9fa97a392d9"
+			createIndustry="0" createTime="2020-03-10 18:10:27" creator=""
+			dataType="1001AX1000000002LH6U" dbtype="" description=""
+			displayName="修改" fullClassName="nc.vouap.bo_Defdoc-SEALOCALIND01.edit"
+			height="100" help="" id="5d37b37a-62b7-11ea-bb33-b9fa97a392d9"
+			industryChanged="false" isAuthorization="true" isBusiActivity="false"
+			isSource="false" logtype="MODIFY" modifier="" modifyIndustry="0"
+			modifyTime="2020-03-10 18:10:27" name="edit" needlog="true"
+			resid="2UC000-001103" typeDisplayName="PPH21_Deduction_Group(自定义档案)"
+			typeName="Defdoc-SEALOCALIND01" version=""
+			versionType="0" visibility="public" width="80" x="150" y="120">
+			<refoperationlist />
+		</busioperation>
+		<busioperation componentID="5d37b376-62b7-11ea-bb33-b9fa97a392d9"
+			createIndustry="0" createTime="2020-03-10 18:10:27" creator=""
+			dataType="1001AX1000000002LH6U" dbtype="" description=""
+			displayName="删除" fullClassName="nc.vouap.bo_Defdoc-SEALOCALIND01.delete"
+			height="100" help="" id="5d37b378-62b7-11ea-bb33-b9fa97a392d9"
+			industryChanged="false" isAuthorization="true" isBusiActivity="false"
+			isSource="false" logtype="DELETE" modifier="" modifyIndustry="0"
+			modifyTime="2020-03-10 18:10:27" name="delete" needlog="true"
+			resid="2UC000-001104" typeDisplayName="PPH21_Deduction_Group(自定义档案)"
+			typeName="Defdoc-SEALOCALIND01" version=""
+			versionType="0" visibility="public" width="80" x="250" y="120">
+			<refoperationlist />
+		</busioperation>
+		<busioperation componentID="5d37b376-62b7-11ea-bb33-b9fa97a392d9"
+			createIndustry="0" createTime="2020-03-10 18:10:27" creator=""
+			dataType="1001AX1000000002LH6U" dbtype="" description=""
+			displayName="启用" fullClassName="nc.vouap.bo_Defdoc-SEALOCALIND01.enable"
+			height="100" help="" id="5d37b37b-62b7-11ea-bb33-b9fa97a392d9"
+			industryChanged="false" isAuthorization="true" isBusiActivity="false"
+			isSource="false" logtype="MODIFY" modifier="" modifyIndustry="0"
+			modifyTime="2020-03-10 18:10:27" name="enable" needlog="true"
+			resid="2UC000-001105" typeDisplayName="PPH21_Deduction_Group(自定义档案)"
+			typeName="Defdoc-SEALOCALIND01" version=""
+			versionType="0" visibility="public" width="80" x="350" y="120">
+			<refoperationlist />
+		</busioperation>
+		<busioperation componentID="5d37b376-62b7-11ea-bb33-b9fa97a392d9"
+			createIndustry="0" createTime="2020-03-10 18:10:27" creator=""
+			dataType="1001AX1000000002LH6U" dbtype="" description=""
+			displayName="停用" fullClassName="nc.vouap.bo_Defdoc-SEALOCALIND01.disable"
+			height="100" help="" id="5d37b379-62b7-11ea-bb33-b9fa97a392d9"
+			industryChanged="false" isAuthorization="true" isBusiActivity="false"
+			isSource="false" logtype="MODIFY" modifier="" modifyIndustry="0"
+			modifyTime="2020-03-10 18:10:27" name="disable" needlog="true"
+			resid="2UC000-001106" typeDisplayName="PPH21_Deduction_Group(自定义档案)"
+			typeName="Defdoc-SEALOCALIND01" version=""
+			versionType="0" visibility="public" width="80" x="450" y="120">
+			<refoperationlist />
+		</busioperation>
+		<busioperation componentID="5d37b376-62b7-11ea-bb33-b9fa97a392d9"
+			createIndustry="0" createTime="2020-03-10 18:10:27" creator=""
+			dataType="1001AX1000000002LH6U" dbtype="" description=""
+			displayName="新增" fullClassName="nc.vouap.bo_Defdoc-SEALOCALIND01.add"
+			height="100" help="" id="5d37b377-62b7-11ea-bb33-b9fa97a392d9"
+			industryChanged="false" isAuthorization="true" isBusiActivity="false"
+			isSource="false" logtype="ADD" modifier="" modifyIndustry="0"
+			modifyTime="2020-03-10 18:10:27" name="add" needlog="true"
+			resid="2UC000-001114" typeDisplayName="PPH21_Deduction_Group(自定义档案)"
+			typeName="Defdoc-SEALOCALIND01" version=""
+			versionType="0" visibility="public" width="80" x="50" y="120">
+			<refoperationlist />
+		</busioperation>
+	</celllist>
+	<connectlist />
+	<refdepends />
+	<refdependLoseIDs />
+	<cellRemoveLog />
+	<rulers>
+		<ruler isHorizontal="true" unit="0">
+			<guideList />
+		</ruler>
+		<ruler isHorizontal="false" unit="0">
+			<guideList />
+		</ruler>
+	</rulers>
+</component>

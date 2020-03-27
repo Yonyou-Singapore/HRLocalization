@@ -26,15 +26,10 @@ public class BeforeCurrentYearSum extends  AbstractPreExcutorFormulaParse {
 		String[] startandend_period = this.getBeforCurrentYearPeriod();
 		String sql = this.getFormulaSql(item, startandend_period);
 		fvo.setReplaceStr(sql);
+//		return super.getReplaceStr(formula);
 		return fvo;
 	}
 	
-	@Override
-	public void excute(Object arguments, WaLoginContext context)
-			throws BusinessException {
-		// TODO Auto-generated method stub
-		
-	}
 	
 	/**
 	 * 
@@ -78,6 +73,14 @@ public class BeforeCurrentYearSum extends  AbstractPreExcutorFormulaParse {
 		}
 		arr_period[1] = year + endperiod;
 		return arr_period;
+		
+	}
+
+
+	@Override
+	public void excute(Object arguments, WaLoginContext context)
+			throws BusinessException {
+		// TODO Auto-generated method stub
 		
 	}
 

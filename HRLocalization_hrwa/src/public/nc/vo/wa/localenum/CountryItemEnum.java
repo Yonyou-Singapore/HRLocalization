@@ -3,10 +3,10 @@ package nc.vo.wa.localenum;
 
 public enum CountryItemEnum{
 
-	MALAYSIAITEM("my"),
-	SINGAPOREITEM("sg"),
-	INDONESIAITEM("in"),
-	PHILIPPINESITEM("ph");
+	MALAYSIAITEM("MY"),
+	SINGAPOREITEM("SG"),
+	INDONESIAITEM("IND"),
+	PHILIPPINESITEM("PH");
 
 	private String code;
 	

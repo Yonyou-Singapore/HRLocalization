@@ -317,7 +317,7 @@ public class ReportComp extends AbstractFunclet {
 						.exec("rundll32 url.dll FileProtocolHandler " + path
 								+ ".pdf");
 		} catch (Exception ex) {
-			MessageBox.showMessageDialog("Error", ex.getMessage());
+			MessageBox.showMessageDialog("Error", ex.getMessage() + " ,Cause: " + ex.getCause());
 			// ex.printStackTrace();
 		}
 	}

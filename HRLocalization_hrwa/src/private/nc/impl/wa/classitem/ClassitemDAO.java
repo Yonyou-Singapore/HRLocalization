@@ -324,8 +324,8 @@ public class ClassitemDAO extends BaseDAOManager{
 				+ " wa_classitem.def12, wa_classitem.def13, wa_classitem.def14, wa_classitem.def15, wa_classitem.def16, wa_classitem.def17, wa_classitem.def18, wa_classitem.def19, wa_classitem.def20, wa_classitem.def21, " 
 				+ " wa_classitem.def22, wa_classitem.def23, wa_classitem.def24, wa_classitem.def25, wa_classitem.def26, wa_classitem.def27, wa_classitem.def28, wa_classitem.def29, wa_classitem.def30, wa_classitem.def31, "
 				+ " wa_classitem.def32, wa_classitem.def33, wa_classitem.def34, wa_classitem.def35, wa_classitem.def36, wa_classitem.def37, wa_classitem.def38, wa_classitem.def39, wa_classitem.def40, wa_classitem.my_isepf_n,"
-				+ " wa_classitem.my_isepf_a, wa_classitem.my_iseis, wa_classitem.my_issocso, wa_classitem.my_ispcb_n, wa_classitem.my_ispcb_a, wa_classitem.g_istotalitem, wa_classitem.g_totaltoitem, " +
-				" wa_classitem.sg_isaw, wa_classitem.sg_isow, wa_classitem.sg_inpe, wa_classitem.sg_iapp8acat, wa_classitem.sg_prorate, wa_classitem.sg_iapp8acat ";
+				+ " wa_classitem.my_isepf_a, wa_classitem.my_iseis, wa_classitem.my_issocso, wa_classitem.my_ispcb_n, wa_classitem.my_ispcb_a, wa_classitem.g_istotalitem, wa_classitem.g_totaltoitem, " 
+				+ " wa_classitem.sg_aw_or_ow, wa_classitem.sg_inpe, wa_classitem.sg_iapp8acat, wa_classitem.sg_prorate,wa_classitem.sg_brp_or_grp, wa_classitem.sg_iapp8acat, wa_classitem.g_fixeddays";
 		return sql;
 	// end
 	}

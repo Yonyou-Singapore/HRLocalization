@@ -42,7 +42,7 @@ public class MalaysiaTaxPreExcutor extends AbstractFormulaExecutor {
 		if (inTaxFormulaVO instanceof MalaysiaTaxFormulaVO) {
 			// 传递扣税信息到中间表
 			MalaysiaTaxFormulaVO taxFormulaVO = (MalaysiaTaxFormulaVO) inTaxFormulaVO;
-			IMalaysiaPCBTaxInfPreProcess  taxInfPreProcess = this.createMYTaxInfPreProcess(taxFormulaVO.getClass_wagetype());
+			IMalaysiaPCBTaxInfPreProcess  taxInfPreProcess = this.createMYTaxInfPreProcess(taxFormulaVO.getClass_wagetype(), context);
 			taxInfPreProcess.transferTaxCacuData(taxFormulaVO, context);
 		}
 	}
@@ -62,17 +62,24 @@ public class MalaysiaTaxPreExcutor extends AbstractFormulaExecutor {
 	
 	/**
 	 * 普通发放或者其他类型发放
+	 * @param context 
 	 */
-	public IMalaysiaPCBTaxInfPreProcess createMYTaxInfPreProcess(String type) {
-		if(MalaysiaTaxFormulaVO.CLASS_TYPE_NORMAL.equals(type)){
+	public IMalaysiaPCBTaxInfPreProcess createMYTaxInfPreProcess(String type, WaLoginContext context) {
+		//支持多次方法 需要判断是否多次方法 如果是 走多次发放的逻辑,PCB计算中用到的薪资项目取和值
+		Boolean ismutiple = false;
+		if(context.getWaLoginVO().getBatch() != null && context.getWaLoginVO().getBatch() > 1) {
+			ismutiple = true;
+		}
+		if(MalaysiaTaxFormulaVO.CLASS_TYPE_NORMAL.equals(type) && !ismutiple){
 			//普通计税
 			return new MY_NormalPCBTaxInfPreProcess();
 		}else if (MalaysiaTaxFormulaVO.CLASS_TYPE_YEAR.equals(type)){
 			//年终奖
 			return new MY_AwardPCBTaxInfPreProcess();
-		}else{
-			//补发计税
+		}else if(ismutiple){
+			//多次发放
 			return new MY_MutiPCBTaxInfPreProcess();
 		}
+		return null;
 	}
 }

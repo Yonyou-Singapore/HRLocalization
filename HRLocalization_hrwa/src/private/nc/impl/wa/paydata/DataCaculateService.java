@@ -171,11 +171,11 @@ public class DataCaculateService extends AbstractCaculateService {
 //				formaulas.add(waClassItemVO);
 //				continue;
 //			}
-			//TEST END 不清楚这个是干什么? 注释掉
+			//TEST END 不清楚这个是干什么? 注释掉 
 //			if(!"f_634".equals(waClassItemVO.getItemkey())) {
 //				continue;
 //			}
-			//end
+			//end 
 			doCaculateSingle(waClassItemVO);
 
 			// 特殊人员数据调整

@@ -212,11 +212,11 @@ public class SingaporeVO_CPF extends SuperVO implements Serializable {
 		sb.append(" def.code          idtype,");
 		sb.append(" p.sg_ispr            sgpr,");
 		sb.append(" p.birthdate          birthdate,");
-		sb.append(" w.f_700              ow,");
-		sb.append(" w.f_702              aw,");
-		sb.append(" w.f_714              tw,");
-		sb.append(" w.f_706			   npe,");
-		sb.append(" w.f_705			   awceilling,");
+		sb.append(" w.f_1067              ow,");//capping后的ow
+		sb.append(" w.f_1001              aw,");//这里也是取capping后的aw TODO
+		sb.append(" w.f_1011              tw,");
+		sb.append(" w.f_1003			  npe,");
+		sb.append(" w.f_1002			  awceilling,");
 		sb.append(" p.code 			   psncode,");
 		sb.append(" po.endflag		   endflag");
 		sb.append(" from wa_cacu_data c");
@@ -225,7 +225,8 @@ public class SingaporeVO_CPF extends SuperVO implements Serializable {
 		sb.append(" inner join bd_psndoc p");
 		sb.append(" on p.pk_psndoc = c.pk_psndoc");
 		sb.append(" inner join hi_psnorg po on po.pk_psndoc = p.pk_psndoc");
-		sb.append(" left join bd_defdoc def on def.pk_defdoc = p.sg_idtype)");
+		//id type使用标准字段idtype 
+		sb.append(" left join bd_psnidtype def on def.pk_identitype = p.idtype)");
 		return sb.toString();
 	}
 	

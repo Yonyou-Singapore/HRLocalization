@@ -122,5 +122,23 @@
   <functionClass>nc.ui.wa.formular.func.SingaporeCPF</functionClass>
 </formula>
 
+<!-- AW Ceilling -->
+<formula>
+  <customType>9</customType>
+  <functionName>SG_AWceilling</functionName>
+  <functionClass>nc.ui.wa.formular.func.SG_AWceilling</functionClass>
+</formula>
+<!-- Before current year -->
+<formula>
+  <customType>9</customType>
+  <functionName>BeforeCurrentYearSum</functionName>
+  <functionClass>nc.ui.wa.formular.func.BeforeCurrentYearSum</functionClass>
+</formula>
+<!-- 多次发放使用(取合并方案的薪资项目) -->
+<formula>
+  <customType>9</customType>
+  <functionName>ParentClassItem</functionName>
+  <functionClass>nc.ui.wa.formular.func.ParentClassItem</functionClass>
+</formula>
 
 </formula-array>

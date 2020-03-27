@@ -82,4 +82,38 @@
       <productCode>UPP6013func</productCode>
     </function>
   </entry>
+  
+  <entry>
+    <string>ParentClassItem</string>
+    <function>
+      <displayName>ParentClassItem</displayName>
+      <defaultName>6001formula;sealocal-000029</defaultName>
+      <hintMsgRes>6001formula;sealocal-000030</hintMsgRes>
+      <inputSigRes>6001formula;sealocal-000031</inputSigRes>
+      <pattern>ParentClassItem\(f_\d+\)</pattern>
+      <arguments>ParentClassItem({0})</arguments>
+      <parapanel>nc.ui.hr.itemsource.view.NullParaPanel</parapanel>
+      <group>WA</group>
+      <process>nc.impl.wa.func.ParentClassItem</process>
+      <productCode>UPP6013func</productCode>
+    </function>
+  </entry>
+  
+  <!-- 本年度本期以前 -->
+  <entry>
+    <string>BeforeCurrentYearSum</string>
+    <function>
+      <displayName>BeforeCurrentYearSum</displayName>
+      <defaultName>6001formula;sealocal-000026</defaultName>
+      <hintMsgRes>6001formula;sealocal-000027</hintMsgRes>
+      <inputSigRes>6001formula;sealocal-000028</inputSigRes>
+      <pattern>BeforeCurrentYearSum\(f_\d+\)</pattern>
+      <arguments>BeforeCurrentYearSum({0})</arguments>
+      <parapanel>nc.ui.hr.func.WaParaAdjPanel</parapanel>
+      <convertor>nc.ui.hr.func.WaParaPanel_jdConvertor</convertor>
+      <group>WA</group>
+      <process>nc.impl.wa.func.BeforeCurrentYearSum</process>
+      <productCode>UPP6013func</productCode>
+    </function>
+  </entry>
  </linked-hash-map> 

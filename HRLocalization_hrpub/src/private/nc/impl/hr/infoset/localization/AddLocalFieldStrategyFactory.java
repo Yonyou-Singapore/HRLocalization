@@ -20,9 +20,10 @@ public class AddLocalFieldStrategyFactory {
 			return new MalaysiaFieldStrategy();
 		} else if (country.equals("SG")) {
 			return new SingaporeFieldStrategy();
-		} else {
-			return null;
+		} else if (country.equals("IND")){
+			return new IndonesiaFieldStrategy(); 
 		}
+		return null;
 	}
 	
 }

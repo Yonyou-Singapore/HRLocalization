@@ -1,5 +1,6 @@
 package nc.ui.wa.datainterface.view;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
@@ -17,6 +18,7 @@ import nc.ui.pub.beans.UITextField;
 import nc.ui.pub.beans.constenum.DefaultConstEnum;
 import nc.ui.uif2.model.AbstractUIAppModel;
 import nc.ui.wa.datainterface.model.DataIOAppModel;
+import nc.ui.wa.ref.WaClassRefModel;
 import nc.vo.hr.datainterface.FileTypeEnum;
 import nc.vo.hr.datainterface.ItemSeprtorEnum;
 import nc.vo.hr.datainterface.LineTopEnum;
@@ -69,6 +71,11 @@ public class ParaInfPanel extends UIPanel
 	private UIPanel tablePanel;
 
 	private UIRefPane bankRefPane;
+	
+	private UIRefPane salaryschemaRefPane;
+	private WaClassRefModel classRefModel = null;
+	private UITextArea filenameSettingTextArea;
+	private UICheckBox displayStopSalary;
 
 	public ParaInfPanel(AbstractUIAppModel appModel)
 	{
@@ -101,8 +108,76 @@ public class ParaInfPanel extends UIPanel
 		builder.nextLine();
 		// builder.append("备注", getMemTextArea(),5);
 		builder.append(ResHelper.getString("common","UC000-0001376")/*@res "备注"*/, getMemTextArea());
+		//增加薪资方案过滤及文件名称设置  add by weiningc 20200213 start
+		if (getAppModel().getContext().getNodeCode().equals(DataIOconstant.NODE_BANK)) {
+			builder.nextLine();
+			builder.append("Salary Schema", getSalarySchemaRefPane());
+			builder.nextLine();
+			builder.append("Export File Name", getFilenameSettingTextArea());
+			//增加是否查询停薪人员 add by weiningc 20200302 start
+			builder.nextLine();
+			builder.append("Employee stop payment ", getDisplayStopSalaryPanel());
+		}
+		//end
+		
 
 		return (UIPanel) builder.getPanel();
+	}
+
+	public UICheckBox getDisplayStopSalaryPanel() {
+		if (displayStopSalary == null)
+		{
+			displayStopSalary = new UICheckBox();
+			displayStopSalary.setPreferredSize(new Dimension(200, 20));
+		}
+		return displayStopSalary;
+	}
+
+	public UIRefPane getSalarySchemaRefPane() {
+		if (salaryschemaRefPane == null)
+		{
+			salaryschemaRefPane = new UIRefPane();
+			salaryschemaRefPane.setVisible(true);
+			salaryschemaRefPane.setPreferredSize(new Dimension(200, 20));
+			//			waClassRefPane.setBounds(new Rectangle(x+100, 5, 122, 20));
+			//waClassRefPane.setSize(new Dimension(200,20));
+			salaryschemaRefPane.setButtonFireEvent(true);
+			WaClassRefModel refmodel = getClassRefModel();
+			refmodel.setPk_org(getAppModel().getContext().getPk_org());
+			salaryschemaRefPane.setMultiSelectedEnabled(true);//可多选
+			salaryschemaRefPane.setRefModel(refmodel);
+		}
+		return salaryschemaRefPane;
+	}
+	
+	public UITextArea getFilenameSettingTextArea()
+	{
+		if (filenameSettingTextArea == null)
+		{
+			filenameSettingTextArea = new UITextArea();
+			filenameSettingTextArea.setName("filenameSettingTextArea");
+			// memTexttArea.setPreferredSize(new Dimension(200,80));
+			filenameSettingTextArea.setPreferredSize(new Dimension(200, 20));
+			filenameSettingTextArea.setLineWrap(true);
+			filenameSettingTextArea.setMaxLength(1024);
+		}
+		return filenameSettingTextArea;
+	}
+	
+	/**
+	 * @author zhangg on 2009-11-24
+	 * @return the classRefModel
+	 */
+	public WaClassRefModel getClassRefModel()
+	{
+
+		if (classRefModel == null)
+		{
+			classRefModel = new nc.ui.wa.ref.WaClassRefModel();
+			//			classRefModel.setRefNodeName("薪资方案");
+		}
+		return classRefModel;
+
 	}
 
 	private UIPanel buildDataParaPanel()

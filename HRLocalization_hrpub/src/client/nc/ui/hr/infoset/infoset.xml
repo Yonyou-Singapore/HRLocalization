@@ -163,6 +163,9 @@
   <bean id="addLocalizationFieldsSG" class="nc.ui.hr.infoset.action.AddSingaporeFieldsAction">
   	<property name="model" ref="infoSetModel" />
   </bean>
+  <bean id="addLocalizationFieldsIDN" class="nc.ui.hr.infoset.action.AddIndonesiaFieldsAction">
+  	<property name="model" ref="infoSetModel" />
+  </bean>
 
 
   <bean id="separatorAction" class="nc.funcnode.ui.action.SeparatorAction" />

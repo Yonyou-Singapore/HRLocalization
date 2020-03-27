@@ -221,8 +221,8 @@ public class WaFunctionFactory implements IFunctionFactory {
 					fvo.getInputSig(), fvo.getHintMsg(),
 					fvo.getReturntype());
 			items.add(singaporeCPF);
-			// }
-			//SG_AWceilling
+//			 }
+//			SG_AWceilling
 			fvo = WaFormulaXmlHelper.getFunctionVO("SG_AWceilling");
 			HRFormulaItem sg_AWceilling = new HRFormulaItem(
 					fvo.getDisplayName(), fvo.getDefaultName(),
@@ -235,8 +235,15 @@ public class WaFunctionFactory implements IFunctionFactory {
 					fvo.getDisplayName(), fvo.getDefaultName(),
 					fvo.getInputSig(), fvo.getHintMsg(),
 					fvo.getReturntype());
-			items.add(beforeCurrentYearSum);
-
+			items.add(beforeCurrentYearSum); 
+			
+			//ParentClassItem
+			fvo = WaFormulaXmlHelper.getFunctionVO("ParentClassItem");
+			HRFormulaItem parentClassItem = new HRFormulaItem(
+					fvo.getDisplayName(), fvo.getDefaultName(),
+					fvo.getInputSig(), fvo.getHintMsg(),
+					fvo.getReturntype());
+			items.add(parentClassItem);
 		} catch (Exception e) {
 			Logger.error(e.getMessage(), e);
 		}

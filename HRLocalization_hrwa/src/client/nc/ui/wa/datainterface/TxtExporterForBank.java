@@ -5,10 +5,13 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
+import nc.bs.framework.common.NCLocator;
 import nc.hr.utils.ResHelper;
+import nc.itf.uap.IUAPQueryBS;
+import nc.jdbc.framework.processor.ColumnProcessor;
 import nc.ui.pub.beans.MessageDialog;
-import nc.ui.wa.pub.WADelegator;
 import nc.vo.hr.append.AppendableVO;
 import nc.vo.hr.datainterface.BooleanEnum;
 import nc.vo.hr.datainterface.CaretposEnum;
@@ -20,10 +23,12 @@ import nc.vo.hr.datainterface.IfsettopVO;
 import nc.vo.hr.datainterface.ItemSeprtorEnum;
 import nc.vo.hr.datainterface.LineTopEnum;
 import nc.vo.hr.datainterface.LineTopPositionEnum;
+import nc.vo.pub.BusinessException;
 import nc.vo.pub.lang.UFDate;
 import nc.vo.pub.lang.UFDouble;
 import nc.vo.pubapp.pattern.exception.ExceptionUtils;
 import nc.vo.wa.datainterface.DataIOconstant;
+import nc.vo.wa.pub.WaLoginContext;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -33,7 +38,7 @@ public class TxtExporterForBank extends DefaultExporter
 
 	public static final String crlf = System.getProperties().getProperty("line.separator"); // 换行符
 	java.io.Writer raf = null;
-	java.io.FileOutputStream fileOut = null;
+	java.io.FileOutputStream fileOut = null; 
 
 	@Override
 	protected void openFile() throws Exception
@@ -46,7 +51,12 @@ public class TxtExporterForBank extends DefaultExporter
 				if (getIntfaceInfs()[getReadIndex()] != null)
 				{
 					HrIntfaceVO itfVO = (HrIntfaceVO) getIntfaceInfs()[getReadIndex()].getParentVO();
-					String fileName = getParas().getFileLocation() + "\\" + itfVO.getVifname() + ".txt";
+					//银行报盘文件名支持可配置 取filesetting字段 add by weiningc 20200218 start
+					String filenamesetting = itfVO.getFilenamesetting();
+					//查询薪资项目
+					WaLoginContext wacontext = (WaLoginContext)getAppModel().getContext();
+					String fileName = this.getFilename(filenamesetting, wacontext, itfVO.getVifname());
+					//end
 					java.io.File file = new java.io.File(fileName);
 					if (file.exists())
 					{
@@ -984,12 +994,17 @@ public class TxtExporterForBank extends DefaultExporter
 			// sbd.append(BLANK);// 不统一使用分割符，则添加一个空格
 			// }
 			// }
+			boolean deletelineflag = false;
+			Map<Integer, Boolean> deleteindex = new HashMap<Integer, Boolean>();
+			int lineindex = 0;
+			StringBuilder sbb = new StringBuilder();//用于filter0的数据
 			for (int temp = 0; temp < vos.length; temp++)
 			{
 				FormatItemVO formatItemVO = vos[temp];
 				// 换行处理
 				if (formatItemVO.getInextline().equals(BooleanEnum.YES.toIntValue())) {
 					sbd.append(crlf);
+					lineindex ++;
 				}
 				// 获取单元值
 				Object value = appendVOs[index].getAttributeValue(formatItemVO.getVcontent().replace(".", ""));
@@ -1013,8 +1028,24 @@ public class TxtExporterForBank extends DefaultExporter
 							b = value;
 						}
 					}
-
-					value = getStringDigit(b != null ? b.toString() : "", formatItemVO, dot, kilobit);
+					boolean zeroflag = false;
+					if(b instanceof BigDecimal) {
+						zeroflag = ((BigDecimal) b).doubleValue() == 0.00 ? true : false;
+					}else if(b instanceof Integer) {
+						zeroflag = ((Integer) b).intValue() == 0 ? true : false;
+					}else if(b instanceof Double) {
+						zeroflag = ((Double) b).doubleValue() == 0.00 ? true : false;
+					}else if(b instanceof UFDouble) {
+						zeroflag = new UFDouble(b.toString()).equals(UFDouble.ZERO_DBL) ? true : false;
+					}
+					if(("0.00".equals(b.toString()) && formatItemVO.getIskipifzero() != null && formatItemVO.getIskipifzero().intValue() == 1) ||
+							(zeroflag && formatItemVO.getIskipifzero().intValue() == 1)) {
+						deletelineflag = true;
+						deleteindex.put(lineindex, deletelineflag);
+						value = getStringDigit(b != null ? b.toString() : "", formatItemVO, dot, kilobit);
+					} else {
+						value = getStringDigit(b != null ? b.toString() : "", formatItemVO, dot, kilobit);
+					}
 
 				}
 				else if (formatItemVO.getIfieldtype().equals(FieldTypeEnum.DATE.value()))
@@ -1036,7 +1067,7 @@ public class TxtExporterForBank extends DefaultExporter
 				else
 				{// //字符型
 					if (value == null)
-					{
+					{  
 						value = "";
 					}
 					value = getStringStr((String) value, formatItemVO);
@@ -1058,9 +1089,20 @@ public class TxtExporterForBank extends DefaultExporter
 				}
 
 			}
+			//add by weiningc 202002020 start换行前检查需不需要删除当前行
+			String strlines = sbd.toString();
+			String[] splits = strlines.split(crlf);
+			for(int k=0; k<splits.length; k++) {
+				if((deleteindex.get(k) == null || !deleteindex.get(k)) && !StringUtils.isBlank(splits[k])) {
+					sbb.append(splits[k]);
+					sbb.append(crlf);
+				}
+//				sbd.append(splits[k]);
+			}
+			//end
 			// 输出sbd
-			sbd.append(crlf);
-			raf.write(sbd.toString());
+//			sbb.append(crlf);
+			raf.write(sbb.toString());
 			raf.flush();
 		}
 
@@ -1204,5 +1246,33 @@ public class TxtExporterForBank extends DefaultExporter
 		// return ((HrIntfaceVO)getIntfaceInf().getParentVO()).getLncaret();
 		return "";
 
+	}
+	
+	public String getFilename(String filenamesetting, WaLoginContext wacontext, String vifname) {
+		String fileName = "";
+		if(StringUtils.isBlank(filenamesetting)) {
+			fileName = getParas().getFileLocation() + "\\" + vifname + ".txt";
+		} else {
+			StringBuffer sb = new StringBuffer();
+			sb.append(" select ").append(filenamesetting).append(" from wa_data")
+				.append(" where pk_wa_class='").append(wacontext.getPk_wa_class())
+				.append("' and cyear = '").append(wacontext.getCyear())
+				.append("' and cperiod = '").append(wacontext.getCperiod()).append("'")
+				.append(" and stopflag = 'N'")
+				.append(" and rownum=1");
+			IUAPQueryBS queryBS = (IUAPQueryBS) NCLocator.getInstance().lookup(IUAPQueryBS.class.getName());
+			Object executeQuery = null;
+			try {
+				executeQuery = queryBS.executeQuery(sb.toString(), new ColumnProcessor());
+			} catch (BusinessException e) {
+				ExceptionUtils.wrappBusinessException(e.getMessage());
+			}
+			if(executeQuery != null) {
+				fileName = getParas().getFileLocation() + "\\" + executeQuery.toString() + ".txt";;
+			} else {
+				fileName = getParas().getFileLocation() + "\\" + "filename is blank" + ".txt";
+			}
+		}
+		return fileName;
 	}
 }

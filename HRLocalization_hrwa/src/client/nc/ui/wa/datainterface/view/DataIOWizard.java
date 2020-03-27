@@ -337,6 +337,17 @@ public class DataIOWizard
 
 			paraPanel.getBankRefPane().setPK(vo.getPk_bankdoc());
 			paraPanel.getFormatNameTextField().setText(vo.getVifname());
+			//增加薪资方案过滤和文件名命名	add by weiningc 2020021 start
+			String salaryschema = vo.getSalaryschema();
+			if(!StringUtils.isBlank(salaryschema)) {
+				String[] split = salaryschema.split(",");
+				paraPanel.getSalarySchemaRefPane().setPKs(split);
+			} else {
+				paraPanel.getSalarySchemaRefPane().setPKs(null);
+			}
+			paraPanel.getFilenameSettingTextArea().setText(vo.getFilenamesetting());
+			paraPanel.getDisplayStopSalaryPanel().setSelected(BooleanEnum.YES.value().equals(vo.getDisplaystopsalary()));
+			//end
 			// paraPanel.getOutFileNameTextField().setText(vo.getVfilename());
 			Integer filetype = vo.getIfiletype();
 			paraPanel.getFileTypeCombox().setSelectedItem(filetype);
@@ -808,8 +819,13 @@ public class DataIOWizard
 				vo.setCperiod(context.getWaPeriod());
 			}
 			else
-			{
+			{	//银行报盘
 				vo.setIiftype((Integer) ItfTypeEnum.WA_BANK.value());
+				//add by weiningc 20200214 start
+				vo.setSalaryschema(null);
+				vo.setFilenamesetting(null);
+				paraPanel.getDisplayStopSalaryPanel().setSelected(false);
+				//end
 			}
 
 			aggVO.setParentVO(vo);
@@ -820,6 +836,22 @@ public class DataIOWizard
 		((HrIntfaceVO) aggVO.getParentVO()).setVifname(paraPanel.getFormatNameTextField().getText());
 		((HrIntfaceVO) aggVO.getParentVO()).setIfiletype((Integer) paraPanel.getFileTypeCombox().getSelectdItemValue());
 		((HrIntfaceVO) aggVO.getParentVO()).setVmemo(paraPanel.getMemTextArea().getText());
+		
+		//add by weiningc 20200214 start
+		String[] waclasses = paraPanel.getSalarySchemaRefPane().getRefPKs();
+		if(waclasses != null && waclasses.length > 0) {
+			StringBuffer sb = new StringBuffer();
+			for(String salaryschema : waclasses) {
+				sb.append(salaryschema).append(",");
+			}
+			((HrIntfaceVO) aggVO.getParentVO()).setSalaryschema(sb.toString().substring(0, sb.toString().length() - 1));
+		} else {
+			((HrIntfaceVO) aggVO.getParentVO()).setSalaryschema(null);
+		}
+		((HrIntfaceVO) aggVO.getParentVO()).setFilenamesetting(paraPanel.getFilenameSettingTextArea().getText());
+		Integer displaystopsalary = paraPanel.getDisplayStopSalaryPanel().isSelected() ? (Integer) BooleanEnum.YES.value() : (Integer) BooleanEnum.NO.value();
+		((HrIntfaceVO) aggVO.getParentVO()).setDisplaystopsalary(displaystopsalary);
+		//end
 
 		// 关联字段
 		String colName = (String) paraPanel.getRelatedItemComb().getSelectdItemValue();

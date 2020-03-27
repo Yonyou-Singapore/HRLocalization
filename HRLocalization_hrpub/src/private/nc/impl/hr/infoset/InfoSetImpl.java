@@ -119,6 +119,7 @@ import nc.vo.trade.summarize.VOHashKeyAdapter;
 import nc.vo.trade.voutils.VOUtil;
 import nc.vo.uif2.LoginContext;
 import nc.vo.util.AuditInfoUtil;
+import nc.vo.wa.item.LocalLicenseUtil;
 
 import org.apache.commons.collections.EnumerationUtils;
 import org.apache.commons.io.FileUtils;
@@ -3801,6 +3802,7 @@ public class InfoSetImpl implements IInfoSet, IInfoSetQry
 	public void addLocalizationFields(String country) throws BusinessException {
 		// TODO 试一下到底可不可以全查
 		// 获取信息集 这边没有指定哪一个是为了以后其他信息集也需要本地化字段
+		LocalLicenseUtil.checkLocalLicense(country);
 		String whereSql = " infoset_code = 'bd_psndoc' ";
 		InfoSetVO[] bd_psndocInfoSet = queryInfoSet(whereSql);
 		

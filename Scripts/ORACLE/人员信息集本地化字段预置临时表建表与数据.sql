@@ -27,6 +27,10 @@ INSERT INTO hr_infoset_item_sealocal VALUES(N'GLOBAL', N'g_bank', N'Bank Name', 
 INSERT INTO hr_infoset_item_sealocal VALUES(N'GLOBAL', N'g_bankcode', N'Bank Code', NULL, NULL, NULL, NULL, NULL, 0, NULL, 101, 0, N'hrlocal-000006', N'6007psn', 'Y', 'N');
 INSERT INTO hr_infoset_item_sealocal VALUES(N'GLOBAL', N'g_bankbranchcode', N'Bank Branch Code', NULL, NULL, NULL, NULL, NULL, 0, NULL, 101, 0, N'hrlocal-000007', N'6007psn', 'Y', 'N');
 INSERT INTO hr_infoset_item_sealocal VALUES(N'GLOBAL', N'g_bankacno', N'Bank A/C No', NULL, NULL, NULL, NULL, NULL, 0, NULL, 101, 0, N'hrlocal-000008', N'6007psn', 'Y', 'Y');
+--add by weiningc 20200227 start
+insert into hr_infoset_item_sealocal (COUNTRY, ITEM_CODE, ITEM_NAME, ITEM_NAME2, ITEM_NAME3, ITEM_NAME4, ITEM_NAME5, ITEM_NAME6, DATA_TYPE, REF_MODEL_NAME, MAX_LENGTH, PRECISE, RESID, RESPATH, NULLABLE, UNIQUE_FLAG)
+values ('GLOBAL', 'g_eepaygroup', 'Employee Pay Group', null, null, null, null, null, 5, 'SEALOCAL016', 20, 0, 'hrlocal-000059', '6007psn', 'Y', 'N');
+
 
 -- Insert Malaysia Fields
 INSERT INTO hr_infoset_item_sealocal VALUES(N'MY', N'my_category', N'Personnel Category', NULL, NULL, NULL, NULL, NULL, 5, N'SEALOCAL003', 20, 0, N'hrlocal-000009', N'6007psn', 'Y', 'N');

@@ -7,66 +7,6 @@ public class SeaLocalCommonItemVO extends SuperVO {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final String MY_BS = "my_bs";// Basic Salary
-	public static final String MY_TA = "my_ta";// Total Allowance
-	public static final String MY_TB = "my_tb";// Total bonus
-	public static final String MY_NPL = "my_npl";// NPL
-	public static final String MY_OT = "my_ot";// Total OT
-	public static final String MY_EPF_ER = "my_epf_er";// EPF(employer)
-	public static final String MY_EPF_EE = "my_epf_ee";// EPF(employee)
-	public static final String MY_EIS_ER = "my_eis_er";
-	public static final String MY_EIS_EE = "my_eis_ee";
-	public static final String MY_SOCSO_EYER = "my_socso_eyer";
-	public static final String MY_SOCSO_EYEE = "my_socso_eyee";
-	public static final String MY_PCB = "my_pcb";
-	public static final String MY_ZAKAT = "my_zakat";
-	public static final String MY_PAY = "my_pay";// NET PAY
-	public static final String MY_Y1 = "my_Y1";// Taxable
-															// Income(Normal)(Y1)
-	public static final String MY_YT = "my_Yt";// Taxable
-															// Income(Additional)(Yt)
-	public static final String MY_TI = "my_ti";// Taxable Income
-	public static final String MY_EPF_NR = "my_epf_nr";// EPF(Normal
-																	// remuneration)
-	public static final String MY_EPF_AR = "my_epf_ar";// EPF(Addtional
-																	// remuneration)
-	public static final String MY_K1 = "my_K1";// Normal
-															// remuneration’s
-															// EPF and Other
-															// Approved
-															// Funds(K1)
-	public static final String MY_KT = "my_Kt";// Additional
-															// remuneration’s
-															// EPF (Kt)
-	public static final String MY_K1KT = "my_K1Kt";// Taxable
-																// Deduction(K1+Kt)
-	public static final String MY_LP1 = "my_LP1";// Taxable Option
-																// Deduction(LP1)
-	public static final String MY_CF_EPF_ER = "my_cf_epf_er";// CF
-																			// EPF(employer)
-	public static final String MY_CF_EPF_EE = "my_cf_epf_ee";// CF
-																			// EPF(employee)
-	public static final String MY_CF_EIS_ER = "my_cf_eis_er";
-	public static final String MY_CF_EIS_EE = "my_cf_eis_ee";
-	public static final String my_cf_socso_er = "my_cf_socso_er";
-	public static final String MY_CF_SOCSO_EE = "my_cf_socso_ee";
-	public static final String MY_X = "my_X";// CF PCB(X)
-	public static final String MY_Y = "my_Y";// CF Taxable Income(Y)
-	public static final String MY_K = "my_K";// CF Taxable
-															// Deduction(K)
-	public static final String MY_LP = "my_LP";// CF Taxable Option
-															// Deduction(LP)
-	public static final String MY_Z = "my_Z";// CF ZAKAT(Z)
-	public static final String MY_YTD_EPF_ER = "my_ytd_epf_er";// YTD
-																			// EPF(employer)
-	public static final String MY_YTD_EPF_EE = "my_ytd_epf_ee";// YTD
-																			// EPF(employee)
-	public static final String MY_YTD_EIS_ER = "my_ytd_eis_er";
-	public static final String MY_YTD_EIS_EE = "my_ytd_eis_ee";
-	public static final String MY_YTD_SOCSO_ER = "my_ytd_socso_er";
-	public static final String my_ytd_socso_er = "my_ytd_epf_ee";
-	public static final String MY_YTD_PCB = "my_ytd_pcb";// YTD PCB
-
 	private String item_code;
 	private String item_name;
 	private Integer item_class;// 数据类型
@@ -74,6 +14,14 @@ public class SeaLocalCommonItemVO extends SuperVO {
 	private Integer item_length;
 	private UFBoolean item_isclearnextmonth;// 下月是否清零
 	private String itemkey;
+	private String country;
+	private String item_name2;//多语名称 第二语言名称
+	//是否公式
+	private UFBoolean isformula;
+	//公式显示
+	private String vformula;
+	//公式value
+	private String vformulastr;
 
 	public String getItem_code() {
 		return item_code;
@@ -129,6 +77,48 @@ public class SeaLocalCommonItemVO extends SuperVO {
 
 	public void setItemkey(String itemkey) {
 		this.itemkey = itemkey;
+	}
+	
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public String getItem_name2() {
+		return item_name2;
+	}
+
+	public void setItem_name2(String item_name2) {
+		this.item_name2 = item_name2;
+	}
+	
+
+	public UFBoolean getIsformula() {
+		return isformula;
+	}
+
+	public void setIsformula(UFBoolean isformula) {
+		this.isformula = isformula;
+	}
+
+	public String getVformula() {
+		return vformula;
+	}
+
+	public void setVformula(String vformula) {
+		this.vformula = vformula;
+	}
+
+	public String getVformulastr() {
+		return vformulastr;
+	}
+
+	public void setVformulastr(String vformulastr) {
+		this.vformulastr = vformulastr;
 	}
 
 	@Override

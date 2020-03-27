@@ -78,6 +78,8 @@ import nc.vo.wa.item.FromEnumVO;
 import nc.vo.wa.item.PropertyEnumVO;
 import nc.vo.wa.item.WaItemConstant;
 import nc.vo.wa.item.WaItemVO;
+import nc.vo.wa.localenum.CpfWagCategoryEnum;
+import nc.vo.wa.localenum.SgPayCategoryEnum;
 import nc.vo.wa.pub.WaLoginContext;
 import nc.vo.wa.pub.WaLoginVOHelper;
 import nc.vo.wabm.util.WaCacheUtils;
@@ -101,6 +103,7 @@ import org.apache.commons.lang.StringUtils;
 public class ClassItemManageServiceImpl implements IClassItemManageService, IClassItemQueryService {
 
 	private final ItemServiceImpl itemServiceImpl = new ItemServiceImpl();
+	
 	WaCommonImpl waCommonImpl = new WaCommonImpl();
 	ClassItemPowerServiceImpl classItemPowerServiceImpl = new ClassItemPowerServiceImpl();
 	PaydataServiceImpl paydataServiceImpl = new PaydataServiceImpl();
@@ -859,42 +862,37 @@ public class ClassItemManageServiceImpl implements IClassItemManageService, ICla
 	public void regenerateSystemFormula(String pk_org, String pk_wa_class, String cyear, String cperiod)
 			throws BusinessException {
 
+		WaClassItemVO[] items = null;
+		
+
 		try {
-
-			WaClassItemVO[] items = null;
-			try {
-				items = classitemDAO.queryItemInfoVO(pk_org, pk_wa_class, cyear, cperiod,
-						" wa_item.itemkey in ("+getRegenerateItem()+") and wa_classitem.issysformula = 'Y'");
-			} catch (DAOException e) {
-				Logger.error(e);
-				throw new BusinessRuntimeException(ResHelper.getString("60130classpower","060130classpower0178")/*@res "重新设置系统项目的公式失败。"*/);
-			}
-			if (items == null || items.length == 0) {
-				return;
-			}
-			BDPKLockUtil.lockSuperVO(items);
-
-			for (int i = 0; i < items.length; i++) {
-				HrFormula formula = new FormulaUtils().getSystemFormula(pk_org, pk_wa_class, cyear, cperiod, items[i]
-						.getItemkey());
-				items[i].setVformula(formula.getScirptLang());
-				//20151208 shenliangc NCdp205556679  薪资补发多次发放薪资方案，只有一次发放的薪资项目值补发值没有累计。
-				//根本原因是期末处理生成下期间发放项目后系统项目公式没有包含多次方案子方案中添加的发放项目。
-				//20151209 修改后重新构造补丁
-				items[i].setVformulastr(formula.getBusinessLang());
-			}
-			BaseDAO baseDAO = new BaseDAO();
-			baseDAO.updateVOArray(items, new String[] { WaClassItemVO.VFORMULA, WaClassItemVO.VFORMULASTR});
-			WaCacheUtils.synCache(items[0].getTableName());
-		} catch (BusinessException e) {
-			Logger.error(e.getMessage(), e);
-			throw e;
-		}catch (Exception e) {
-			Logger.error(e.getMessage(), e);
-			throw new BusinessException(ResHelper.getString("60130classpower","060130classpower0179")/*@res "生成系统项目的默认公式失败！"*/);
-		}finally{
-
+			items = classitemDAO.queryItemInfoVO(pk_org, pk_wa_class, cyear, cperiod,
+					" wa_item.itemkey in ("+getRegenerateItem()+") and wa_classitem.issysformula = 'Y'");
+		} catch (DAOException e) {
+			Logger.error(e);
+			throw new BusinessRuntimeException(ResHelper.getString("60130classpower","060130classpower0178")/*@res "重新设置系统项目的公式失败。"*/);
 		}
+		if (items == null || items.length == 0) {
+			return;
+		}
+		BDPKLockUtil.lockSuperVO(items);
+
+		for (int i = 0; i < items.length; i++) {
+			HrFormula formula = new FormulaUtils().getSystemFormula(pk_org, pk_wa_class, cyear, cperiod, items[i]
+					.getItemkey());
+			if(formula == null) {
+				throw new BusinessException(items[i].getCode() + " 's formula is blank, check please");
+			}
+			items[i].setVformula(formula.getScirptLang());
+			//20151208 shenliangc NCdp205556679  薪资补发多次发放薪资方案，只有一次发放的薪资项目值补发值没有累计。
+			//根本原因是期末处理生成下期间发放项目后系统项目公式没有包含多次方案子方案中添加的发放项目。
+			//20151209 修改后重新构造补丁
+			items[i].setVformulastr(formula.getBusinessLang());
+		}
+		BaseDAO baseDAO = new BaseDAO();
+		baseDAO.updateVOArray(items, new String[] { WaClassItemVO.VFORMULA, WaClassItemVO.VFORMULASTR});
+		WaCacheUtils.synCache(items[0].getTableName());
+		
 	}
 	
 	private void generateTotalItemFormula(String pk_org, String pk_wa_class, String cyear, String cperiod) throws BusinessException {
@@ -950,6 +948,17 @@ public class ClassItemManageServiceImpl implements IClassItemManageService, ICla
 			summingPCBNormalItems(items);
 			summingPCBAdditionalItems(items);
 			//end
+			//CPF 汇总 start
+			summingCPFOwItems(items);
+			summingCPFAwItems(items);
+			//end
+			//BRP和GRP 汇总 start
+			summingBRPItems(items);
+			summingGRPItems(items);
+			//end
+			//印尼本地化
+			summingBPJS(items);
+			summingPPH21(items);
 			
 			BaseDAO baseDAO = new BaseDAO();
 			baseDAO.updateVOArray(items, new String[] { WaClassItemVO.VFORMULA, WaClassItemVO.VFORMULASTR});
@@ -960,6 +969,187 @@ public class ClassItemManageServiceImpl implements IClassItemManageService, ICla
 		}
 	}
 	
+	private void summingBPJS(WaClassItemVO[] items) {
+		for (WaClassItemVO parent : items) {
+			if (parent.getCode().equals("idn_bpb")) {
+				StringBuilder formulaSb = new StringBuilder();
+				StringBuilder formulaStrSb = new StringBuilder();
+				
+				// 清空vformula和vformulaStr字段
+				parent.setVformula(null);
+				parent.setVformulastr(null);
+				
+				// 遍历所有薪资发放项目，重构公式
+				for (WaClassItemVO child : items) {
+					if (child.getIdn_bpjs() != null && child.getIdn_bpjs().booleanValue()) {
+						if (child.getIproperty().intValue() == PropertyEnumVO.MINUS.toIntValue()) {
+							formulaSb.append(" - wa_data." + child.getItemkey());
+							formulaStrSb.append(" - wa_data." + child.getItemkey());
+						} else {
+							formulaSb.append(" + wa_data." + child.getItemkey());
+							formulaStrSb.append(" + wa_data." + child.getItemkey());
+						}
+					}
+				}
+				parent.setVformula(formulaSb.toString());
+				parent.setVformulastr(formulaStrSb.toString());
+			} else {
+				continue;
+			}
+		}
+	}
+
+	private void summingPPH21(WaClassItemVO[] items) {
+		for (WaClassItemVO parent : items) {
+			if (parent.getCode().equals("idn_ppb")) {
+				StringBuilder formulaSb = new StringBuilder();
+				StringBuilder formulaStrSb = new StringBuilder();
+				
+				// 清空vformula和vformulaStr字段
+				parent.setVformula(null);
+				parent.setVformulastr(null);
+				
+				// 遍历所有薪资发放项目，重构公式
+				for (WaClassItemVO child : items) {
+					if (child.getIdn_pph21() != null && child.getIdn_pph21().booleanValue()) {
+						if (child.getIproperty().intValue() == PropertyEnumVO.MINUS.toIntValue()) {
+							formulaSb.append(" - wa_data." + child.getItemkey());
+							formulaStrSb.append(" - wa_data." + child.getItemkey());
+						} else {
+							formulaSb.append(" + wa_data." + child.getItemkey());
+							formulaStrSb.append(" + wa_data." + child.getItemkey());
+						}
+					}
+				}
+				//PPH21需要乘以12
+				parent.setVformula(formulaSb.toString());
+				parent.setVformulastr(formulaSb.toString());
+			} else {
+				continue;
+			}
+		}
+	}
+
+	private void summingGRPItems(WaClassItemVO[] items) {
+		for (WaClassItemVO parent : items) {
+			if (parent.getCode().equals("sg_grp")) {
+				StringBuilder formulaSb = new StringBuilder();
+				StringBuilder formulaStrSb = new StringBuilder();
+				
+				// 清空vformula和vformulaStr字段
+				parent.setVformula(null);
+				parent.setVformulastr(null);
+				
+				// 遍历所有薪资发放项目，重构公式
+				for (WaClassItemVO child : items) {
+					if (child.getSg_brp_or_grp() != null && SgPayCategoryEnum.SG_GRP.value().equals(child.getSg_brp_or_grp())) {
+						if (child.getIproperty().intValue() == PropertyEnumVO.MINUS.toIntValue()) {
+							formulaSb.append(" - wa_data." + child.getItemkey());
+							formulaStrSb.append(" - wa_data." + child.getItemkey());
+						} else {
+							formulaSb.append(" + wa_data." + child.getItemkey());
+							formulaStrSb.append(" + wa_data." + child.getItemkey());
+						}
+					}
+				}
+				parent.setVformula(formulaSb.toString());
+				parent.setVformulastr(formulaStrSb.toString());
+			} else {
+				continue;
+			}
+		}
+	}
+
+	private void summingBRPItems(WaClassItemVO[] items) {
+		for (WaClassItemVO parent : items) {
+			if (parent.getCode().equals("sg_brp")) {
+				StringBuilder formulaSb = new StringBuilder();
+				StringBuilder formulaStrSb = new StringBuilder();
+				
+				// 清空vformula和vformulaStr字段
+				parent.setVformula(null);
+				parent.setVformulastr(null);
+				
+				// 遍历所有薪资发放项目，重构公式
+				for (WaClassItemVO child : items) {
+					if (child.getSg_brp_or_grp() != null && SgPayCategoryEnum.SG_BRP.value().equals(child.getSg_brp_or_grp())) {
+						if (child.getIproperty().intValue() == PropertyEnumVO.MINUS.toIntValue()) {
+							formulaSb.append(" - wa_data." + child.getItemkey());
+							formulaStrSb.append(" - wa_data." + child.getItemkey());
+						} else {
+							formulaSb.append(" + wa_data." + child.getItemkey());
+							formulaStrSb.append(" + wa_data." + child.getItemkey());
+						}
+					}
+				}
+				parent.setVformula(formulaSb.toString());
+				parent.setVformulastr(formulaStrSb.toString());
+			} else {
+				continue;
+			}
+		}
+	}
+
+	private void summingCPFAwItems(WaClassItemVO[] items) {
+		for (WaClassItemVO parent : items) {
+			if (parent.getCode().equals("sg_aw")) {
+				StringBuilder formulaSb = new StringBuilder();
+				StringBuilder formulaStrSb = new StringBuilder();
+				
+				// 清空vformula和vformulaStr字段
+				parent.setVformula(null);
+				parent.setVformulastr(null);
+				
+				// 遍历所有薪资发放项目，重构公式
+				for (WaClassItemVO child : items) {
+					if (child.getSg_aw_or_ow() != null && CpfWagCategoryEnum.CONTRIBUTE_TO_ADDITIONAL_WAGE.value().equals(child.getSg_aw_or_ow())) {
+						if (child.getIproperty().intValue() == PropertyEnumVO.MINUS.toIntValue()) {
+							formulaSb.append(" - wa_data." + child.getItemkey());
+							formulaStrSb.append(" - wa_data." + child.getItemkey());
+						} else {
+							formulaSb.append(" + wa_data." + child.getItemkey());
+							formulaStrSb.append(" + wa_data." + child.getItemkey());
+						}
+					}
+				}
+				parent.setVformula(formulaSb.toString());
+				parent.setVformulastr(formulaStrSb.toString());
+			} else {
+				continue;
+			}
+		}
+	}
+
+	private void summingCPFOwItems(WaClassItemVO[] items) {
+		for (WaClassItemVO parent : items) {
+			if (parent.getCode().equals("sg_ow")) {
+				StringBuilder formulaSb = new StringBuilder();
+				StringBuilder formulaStrSb = new StringBuilder();
+				
+				// 清空vformula和vformulaStr字段
+				parent.setVformula(null);
+				parent.setVformulastr(null);
+				
+				// 遍历所有薪资发放项目，重构公式
+				for (WaClassItemVO child : items) {
+					if (child.getSg_aw_or_ow() != null && CpfWagCategoryEnum.CONTRIBUTE_TO_ORDINARY_WAGE.value().equals(child.getSg_aw_or_ow())) {
+						if (child.getIproperty().intValue() == PropertyEnumVO.MINUS.toIntValue()) {
+							formulaSb.append(" - wa_data." + child.getItemkey());
+							formulaStrSb.append(" - wa_data." + child.getItemkey());
+						} else {
+							formulaSb.append(" + wa_data." + child.getItemkey());
+							formulaStrSb.append(" + wa_data." + child.getItemkey());
+						}
+					}
+				}
+				parent.setVformula(formulaSb.toString());
+				parent.setVformulastr(formulaStrSb.toString());
+			} else {
+				continue;
+			}
+		}
+	}
+
 	private void summingPCBAdditionalItems(WaClassItemVO[] items) {
 		for (WaClassItemVO parent : items) {
 			if (parent.getCode().equals("sealocal_pcb_additional")) {

@@ -30,7 +30,7 @@ public class LocalSeaItemAction_SG extends NCAction{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static final String SINGAPORE = "sg";
+	private static final String SINGAPORE = "SG";
 	private AbstractAppModel model;
 	
 	public LocalSeaItemAction_SG() {

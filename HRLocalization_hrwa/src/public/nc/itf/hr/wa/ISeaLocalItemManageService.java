@@ -9,8 +9,7 @@ import nc.vo.wa.item.WaItemVO;
  *
  */
 public interface ISeaLocalItemManageService {
-	
-	
+
 	void saveBactchItemForSeaLocal(WaItemVO vo, String countryitem) throws BusinessException, Exception;
 
 }

@@ -9,6 +9,7 @@ import nc.md.model.impl.MDEnum;
 import nc.vo.hr.itemsource.TypeEnumVO;
 import nc.vo.pub.SuperVO;
 import nc.vo.pub.lang.UFBoolean;
+import nc.vo.pub.lang.UFDouble;
 
 /**
  * <b> 在此处简要描述此类的功能 </b>
@@ -106,12 +107,19 @@ public class WaItemVO extends SuperVO
 	
 	//添加新加坡本地化字段 20190918 start
 	// EPF字段修改 添加my_isepf_n, my_isepf_a, my_ispcb_n, my_ispcb_a
-	private nc.vo.pub.lang.UFBoolean sg_isow;
-	private nc.vo.pub.lang.UFBoolean sg_isaw;
+//	private nc.vo.pub.lang.UFBoolean sg_isow;
+//	private nc.vo.pub.lang.UFBoolean sg_isaw;
+	private String sg_aw_or_ow;
 	private nc.vo.pub.lang.UFBoolean sg_inpe;
 	private String sg_iir8acat;
 	private String sg_iapp8acat;
 	private String sg_prorate;
+	private UFDouble g_fixeddays;
+//	private nc.vo.pub.lang.UFBoolean sg_isbrp;
+//	private nc.vo.pub.lang.UFBoolean sg_isgrp;
+	private String sg_brp_or_grp;
+	private nc.vo.pub.lang.UFBoolean idn_bpjs;
+	private nc.vo.pub.lang.UFBoolean idn_pph21;
 	//end
 	
 	// 添加汇总功能相关字段2018-11-08
@@ -238,8 +246,8 @@ public class WaItemVO extends SuperVO
 	public static final String MY_ISOTRATE = "my_isotrate";
 	
 	//Singapore 字段
-	public static final String SG_ISOW = "sg_isow";
-	public static final String SG_ISAW = "sg_isaw";
+//	public static final String SG_ISOW = "sg_isow";
+//	public static final String SG_ISAW = "sg_isaw";
 	public static final String SG_INPE = "sg_inpe";
 	public static final String SG_IIR8ACAT = "sg_iir8acat";
 	public static final String SG_IAPP8ACAT = "sg_iapp8acat";
@@ -1600,21 +1608,21 @@ public class WaItemVO extends SuperVO
 	
 	
 
-	public nc.vo.pub.lang.UFBoolean getSg_isow() {
-		return sg_isow;
-	}
-
-	public void setSg_isow(nc.vo.pub.lang.UFBoolean sg_isow) {
-		this.sg_isow = sg_isow;
-	}
-
-	public nc.vo.pub.lang.UFBoolean getSg_isaw() {
-		return sg_isaw;
-	}
-
-	public void setSg_isaw(nc.vo.pub.lang.UFBoolean sg_isaw) {
-		this.sg_isaw = sg_isaw;
-	}
+//	public nc.vo.pub.lang.UFBoolean getSg_isow() {
+//		return sg_isow;
+//	}
+//
+//	public void setSg_isow(nc.vo.pub.lang.UFBoolean sg_isow) {
+//		this.sg_isow = sg_isow;
+//	}
+//
+//	public nc.vo.pub.lang.UFBoolean getSg_isaw() {
+//		return sg_isaw;
+//	}
+//
+//	public void setSg_isaw(nc.vo.pub.lang.UFBoolean sg_isaw) {
+//		this.sg_isaw = sg_isaw;
+//	}
 
 	public nc.vo.pub.lang.UFBoolean getSg_inpe() {
 		return sg_inpe;
@@ -1657,6 +1665,74 @@ public class WaItemVO extends SuperVO
 	public void setG_totaltoitem(java.lang.String g_totaltoitem) {
 		this.g_totaltoitem = g_totaltoitem;
 	}
+
+//	public nc.vo.pub.lang.UFBoolean getSg_isbrp() {
+//		return sg_isbrp;
+//	}
+//
+//	public void setSg_isbrp(nc.vo.pub.lang.UFBoolean sg_isbrp) {
+//		this.sg_isbrp = sg_isbrp;
+//	}
+//
+//	public nc.vo.pub.lang.UFBoolean getSg_isgrp() {
+//		return sg_isgrp;
+//	}
+//
+//	public void setSg_isgrp(nc.vo.pub.lang.UFBoolean sg_isgrp) {
+//		this.sg_isgrp = sg_isgrp;
+//	}
+	
+
+	public String getSg_prorate() {
+		return sg_prorate;
+	}
+
+	public String getSg_aw_or_ow() {
+		return sg_aw_or_ow;
+	}
+
+	public void setSg_aw_or_ow(String sg_aw_or_ow) {
+		this.sg_aw_or_ow = sg_aw_or_ow;
+	}
+
+	public String getSg_brp_or_grp() {
+		return sg_brp_or_grp;
+	}
+
+	public void setSg_brp_or_grp(String sg_brp_or_grp) {
+		this.sg_brp_or_grp = sg_brp_or_grp;
+	}
+
+	public void setSg_prorate(String sg_prorate) {
+		this.sg_prorate = sg_prorate;
+	}
+
+	public UFDouble getG_fixeddays() {
+		return g_fixeddays;
+	}
+
+	public void setG_fixeddays(UFDouble g_fixeddays) {
+		this.g_fixeddays = g_fixeddays;
+	}
+
+	public nc.vo.pub.lang.UFBoolean getIdn_bpjs() {
+		return idn_bpjs;
+	}
+
+	public void setIdn_bpjs(nc.vo.pub.lang.UFBoolean idn_bpjs) {
+		this.idn_bpjs = idn_bpjs;
+	}
+
+	public nc.vo.pub.lang.UFBoolean getIdn_pph21() {
+		return idn_pph21;
+	}
+
+	public void setIdn_pph21(nc.vo.pub.lang.UFBoolean idn_pph21) {
+		this.idn_pph21 = idn_pph21;
+	}
+	
+	
+	
 	
 	
 }

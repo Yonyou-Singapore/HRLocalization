@@ -186,6 +186,8 @@
 				<ref bean="localSeaItemAction_MY" />
 				<ref bean="nullaction" />
 				<ref bean="localSeaItemAction_SG" />
+				<ref bean="nullaction" />
+				<ref bean="localSeaItemAction_IND" />
 			</list>
 		</property>
 	</bean>
@@ -193,6 +195,9 @@
 		<property name="model" ref="ManageAppModel" />
 	</bean>
 	<bean id="localSeaItemAction_SG" class="nc.ui.wa.item.action.LocalSeaItemAction_SG">
+		<property name="model" ref="ManageAppModel" />
+	</bean>
+	<bean id="localSeaItemAction_IDN" class="nc.ui.wa.item.action.LocalSeaItemAction_IND">
 		<property name="model" ref="ManageAppModel" />
 	</bean>
 	<!-- end -->

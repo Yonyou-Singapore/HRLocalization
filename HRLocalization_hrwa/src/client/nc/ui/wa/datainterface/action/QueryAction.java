@@ -226,7 +226,7 @@ public class QueryAction extends nc.ui.hr.uif2.action.QueryAction
 					boolean toSkip = false;
 					for (int k=0; items != null && k<items.length; k++) {
 						if (itemVOs[k].getIskipifzero().intValue() == 1 && (vo.getAttributeValue(items[k].getKey()) == null || ((UFDouble) vo.getAttributeValue(items[k].getKey())).equals(UFDouble.ZERO_DBL) )) {
-							toSkip = true;
+//							toSkip = true;  //modify by wieningc 为0跳过是关于格式的，应不影响数据查询，只作用于txt格式输出
 						}
 						
 						if ((Integer.valueOf(DataFromEnum.SINGLE.getEnumValue().getValue()).intValue() == itemVOs[k].getIsourcetype().intValue()) && items[k].getKey() != null && vo.getAttributeValue(items[k].getKey()) == null)

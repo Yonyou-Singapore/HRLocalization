@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component conRouterType="手动" createIndustry="0"
+	createTime="2020-03-10 18:01:45" creator="" description=""
+	displayName="SOCSO_Category(自定义档案)Business Operation " fromSourceBmf="true"
+	gencodestyle="NC传统样式" help="" id="269ee99e-62b6-11ea-bb33-b9fa97a392d9"
+	industry="0" industryChanged="false" industryIncrease="false"
+	industryName="基础行业" isSource="false" isbizmodel="true" mainEntity=""
+	modifier="" modifyIndustry="0" modifyTime="2020-03-10 18:01:45"
+	name="bo_Defdoc-SEALOCALMY05" namespace="uap" ownModule="uapbd"
+	preLoad="false" programcode="" resModuleName="bo_Defdoc-SEALOCALMY05"
+	resid="" version="1" versionType="0">
+	<celllist>
+		<busioperation componentID="269ee99e-62b6-11ea-bb33-b9fa97a392d9"
+			createIndustry="0" createTime="2020-03-10 18:01:45" creator=""
+			dataType="1001AX1000000002LH1W" dbtype="" description=""
+			displayName="修改" fullClassName="nc.vouap.bo_Defdoc-SEALOCALMY05.edit"
+			height="100" help="" id="269ee9a2-62b6-11ea-bb33-b9fa97a392d9"
+			industryChanged="false" isAuthorization="true" isBusiActivity="false"
+			isSource="false" logtype="MODIFY" modifier="" modifyIndustry="0"
+			modifyTime="2020-03-10 18:01:45" name="edit" needlog="true"
+			resid="2UC000-001103" typeDisplayName="SOCSO_Category(自定义档案)"
+			typeName="Defdoc-SEALOCALMY05" version=""
+			versionType="0" visibility="public" width="80" x="150" y="120">
+			<refoperationlist />
+		</busioperation>
+		<busioperation componentID="269ee99e-62b6-11ea-bb33-b9fa97a392d9"
+			createIndustry="0" createTime="2020-03-10 18:01:45" creator=""
+			dataType="1001AX1000000002LH1W" dbtype="" description=""
+			displayName="删除" fullClassName="nc.vouap.bo_Defdoc-SEALOCALMY05.delete"
+			height="100" help="" id="269ee9a0-62b6-11ea-bb33-b9fa97a392d9"
+			industryChanged="false" isAuthorization="true" isBusiActivity="false"
+			isSource="false" logtype="DELETE" modifier="" modifyIndustry="0"
+			modifyTime="2020-03-10 18:01:45" name="delete" needlog="true"
+			resid="2UC000-001104" typeDisplayName="SOCSO_Category(自定义档案)"
+			typeName="Defdoc-SEALOCALMY05" version=""
+			versionType="0" visibility="public" width="80" x="250" y="120">
+			<refoperationlist />
+		</busioperation>
+		<busioperation componentID="269ee99e-62b6-11ea-bb33-b9fa97a392d9"
+			createIndustry="0" createTime="2020-03-10 18:01:45" creator=""
+			dataType="1001AX1000000002LH1W" dbtype="" description=""
+			displayName="启用" fullClassName="nc.vouap.bo_Defdoc-SEALOCALMY05.enable"
+			height="100" help="" id="269ee9a3-62b6-11ea-bb33-b9fa97a392d9"
+			industryChanged="false" isAuthorization="true" isBusiActivity="false"
+			isSource="false" logtype="MODIFY" modifier="" modifyIndustry="0"
+			modifyTime="2020-03-10 18:01:45" name="enable" needlog="true"
+			resid="2UC000-001105" typeDisplayName="SOCSO_Category(自定义档案)"
+			typeName="Defdoc-SEALOCALMY05" version=""
+			versionType="0" visibility="public" width="80" x="350" y="120">
+			<refoperationlist />
+		</busioperation>
+		<busioperation componentID="269ee99e-62b6-11ea-bb33-b9fa97a392d9"
+			createIndustry="0" createTime="2020-03-10 18:01:45" creator=""
+			dataType="1001AX1000000002LH1W" dbtype="" description=""
+			displayName="停用" fullClassName="nc.vouap.bo_Defdoc-SEALOCALMY05.disable"
+			height="100" help="" id="269ee9a1-62b6-11ea-bb33-b9fa97a392d9"
+			industryChanged="false" isAuthorization="true" isBusiActivity="false"
+			isSource="false" logtype="MODIFY" modifier="" modifyIndustry="0"
+			modifyTime="2020-03-10 18:01:45" name="disable" needlog="true"
+			resid="2UC000-001106" typeDisplayName="SOCSO_Category(自定义档案)"
+			typeName="Defdoc-SEALOCALMY05" version=""
+			versionType="0" visibility="public" width="80" x="450" y="120">
+			<refoperationlist />
+		</busioperation>
+		<busioperation componentID="269ee99e-62b6-11ea-bb33-b9fa97a392d9"
+			createIndustry="0" createTime="2020-03-10 18:01:45" creator=""
+			dataType="1001AX1000000002LH1W" dbtype="" description=""
+			displayName="新增" fullClassName="nc.vouap.bo_Defdoc-SEALOCALMY05.add"
+			height="100" help="" id="269ee99f-62b6-11ea-bb33-b9fa97a392d9"
+			industryChanged="false" isAuthorization="true" isBusiActivity="false"
+			isSource="false" logtype="ADD" modifier="" modifyIndustry="0"
+			modifyTime="2020-03-10 18:01:45" name="add" needlog="true"
+			resid="2UC000-001114" typeDisplayName="SOCSO_Category(自定义档案)"
+			typeName="Defdoc-SEALOCALMY05" version=""
+			versionType="0" visibility="public" width="80" x="50" y="120">
+			<refoperationlist />
+		</busioperation>
+	</celllist>
+	<connectlist />
+	<refdepends />
+	<refdependLoseIDs />
+	<cellRemoveLog />
+	<rulers>
+		<ruler isHorizontal="true" unit="0">
+			<guideList />
+		</ruler>
+		<ruler isHorizontal="false" unit="0">
+			<guideList />
+		</ruler>
+	</rulers>
+</component>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<linked-hash-map>	 
+  <entry>
+    <string>SingaporeCPF</string>
+    <function>
+      <displayName>SingaporeCPF</displayName>
+      <defaultName>6001formula;sealocal-000020</defaultName>
+      <hintMsgRes>6001formula;sealocal-000021</hintMsgRes>
+      <inputSigRes>6001formula;sealocal-000022</inputSigRes>
+      <pattern>SingaporeCPF\([0-1],[0-5],f_\d+,f_\d+,f_\d+,f_\d+,f_\d+\)</pattern>
+      <arguments>SingaporeCPF({0},{1},{2},{3},{4},{5},{6})</arguments>
+      <parapanel>nc.ui.hr.func.WaParaAdjPanel</parapanel>
+      <convertor>nc.ui.hr.func.WaParaPanel_jdConvertor</convertor>
+      <group>WA</group>
+      <process>nc.impl.wa.func.SingaporeCPF</process>
+      <productCode>UPP6013func</productCode>
+    </function>
+  </entry>
+  
+  <!-- AW Ceilling函数 -->
+  <entry>
+    <string>SG_AWceilling</string>
+    <function>
+      <displayName>SG_AWceilling</displayName>
+      <defaultName>6001formula;sealocal-000023</defaultName>
+      <hintMsgRes>6001formula;sealocal-000024</hintMsgRes>
+      <inputSigRes>6001formula;sealocal-000025</inputSigRes>
+      <pattern>SG_AWceilling\(f_\d+,f_\d+,f_\d+,f_\d+\)</pattern>
+      <arguments>SG_AWceilling({0},{1},{2},{3})</arguments>
+      <parapanel>nc.ui.hr.func.WaParaAdjPanel</parapanel>
+      <convertor>nc.ui.hr.func.WaParaPanel_jdConvertor</convertor>
+      <group>WA</group>
+      <process>nc.impl.wa.func.SG_AWceilling</process>
+      <productCode>UPP6013func</productCode>
+    </function>
+  </entry>
+  
+ </linked-hash-map> 

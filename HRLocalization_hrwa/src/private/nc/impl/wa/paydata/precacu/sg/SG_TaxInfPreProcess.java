@@ -48,13 +48,13 @@ public class SG_TaxInfPreProcess extends AbstractFormulaExecutor
 			throws BusinessException {
 		// TODO Auto-generated method stub
 
-	}
+	}  
 
 	@Override
 	public void transferTaxCacuData(SingaporeFormulaVO singaporeFormulaVO,
 			WaLoginContext context) throws DAOException, BusinessException {
 		// 1.查询已知的薪资项目
-		List<SingaporeVO_CPF> results = this.queryPCBKnownItems(
+		List<SingaporeVO_CPF> results = this.queryCPFKnownItems(
 				singaporeFormulaVO, context);
 
 		// 2.逻辑计算Singapore CPF, 包括OW Employee rate等等
@@ -128,18 +128,22 @@ public class SG_TaxInfPreProcess extends AbstractFormulaExecutor
 	}
 
 	private ConcurrentHashMap<String, UFDouble> cacuOtherCPFItems(
-			SingaporeVO_CPF[] results, WaLoginContext context, SingaporeFormulaVO singaporeFormulaVO) throws DAOException {
+			SingaporeVO_CPF[] results, WaLoginContext context, SingaporeFormulaVO singaporeFormulaVO) throws BusinessException {
 		
 		String period = context.getCperiod();
 		String year = context.getCyear();
-		FormulaParse formulaparse = new FormulaParse();;
+		FormulaParse formulaparse = new FormulaParse();
 		ConcurrentHashMap<String, UFDouble> wacacumap = new ConcurrentHashMap<String, UFDouble>();
 		//税率对照表
 		SingaporeVO_CPF_Rate[] raterange = this.queryCPFRateRanage(year, singaporeFormulaVO.getOrgmode());
-			
+		Logger.error("===Start cal Singapore CPF===");	
 		for(SingaporeVO_CPF vo : results) {
 			//1 员工年龄
+			if(vo.getBirthdate() == null) {
+				throw new BusinessException(vo.getPsncode() + " :Birthdate is blank.");
+			}
 			int age = this.getAge(vo.getBirthdate(), year, period);
+			Logger.error("===Singapore CPF===" + vo.getPsncode() + " ,Birthdate:" + vo.getBirthdate() + " ,year:" + year + " ,period:" + period);	
 			//prcode
 			String prcode = this.getPRCode(vo, year, period);
 			if(StringUtils.isBlank(prcode)) {
@@ -156,12 +160,12 @@ public class SG_TaxInfPreProcess extends AbstractFormulaExecutor
 		//PR第几年  若是公民, 直接是第三年 公民只有G/G  并且直接是第三年 PR03
 		//公民和PR使用的统一标识 有颜色区分 Citizen 为粉红色 PR为蓝色
 		if(SingaporeFormulaVO.SINGAPORE_CITIZEN.equals(vo.getIdtype())/*Singapore Citizen*/) {
-			Logger.info("===Singapore CPF=== NRIC-PINK, PR03");
+			Logger.error("===Singapore CPF=== NRIC-PINK, PR03");
 			return SingaporeFormulaVO.THIRDPR;
 		}
 		if(vo.getSgpr() == null || !vo.getSgpr().booleanValue() || vo.getPr_approvaldate() == null
 				|| vo.getIdtype() == null) {
-			Logger.info("===Singapore CPF=== 非PR, 不计算CPF. ");
+			Logger.error("===Singapore CPF=== 非PR, 不计算CPF. ");
 			return null;
 		}
 		int prage = this.getPRAge(vo.getPr_approvaldate(), year, period);
@@ -186,8 +190,8 @@ public class SG_TaxInfPreProcess extends AbstractFormulaExecutor
 	private int getAge(UFDate birthdate, String year, String period) {
 		int agemouth = Integer.valueOf(period) - birthdate.getMonth();
 		int ageyear = Integer.valueOf(year) - birthdate.getYear();
-		if(agemouth < 1) {
-			ageyear = ageyear - 1;
+		if(agemouth > 0) {
+			ageyear = ageyear + 1;
 		} 
 		return ageyear;
 	}
@@ -225,10 +229,10 @@ public class SG_TaxInfPreProcess extends AbstractFormulaExecutor
 		String formula = this.matchCPFEmployee_Raterange(raterange, age, prcode, vo, payer);
 		//解析公式
 		if(StringUtils.isBlank(formula)) {
-			Logger.info("===Singapore CPF===Psn age: " + age + " ,PRCODE: " + prcode + " ,matched formula: Formula is blank.");
+			Logger.error("===Singapore CPF===Psn: " + vo.getPsncode() +  " ,TW:" + vo.getTw() +" ,Psn age: " + age + " ,PRCODE: " + prcode + " ,matched formula: " + formula);
 			return;
 		}
-		Logger.info("===Singapore CPF===Psn: " + vo.getPsncode() +  " ,Psn age: " + age + " ,PRCODE: " + prcode + " ,matched formula: " + formula);
+		Logger.error("===Singapore CPF===Psn: " + vo.getPsncode() +  " ,TW:" + vo.getTw() +" ,Psn age: " + age + " ,PRCODE: " + prcode + " ,matched formula: " + formula);
 		UFDouble ow_ceilling = raterange[0].getOw_ceilling();
 		//若OW 超过 cpfceilling时， 取cpfceilling
 		UFDouble ow = vo.getOw();
@@ -249,9 +253,29 @@ public class SG_TaxInfPreProcess extends AbstractFormulaExecutor
 		}
 		formulaparse.setExpress(vo.getPk_cacu_data() + "->" + formula);
 		String value = formulaparse.getValue(); //单个公式的数学公式的结果
-		wacacumap.put(vo.getPk_cacu_data(), new UFDouble(value));
+		//Employee是舍位 如Employer的cpf是进位,如5.11 ==>6.00， Total和Employer是进位如5.88 ==>5.00
+		UFDouble cpfvalue = this.getCpfValueWithRounding(new UFDouble(value), payer);
+		wacacumap.put(vo.getPk_cacu_data(), cpfvalue);
 	}
 	
+	/**
+	 * * @param payer 总缴纳部分 or 雇员缴纳部分 0--总缴纳  1--雇员缴纳
+	 * 2--OW Employee CPF Rate 3--OW Total CPF Rate   
+	 * 4--AW Employee CPF Rate   5--AW Total Employee CPF Rate
+	 * Employee是舍位 如Employer的cpf是进位,如5.11 ==>6.00， Total和Employer是进位如5.88 ==>5.00
+	 * @param ufDouble
+	 * @param payer
+	 * @return
+	 */
+	private UFDouble getCpfValueWithRounding(UFDouble ufDouble, Integer payer) {
+		UFDouble cpfvalue = UFDouble.ZERO_DBL;
+		if(payer == 0 || payer == 3 || payer == 5) {
+			cpfvalue = ufDouble.setScale(0, UFDouble.ROUND_UP);
+		} if(payer == 1 || payer ==2 || payer == 4) {
+			cpfvalue = ufDouble.setScale(0, UFDouble.ROUND_DOWN);
+		}
+		return cpfvalue;
+	}
 
 	/**
 	 * 
@@ -283,34 +307,34 @@ public class SG_TaxInfPreProcess extends AbstractFormulaExecutor
 	private String matchCPFEmployee_Raterange(SingaporeVO_CPF_Rate[] raterange,
 			Integer age, String prcode, SingaporeVO_CPF vo, Integer payer) {
 		for(SingaporeVO_CPF_Rate rate : raterange) {
-			if(payer == 0 && rate.getContribution_type().equals(vo.getFullemployercpf()) && prcode.equals(rate.getCpfcode()) && age > rate.getAge_lower() && age < rate.getAge_upper()
-					&& UFDoubleUtils.isGreaterThan(vo.getTw(), rate.getTotalwage_lower())
-					&& UFDoubleUtils.isLessThan(vo.getTw(), rate.getTotalwage_upper())) {
+			if(payer == 0 && rate.getContribution_type().equals(vo.getFullemployercpf()) && prcode.equals(rate.getCpfcode()) && age >= rate.getAge_lower() && age <= rate.getAge_upper()
+					&& (UFDoubleUtils.isGreaterThan(vo.getTw(), rate.getTotalwage_lower()) || UFDoubleUtils.isEqual(vo.getTw(), rate.getTotalwage_lower())) 
+					&& (UFDoubleUtils.isLessThan(vo.getTw(), rate.getTotalwage_upper()) || UFDoubleUtils.isEqual(vo.getTw(), rate.getTotalwage_upper()))) {
 				return rate.getTotalcpf_formula();
 			}
-			else if(payer == 1 && rate.getContribution_type().equals(vo.getFullemployercpf()) && prcode.equals(rate.getCpfcode()) && age > rate.getAge_lower() && age < rate.getAge_upper()
-					&& UFDoubleUtils.isGreaterThan(vo.getTw(), rate.getTotalwage_lower())
-					&& UFDoubleUtils.isLessThan(vo.getTw(), rate.getTotalwage_upper())) {
+			else if(payer == 1 && rate.getContribution_type().equals(vo.getFullemployercpf()) && prcode.equals(rate.getCpfcode()) && age >= rate.getAge_lower() && age <= rate.getAge_upper()
+					&& (UFDoubleUtils.isGreaterThan(vo.getTw(), rate.getTotalwage_lower()) || UFDoubleUtils.isEqual(vo.getTw(), rate.getTotalwage_lower())) 
+					&& (UFDoubleUtils.isLessThan(vo.getTw(), rate.getTotalwage_upper()) || UFDoubleUtils.isEqual(vo.getTw(), rate.getTotalwage_upper()))) {
 				return rate.getEmployeecpf_formula();
 			}
-			else if(payer == 2 && rate.getContribution_type().equals(vo.getFullemployercpf()) && prcode.equals(rate.getCpfcode()) && age > rate.getAge_lower() && age < rate.getAge_upper()
-					&& UFDoubleUtils.isGreaterThan(vo.getTw(), rate.getTotalwage_lower())
-					&& UFDoubleUtils.isLessThan(vo.getTw(), rate.getTotalwage_upper())) {
+			else if(payer == 2 && rate.getContribution_type().equals(vo.getFullemployercpf()) && prcode.equals(rate.getCpfcode()) && age >= rate.getAge_lower() && age <= rate.getAge_upper()
+					&& (UFDoubleUtils.isGreaterThan(vo.getTw(), rate.getTotalwage_lower()) || UFDoubleUtils.isEqual(vo.getTw(), rate.getTotalwage_lower())) 
+					&& (UFDoubleUtils.isLessThan(vo.getTw(), rate.getTotalwage_upper()) || UFDoubleUtils.isEqual(vo.getTw(), rate.getTotalwage_upper()))) {
 				return rate.getOwee_formla();
 			}
-			else if(payer == 3 && rate.getContribution_type().equals(vo.getFullemployercpf()) && prcode.equals(rate.getCpfcode()) && age > rate.getAge_lower() && age < rate.getAge_upper()
-					&& UFDoubleUtils.isGreaterThan(vo.getTw(), rate.getTotalwage_lower())
-					&& UFDoubleUtils.isLessThan(vo.getTw(), rate.getTotalwage_upper())) {
+			else if(payer == 3 && rate.getContribution_type().equals(vo.getFullemployercpf()) && prcode.equals(rate.getCpfcode()) && age >= rate.getAge_lower() && age <= rate.getAge_upper()
+					&& (UFDoubleUtils.isGreaterThan(vo.getTw(), rate.getTotalwage_lower()) || UFDoubleUtils.isEqual(vo.getTw(), rate.getTotalwage_lower())) 
+					&& (UFDoubleUtils.isLessThan(vo.getTw(), rate.getTotalwage_upper()) || UFDoubleUtils.isEqual(vo.getTw(), rate.getTotalwage_upper()))) {
 				return rate.getOwtotal_formula();
 			}
-			else if(payer == 4 && rate.getContribution_type().equals(vo.getFullemployercpf()) && prcode.equals(rate.getCpfcode()) && age > rate.getAge_lower() && age < rate.getAge_upper()
-					&& UFDoubleUtils.isGreaterThan(vo.getTw(), rate.getTotalwage_lower())
-					&& UFDoubleUtils.isLessThan(vo.getTw(), rate.getTotalwage_upper())) {
+			else if(payer == 4 && rate.getContribution_type().equals(vo.getFullemployercpf()) && prcode.equals(rate.getCpfcode()) && age >= rate.getAge_lower() && age <= rate.getAge_upper()
+					&& (UFDoubleUtils.isGreaterThan(vo.getTw(), rate.getTotalwage_lower()) || UFDoubleUtils.isEqual(vo.getTw(), rate.getTotalwage_lower())) 
+					&& (UFDoubleUtils.isLessThan(vo.getTw(), rate.getTotalwage_upper()) || UFDoubleUtils.isEqual(vo.getTw(), rate.getTotalwage_upper()))) {
 				return rate.getAwee_formula();
 			}
-			else if(payer == 5 && rate.getContribution_type().equals(vo.getFullemployercpf()) && prcode.equals(rate.getCpfcode()) && age > rate.getAge_lower() && age < rate.getAge_upper()
-					&& UFDoubleUtils.isGreaterThan(vo.getTw(), rate.getTotalwage_lower())
-					&& UFDoubleUtils.isLessThan(vo.getTw(), rate.getTotalwage_upper())) {
+			else if(payer == 5 && rate.getContribution_type().equals(vo.getFullemployercpf()) && prcode.equals(rate.getCpfcode()) && age >= rate.getAge_lower() && age <= rate.getAge_upper()
+					&& (UFDoubleUtils.isGreaterThan(vo.getTw(), rate.getTotalwage_lower()) || UFDoubleUtils.isEqual(vo.getTw(), rate.getTotalwage_lower())) 
+					&& (UFDoubleUtils.isLessThan(vo.getTw(), rate.getTotalwage_upper()) || UFDoubleUtils.isEqual(vo.getTw(), rate.getTotalwage_upper()))) {
 				return rate.getAwtotal_formula();
 			}
 		}
@@ -327,12 +351,18 @@ public class SG_TaxInfPreProcess extends AbstractFormulaExecutor
 		UFDate currentdate = new UFDate();
 		sb.append(" and '" + currentdate.asEnd().toString() + "' between ");
 		sb.append(" effective_date and expiration_date");
+		//test
+//		sb.append(" and contribution_type = 'GG' and 750 between totalwage_lower and totalwage_upper and cpfcode = 'PR03'");
+		//end
 		List<SingaporeVO_CPF_Rate> results = (List<SingaporeVO_CPF_Rate>) dao.retrieveByClause(SingaporeVO_CPF_Rate.class, 
 				sb.toString());
+		if(results == null || results.size() == 0) {
+			Logger.error("CPF rate is blank, condition is " + sb );
+		}
 		return results.toArray(new SingaporeVO_CPF_Rate[0]);
 	}
 
-	private List<SingaporeVO_CPF> queryPCBKnownItems(
+	private List<SingaporeVO_CPF> queryCPFKnownItems(
 			SingaporeFormulaVO singaporeFormulaVO, WaLoginContext context) {
 			List<SingaporeVO_CPF> results = null;
 			String condition = " pk_wa_class = ?";

@@ -234,25 +234,25 @@ public nc.funcnode.ui.action.GroupAction getPrintactiongroupAction(){
   nc.funcnode.ui.action.GroupAction bean = new nc.funcnode.ui.action.GroupAction();
   context.put("printactiongroupAction",bean);
   bean.setCode("print");
-  bean.setName(getI18nFB_4a5756());
+  bean.setName(getI18nFB_5ada7a());
   bean.setActions(getManagedList6());
 setBeanFacotryIfBeanFacatoryAware(bean);
 invokeInitializingBean(bean);
 return bean;
 }
 
-private java.lang.String getI18nFB_4a5756(){
- if(context.get("nc.ui.uif2.I18nFB#4a5756")!=null)
- return (java.lang.String)context.get("nc.ui.uif2.I18nFB#4a5756");
+private java.lang.String getI18nFB_5ada7a(){
+ if(context.get("nc.ui.uif2.I18nFB#5ada7a")!=null)
+ return (java.lang.String)context.get("nc.ui.uif2.I18nFB#5ada7a");
   nc.ui.uif2.I18nFB bean = new nc.ui.uif2.I18nFB();
-    context.put("&nc.ui.uif2.I18nFB#4a5756",bean);  bean.setResDir("xmlcode");
+    context.put("&nc.ui.uif2.I18nFB#5ada7a",bean);  bean.setResDir("xmlcode");
   bean.setDefaultValue("打印");
   bean.setResId("X60130002");
 setBeanFacotryIfBeanFacatoryAware(bean);
 invokeInitializingBean(bean);
  try {
      Object product = bean.getObject();
-    context.put("nc.ui.uif2.I18nFB#4a5756",product);
+    context.put("nc.ui.uif2.I18nFB#5ada7a",product);
      return (java.lang.String)product;
 }
 catch(Exception e) { throw new RuntimeException(e);}}
@@ -265,30 +265,30 @@ public nc.funcnode.ui.action.MenuAction getAddCountryItemAction(){
   nc.funcnode.ui.action.MenuAction bean = new nc.funcnode.ui.action.MenuAction();
   context.put("AddCountryItemAction",bean);
   bean.setCode("addcountryitem");
-  bean.setName(getI18nFB_157ba72());
+  bean.setName(getI18nFB_f5ccb5());
   bean.setActions(getManagedList7());
 setBeanFacotryIfBeanFacatoryAware(bean);
 invokeInitializingBean(bean);
 return bean;
 }
 
-private java.lang.String getI18nFB_157ba72(){
- if(context.get("nc.ui.uif2.I18nFB#157ba72")!=null)
- return (java.lang.String)context.get("nc.ui.uif2.I18nFB#157ba72");
+private java.lang.String getI18nFB_f5ccb5(){
+ if(context.get("nc.ui.uif2.I18nFB#f5ccb5")!=null)
+ return (java.lang.String)context.get("nc.ui.uif2.I18nFB#f5ccb5");
   nc.ui.uif2.I18nFB bean = new nc.ui.uif2.I18nFB();
-    context.put("&nc.ui.uif2.I18nFB#157ba72",bean);  bean.setResDir("SinaporeItem60");
+    context.put("&nc.ui.uif2.I18nFB#f5ccb5",bean);  bean.setResDir("SinaporeItem60");
   bean.setDefaultValue("Country Item Setting");
   bean.setResId("Sinaporeitem-001");
 setBeanFacotryIfBeanFacatoryAware(bean);
 invokeInitializingBean(bean);
  try {
      Object product = bean.getObject();
-    context.put("nc.ui.uif2.I18nFB#157ba72",product);
+    context.put("nc.ui.uif2.I18nFB#f5ccb5",product);
      return (java.lang.String)product;
 }
 catch(Exception e) { throw new RuntimeException(e);}}
 
-private List getManagedList7(){  List list = new ArrayList();  list.add(getLocalSeaItemAction_MY());  list.add(getNullaction());  list.add(getLocalSeaItemAction_SG());  return list;}
+private List getManagedList7(){  List list = new ArrayList();  list.add(getLocalSeaItemAction_MY());  list.add(getNullaction());  list.add(getLocalSeaItemAction_SG());  list.add(getNullaction());  list.add(getLocalSeaItemAction_IND());  return list;}
 
 public nc.ui.wa.item.action.LocalSeaItemAction_MY getLocalSeaItemAction_MY(){
  if(context.get("localSeaItemAction_MY")!=null)
@@ -312,31 +312,42 @@ invokeInitializingBean(bean);
 return bean;
 }
 
+public nc.ui.wa.item.action.LocalSeaItemAction_IND getLocalSeaItemAction_IND(){
+ if(context.get("localSeaItemAction_IND")!=null)
+ return (nc.ui.wa.item.action.LocalSeaItemAction_IND)context.get("localSeaItemAction_IND");
+  nc.ui.wa.item.action.LocalSeaItemAction_IND bean = new nc.ui.wa.item.action.LocalSeaItemAction_IND();
+  context.put("localSeaItemAction_IND",bean);
+  bean.setModel(getManageAppModel());
+setBeanFacotryIfBeanFacatoryAware(bean);
+invokeInitializingBean(bean);
+return bean;
+}
+
 public nc.funcnode.ui.action.GroupAction getPrintGroupListAction(){
  if(context.get("PrintGroupListAction")!=null)
  return (nc.funcnode.ui.action.GroupAction)context.get("PrintGroupListAction");
   nc.funcnode.ui.action.GroupAction bean = new nc.funcnode.ui.action.GroupAction();
   context.put("PrintGroupListAction",bean);
   bean.setCode("print");
-  bean.setName(getI18nFB_19191bf());
+  bean.setName(getI18nFB_848f6c());
   bean.setActions(getManagedList8());
 setBeanFacotryIfBeanFacatoryAware(bean);
 invokeInitializingBean(bean);
 return bean;
 }
 
-private java.lang.String getI18nFB_19191bf(){
- if(context.get("nc.ui.uif2.I18nFB#19191bf")!=null)
- return (java.lang.String)context.get("nc.ui.uif2.I18nFB#19191bf");
+private java.lang.String getI18nFB_848f6c(){
+ if(context.get("nc.ui.uif2.I18nFB#848f6c")!=null)
+ return (java.lang.String)context.get("nc.ui.uif2.I18nFB#848f6c");
   nc.ui.uif2.I18nFB bean = new nc.ui.uif2.I18nFB();
-    context.put("&nc.ui.uif2.I18nFB#19191bf",bean);  bean.setResDir("xmlcode");
+    context.put("&nc.ui.uif2.I18nFB#848f6c",bean);  bean.setResDir("xmlcode");
   bean.setDefaultValue("打印");
   bean.setResId("X60130002");
 setBeanFacotryIfBeanFacatoryAware(bean);
 invokeInitializingBean(bean);
  try {
      Object product = bean.getObject();
-    context.put("nc.ui.uif2.I18nFB#19191bf",product);
+    context.put("nc.ui.uif2.I18nFB#848f6c",product);
      return (java.lang.String)product;
 }
 catch(Exception e) { throw new RuntimeException(e);}}
@@ -442,17 +453,17 @@ public nc.ui.wa.item.action.SaveItemAction getSaveAction(){
   bean.setModel(getManageAppModel());
   bean.setEditor(getBillFormEditor());
   bean.setValidationService(getBillNotNullValidator());
-  bean.setInterceptor(getSaveItemInterceptor_17c799e());
+  bean.setInterceptor(getSaveItemInterceptor_10d4eea());
 setBeanFacotryIfBeanFacatoryAware(bean);
 invokeInitializingBean(bean);
 return bean;
 }
 
-private nc.ui.wa.item.action.SaveItemInterceptor getSaveItemInterceptor_17c799e(){
- if(context.get("nc.ui.wa.item.action.SaveItemInterceptor#17c799e")!=null)
- return (nc.ui.wa.item.action.SaveItemInterceptor)context.get("nc.ui.wa.item.action.SaveItemInterceptor#17c799e");
+private nc.ui.wa.item.action.SaveItemInterceptor getSaveItemInterceptor_10d4eea(){
+ if(context.get("nc.ui.wa.item.action.SaveItemInterceptor#10d4eea")!=null)
+ return (nc.ui.wa.item.action.SaveItemInterceptor)context.get("nc.ui.wa.item.action.SaveItemInterceptor#10d4eea");
   nc.ui.wa.item.action.SaveItemInterceptor bean = new nc.ui.wa.item.action.SaveItemInterceptor();
-  context.put("nc.ui.wa.item.action.SaveItemInterceptor#17c799e",bean);
+  context.put("nc.ui.wa.item.action.SaveItemInterceptor#10d4eea",bean);
   bean.setModel(getManageAppModel());
   bean.setContainer(getListView());
 setBeanFacotryIfBeanFacatoryAware(bean);
@@ -468,17 +479,17 @@ public nc.ui.wa.item.action.SaveAddItemAction getSaveAddAction(){
   bean.setModel(getManageAppModel());
   bean.setAddAction(getAddAction());
   bean.setSaveAction(getSaveAction());
-  bean.setInterceptor(getSaveItemInterceptor_1446a00());
+  bean.setInterceptor(getSaveItemInterceptor_194df7b());
 setBeanFacotryIfBeanFacatoryAware(bean);
 invokeInitializingBean(bean);
 return bean;
 }
 
-private nc.ui.wa.item.action.SaveItemInterceptor getSaveItemInterceptor_1446a00(){
- if(context.get("nc.ui.wa.item.action.SaveItemInterceptor#1446a00")!=null)
- return (nc.ui.wa.item.action.SaveItemInterceptor)context.get("nc.ui.wa.item.action.SaveItemInterceptor#1446a00");
+private nc.ui.wa.item.action.SaveItemInterceptor getSaveItemInterceptor_194df7b(){
+ if(context.get("nc.ui.wa.item.action.SaveItemInterceptor#194df7b")!=null)
+ return (nc.ui.wa.item.action.SaveItemInterceptor)context.get("nc.ui.wa.item.action.SaveItemInterceptor#194df7b");
   nc.ui.wa.item.action.SaveItemInterceptor bean = new nc.ui.wa.item.action.SaveItemInterceptor();
-  context.put("nc.ui.wa.item.action.SaveItemInterceptor#1446a00",bean);
+  context.put("nc.ui.wa.item.action.SaveItemInterceptor#194df7b",bean);
   bean.setModel(getManageAppModel());
   bean.setContainer(getListView());
 setBeanFacotryIfBeanFacatoryAware(bean);
@@ -570,17 +581,17 @@ public nc.ui.hr.uif2.validator.BillNotNullValidateService getBillNotNullValidato
  if(context.get("billNotNullValidator")!=null)
  return (nc.ui.hr.uif2.validator.BillNotNullValidateService)context.get("billNotNullValidator");
   nc.ui.hr.uif2.validator.BillNotNullValidateService bean = new nc.ui.hr.uif2.validator.BillNotNullValidateService(getBillFormEditor());  context.put("billNotNullValidator",bean);
-  bean.setNextValidateService(getSaveValidationService_1acd970());
+  bean.setNextValidateService(getSaveValidationService_1223b58());
 setBeanFacotryIfBeanFacatoryAware(bean);
 invokeInitializingBean(bean);
 return bean;
 }
 
-private nc.ui.wa.item.validator.SaveValidationService getSaveValidationService_1acd970(){
- if(context.get("nc.ui.wa.item.validator.SaveValidationService#1acd970")!=null)
- return (nc.ui.wa.item.validator.SaveValidationService)context.get("nc.ui.wa.item.validator.SaveValidationService#1acd970");
+private nc.ui.wa.item.validator.SaveValidationService getSaveValidationService_1223b58(){
+ if(context.get("nc.ui.wa.item.validator.SaveValidationService#1223b58")!=null)
+ return (nc.ui.wa.item.validator.SaveValidationService)context.get("nc.ui.wa.item.validator.SaveValidationService#1223b58");
   nc.ui.wa.item.validator.SaveValidationService bean = new nc.ui.wa.item.validator.SaveValidationService();
-  context.put("nc.ui.wa.item.validator.SaveValidationService#1acd970",bean);
+  context.put("nc.ui.wa.item.validator.SaveValidationService#1223b58",bean);
 setBeanFacotryIfBeanFacatoryAware(bean);
 invokeInitializingBean(bean);
 return bean;
@@ -592,24 +603,24 @@ public nc.vo.bd.meta.BDObjectTreeCreateStrategy getTreeCreateStrategy(){
   nc.vo.bd.meta.BDObjectTreeCreateStrategy bean = new nc.vo.bd.meta.BDObjectTreeCreateStrategy();
   context.put("treeCreateStrategy",bean);
   bean.setFactory(getBoadatorfactory());
-  bean.setRootName(getI18nFB_d1bc13());
+  bean.setRootName(getI18nFB_1313fff());
 setBeanFacotryIfBeanFacatoryAware(bean);
 invokeInitializingBean(bean);
 return bean;
 }
 
-private java.lang.String getI18nFB_d1bc13(){
- if(context.get("nc.ui.uif2.I18nFB#d1bc13")!=null)
- return (java.lang.String)context.get("nc.ui.uif2.I18nFB#d1bc13");
+private java.lang.String getI18nFB_1313fff(){
+ if(context.get("nc.ui.uif2.I18nFB#1313fff")!=null)
+ return (java.lang.String)context.get("nc.ui.uif2.I18nFB#1313fff");
   nc.ui.uif2.I18nFB bean = new nc.ui.uif2.I18nFB();
-    context.put("&nc.ui.uif2.I18nFB#d1bc13",bean);  bean.setResDir("xmlcode");
+    context.put("&nc.ui.uif2.I18nFB#1313fff",bean);  bean.setResDir("xmlcode");
   bean.setDefaultValue("项目分类");
   bean.setResId("X60130003");
 setBeanFacotryIfBeanFacatoryAware(bean);
 invokeInitializingBean(bean);
  try {
      Object product = bean.getObject();
-    context.put("nc.ui.uif2.I18nFB#d1bc13",product);
+    context.put("nc.ui.uif2.I18nFB#1313fff",product);
      return (java.lang.String)product;
 }
 catch(Exception e) { throw new RuntimeException(e);}}
@@ -790,7 +801,7 @@ public nc.ui.wa.item.view.ItemTypeFormEditor getTypeFormEditor(){
   bean.setModel(getHAppModel());
   bean.setTemplateContainer(getTemplateContainer());
   bean.setNodekey("HRA002");
-  bean.setName(getI18nFB_a3999e());
+  bean.setName(getI18nFB_b652ad());
   bean.setActions(getManagedList9());
   bean.initUI();
 setBeanFacotryIfBeanFacatoryAware(bean);
@@ -798,18 +809,18 @@ invokeInitializingBean(bean);
 return bean;
 }
 
-private java.lang.String getI18nFB_a3999e(){
- if(context.get("nc.ui.uif2.I18nFB#a3999e")!=null)
- return (java.lang.String)context.get("nc.ui.uif2.I18nFB#a3999e");
+private java.lang.String getI18nFB_b652ad(){
+ if(context.get("nc.ui.uif2.I18nFB#b652ad")!=null)
+ return (java.lang.String)context.get("nc.ui.uif2.I18nFB#b652ad");
   nc.ui.uif2.I18nFB bean = new nc.ui.uif2.I18nFB();
-    context.put("&nc.ui.uif2.I18nFB#a3999e",bean);  bean.setResDir("xmlcode");
+    context.put("&nc.ui.uif2.I18nFB#b652ad",bean);  bean.setResDir("xmlcode");
   bean.setDefaultValue("薪资项目分类");
   bean.setResId("X60130004");
 setBeanFacotryIfBeanFacatoryAware(bean);
 invokeInitializingBean(bean);
  try {
      Object product = bean.getObject();
-    context.put("nc.ui.uif2.I18nFB#a3999e",product);
+    context.put("nc.ui.uif2.I18nFB#b652ad",product);
      return (java.lang.String)product;
 }
 catch(Exception e) { throw new RuntimeException(e);}}
@@ -885,18 +896,18 @@ public nc.ui.uif2.TangramContainer getContainer(){
  return (nc.ui.uif2.TangramContainer)context.get("container");
   nc.ui.uif2.TangramContainer bean = new nc.ui.uif2.TangramContainer();
   context.put("container",bean);
-  bean.setTangramLayoutRoot(getTBNode_10403());
+  bean.setTangramLayoutRoot(getTBNode_b434e6());
   bean.initUI();
 setBeanFacotryIfBeanFacatoryAware(bean);
 invokeInitializingBean(bean);
 return bean;
 }
 
-private nc.ui.uif2.tangramlayout.node.TBNode getTBNode_10403(){
- if(context.get("nc.ui.uif2.tangramlayout.node.TBNode#10403")!=null)
- return (nc.ui.uif2.tangramlayout.node.TBNode)context.get("nc.ui.uif2.tangramlayout.node.TBNode#10403");
+private nc.ui.uif2.tangramlayout.node.TBNode getTBNode_b434e6(){
+ if(context.get("nc.ui.uif2.tangramlayout.node.TBNode#b434e6")!=null)
+ return (nc.ui.uif2.tangramlayout.node.TBNode)context.get("nc.ui.uif2.tangramlayout.node.TBNode#b434e6");
   nc.ui.uif2.tangramlayout.node.TBNode bean = new nc.ui.uif2.tangramlayout.node.TBNode();
-  context.put("nc.ui.uif2.tangramlayout.node.TBNode#10403",bean);
+  context.put("nc.ui.uif2.tangramlayout.node.TBNode#b434e6",bean);
   bean.setShowMode("CardLayout");
   bean.setTabs(getManagedList12());
 setBeanFacotryIfBeanFacatoryAware(bean);
@@ -904,122 +915,122 @@ invokeInitializingBean(bean);
 return bean;
 }
 
-private List getManagedList12(){  List list = new ArrayList();  list.add(getVSNode_c4e08b());  list.add(getVSNode_1107992());  return list;}
+private List getManagedList12(){  List list = new ArrayList();  list.add(getVSNode_1a3a839());  list.add(getVSNode_68bbb2());  return list;}
 
-private nc.ui.uif2.tangramlayout.node.VSNode getVSNode_c4e08b(){
- if(context.get("nc.ui.uif2.tangramlayout.node.VSNode#c4e08b")!=null)
- return (nc.ui.uif2.tangramlayout.node.VSNode)context.get("nc.ui.uif2.tangramlayout.node.VSNode#c4e08b");
+private nc.ui.uif2.tangramlayout.node.VSNode getVSNode_1a3a839(){
+ if(context.get("nc.ui.uif2.tangramlayout.node.VSNode#1a3a839")!=null)
+ return (nc.ui.uif2.tangramlayout.node.VSNode)context.get("nc.ui.uif2.tangramlayout.node.VSNode#1a3a839");
   nc.ui.uif2.tangramlayout.node.VSNode bean = new nc.ui.uif2.tangramlayout.node.VSNode();
-  context.put("nc.ui.uif2.tangramlayout.node.VSNode#c4e08b",bean);
+  context.put("nc.ui.uif2.tangramlayout.node.VSNode#1a3a839",bean);
   bean.setShowMode("NoDivider");
-  bean.setUp(getCNode_7de320());
-  bean.setDown(getHSNode_af54b4());
+  bean.setUp(getCNode_1f82cc7());
+  bean.setDown(getHSNode_1af0a01());
   bean.setDividerLocation(30f);
 setBeanFacotryIfBeanFacatoryAware(bean);
 invokeInitializingBean(bean);
 return bean;
 }
 
-private nc.ui.uif2.tangramlayout.node.CNode getCNode_7de320(){
- if(context.get("nc.ui.uif2.tangramlayout.node.CNode#7de320")!=null)
- return (nc.ui.uif2.tangramlayout.node.CNode)context.get("nc.ui.uif2.tangramlayout.node.CNode#7de320");
+private nc.ui.uif2.tangramlayout.node.CNode getCNode_1f82cc7(){
+ if(context.get("nc.ui.uif2.tangramlayout.node.CNode#1f82cc7")!=null)
+ return (nc.ui.uif2.tangramlayout.node.CNode)context.get("nc.ui.uif2.tangramlayout.node.CNode#1f82cc7");
   nc.ui.uif2.tangramlayout.node.CNode bean = new nc.ui.uif2.tangramlayout.node.CNode();
-  context.put("nc.ui.uif2.tangramlayout.node.CNode#7de320",bean);
+  context.put("nc.ui.uif2.tangramlayout.node.CNode#1f82cc7",bean);
   bean.setComponent(getOrgpanel());
 setBeanFacotryIfBeanFacatoryAware(bean);
 invokeInitializingBean(bean);
 return bean;
 }
 
-private nc.ui.uif2.tangramlayout.node.HSNode getHSNode_af54b4(){
- if(context.get("nc.ui.uif2.tangramlayout.node.HSNode#af54b4")!=null)
- return (nc.ui.uif2.tangramlayout.node.HSNode)context.get("nc.ui.uif2.tangramlayout.node.HSNode#af54b4");
+private nc.ui.uif2.tangramlayout.node.HSNode getHSNode_1af0a01(){
+ if(context.get("nc.ui.uif2.tangramlayout.node.HSNode#1af0a01")!=null)
+ return (nc.ui.uif2.tangramlayout.node.HSNode)context.get("nc.ui.uif2.tangramlayout.node.HSNode#1af0a01");
   nc.ui.uif2.tangramlayout.node.HSNode bean = new nc.ui.uif2.tangramlayout.node.HSNode();
-  context.put("nc.ui.uif2.tangramlayout.node.HSNode#af54b4",bean);
-  bean.setLeft(getVSNode_f4de6d());
-  bean.setRight(getCNode_1935230());
+  context.put("nc.ui.uif2.tangramlayout.node.HSNode#1af0a01",bean);
+  bean.setLeft(getVSNode_19b3575());
+  bean.setRight(getCNode_155a355());
   bean.setDividerLocation(0.2f);
 setBeanFacotryIfBeanFacatoryAware(bean);
 invokeInitializingBean(bean);
 return bean;
 }
 
-private nc.ui.uif2.tangramlayout.node.VSNode getVSNode_f4de6d(){
- if(context.get("nc.ui.uif2.tangramlayout.node.VSNode#f4de6d")!=null)
- return (nc.ui.uif2.tangramlayout.node.VSNode)context.get("nc.ui.uif2.tangramlayout.node.VSNode#f4de6d");
+private nc.ui.uif2.tangramlayout.node.VSNode getVSNode_19b3575(){
+ if(context.get("nc.ui.uif2.tangramlayout.node.VSNode#19b3575")!=null)
+ return (nc.ui.uif2.tangramlayout.node.VSNode)context.get("nc.ui.uif2.tangramlayout.node.VSNode#19b3575");
   nc.ui.uif2.tangramlayout.node.VSNode bean = new nc.ui.uif2.tangramlayout.node.VSNode();
-  context.put("nc.ui.uif2.tangramlayout.node.VSNode#f4de6d",bean);
-  bean.setUp(getCNode_1f9c086());
-  bean.setDown(getCNode_a1d44e());
+  context.put("nc.ui.uif2.tangramlayout.node.VSNode#19b3575",bean);
+  bean.setUp(getCNode_1b03d5b());
+  bean.setDown(getCNode_1ba3055());
   bean.setDividerLocation(30f);
 setBeanFacotryIfBeanFacatoryAware(bean);
 invokeInitializingBean(bean);
 return bean;
 }
 
-private nc.ui.uif2.tangramlayout.node.CNode getCNode_1f9c086(){
- if(context.get("nc.ui.uif2.tangramlayout.node.CNode#1f9c086")!=null)
- return (nc.ui.uif2.tangramlayout.node.CNode)context.get("nc.ui.uif2.tangramlayout.node.CNode#1f9c086");
+private nc.ui.uif2.tangramlayout.node.CNode getCNode_1b03d5b(){
+ if(context.get("nc.ui.uif2.tangramlayout.node.CNode#1b03d5b")!=null)
+ return (nc.ui.uif2.tangramlayout.node.CNode)context.get("nc.ui.uif2.tangramlayout.node.CNode#1b03d5b");
   nc.ui.uif2.tangramlayout.node.CNode bean = new nc.ui.uif2.tangramlayout.node.CNode();
-  context.put("nc.ui.uif2.tangramlayout.node.CNode#1f9c086",bean);
+  context.put("nc.ui.uif2.tangramlayout.node.CNode#1b03d5b",bean);
   bean.setComponent(getTypeToolbar());
 setBeanFacotryIfBeanFacatoryAware(bean);
 invokeInitializingBean(bean);
 return bean;
 }
 
-private nc.ui.uif2.tangramlayout.node.CNode getCNode_a1d44e(){
- if(context.get("nc.ui.uif2.tangramlayout.node.CNode#a1d44e")!=null)
- return (nc.ui.uif2.tangramlayout.node.CNode)context.get("nc.ui.uif2.tangramlayout.node.CNode#a1d44e");
+private nc.ui.uif2.tangramlayout.node.CNode getCNode_1ba3055(){
+ if(context.get("nc.ui.uif2.tangramlayout.node.CNode#1ba3055")!=null)
+ return (nc.ui.uif2.tangramlayout.node.CNode)context.get("nc.ui.uif2.tangramlayout.node.CNode#1ba3055");
   nc.ui.uif2.tangramlayout.node.CNode bean = new nc.ui.uif2.tangramlayout.node.CNode();
-  context.put("nc.ui.uif2.tangramlayout.node.CNode#a1d44e",bean);
+  context.put("nc.ui.uif2.tangramlayout.node.CNode#1ba3055",bean);
   bean.setComponent(getTreePanel());
 setBeanFacotryIfBeanFacatoryAware(bean);
 invokeInitializingBean(bean);
 return bean;
 }
 
-private nc.ui.uif2.tangramlayout.node.CNode getCNode_1935230(){
- if(context.get("nc.ui.uif2.tangramlayout.node.CNode#1935230")!=null)
- return (nc.ui.uif2.tangramlayout.node.CNode)context.get("nc.ui.uif2.tangramlayout.node.CNode#1935230");
+private nc.ui.uif2.tangramlayout.node.CNode getCNode_155a355(){
+ if(context.get("nc.ui.uif2.tangramlayout.node.CNode#155a355")!=null)
+ return (nc.ui.uif2.tangramlayout.node.CNode)context.get("nc.ui.uif2.tangramlayout.node.CNode#155a355");
   nc.ui.uif2.tangramlayout.node.CNode bean = new nc.ui.uif2.tangramlayout.node.CNode();
-  context.put("nc.ui.uif2.tangramlayout.node.CNode#1935230",bean);
+  context.put("nc.ui.uif2.tangramlayout.node.CNode#155a355",bean);
   bean.setComponent(getListView());
 setBeanFacotryIfBeanFacatoryAware(bean);
 invokeInitializingBean(bean);
 return bean;
 }
 
-private nc.ui.uif2.tangramlayout.node.VSNode getVSNode_1107992(){
- if(context.get("nc.ui.uif2.tangramlayout.node.VSNode#1107992")!=null)
- return (nc.ui.uif2.tangramlayout.node.VSNode)context.get("nc.ui.uif2.tangramlayout.node.VSNode#1107992");
+private nc.ui.uif2.tangramlayout.node.VSNode getVSNode_68bbb2(){
+ if(context.get("nc.ui.uif2.tangramlayout.node.VSNode#68bbb2")!=null)
+ return (nc.ui.uif2.tangramlayout.node.VSNode)context.get("nc.ui.uif2.tangramlayout.node.VSNode#68bbb2");
   nc.ui.uif2.tangramlayout.node.VSNode bean = new nc.ui.uif2.tangramlayout.node.VSNode();
-  context.put("nc.ui.uif2.tangramlayout.node.VSNode#1107992",bean);
+  context.put("nc.ui.uif2.tangramlayout.node.VSNode#68bbb2",bean);
   bean.setShowMode("NoDivider");
-  bean.setUp(getCNode_394f88());
-  bean.setDown(getCNode_1fe9eed());
+  bean.setUp(getCNode_1ad01a5());
+  bean.setDown(getCNode_1f8464e());
   bean.setDividerLocation(26f);
 setBeanFacotryIfBeanFacatoryAware(bean);
 invokeInitializingBean(bean);
 return bean;
 }
 
-private nc.ui.uif2.tangramlayout.node.CNode getCNode_394f88(){
- if(context.get("nc.ui.uif2.tangramlayout.node.CNode#394f88")!=null)
- return (nc.ui.uif2.tangramlayout.node.CNode)context.get("nc.ui.uif2.tangramlayout.node.CNode#394f88");
+private nc.ui.uif2.tangramlayout.node.CNode getCNode_1ad01a5(){
+ if(context.get("nc.ui.uif2.tangramlayout.node.CNode#1ad01a5")!=null)
+ return (nc.ui.uif2.tangramlayout.node.CNode)context.get("nc.ui.uif2.tangramlayout.node.CNode#1ad01a5");
   nc.ui.uif2.tangramlayout.node.CNode bean = new nc.ui.uif2.tangramlayout.node.CNode();
-  context.put("nc.ui.uif2.tangramlayout.node.CNode#394f88",bean);
+  context.put("nc.ui.uif2.tangramlayout.node.CNode#1ad01a5",bean);
   bean.setComponent(getEditorToolBarPanel());
 setBeanFacotryIfBeanFacatoryAware(bean);
 invokeInitializingBean(bean);
 return bean;
 }
 
-private nc.ui.uif2.tangramlayout.node.CNode getCNode_1fe9eed(){
- if(context.get("nc.ui.uif2.tangramlayout.node.CNode#1fe9eed")!=null)
- return (nc.ui.uif2.tangramlayout.node.CNode)context.get("nc.ui.uif2.tangramlayout.node.CNode#1fe9eed");
+private nc.ui.uif2.tangramlayout.node.CNode getCNode_1f8464e(){
+ if(context.get("nc.ui.uif2.tangramlayout.node.CNode#1f8464e")!=null)
+ return (nc.ui.uif2.tangramlayout.node.CNode)context.get("nc.ui.uif2.tangramlayout.node.CNode#1f8464e");
   nc.ui.uif2.tangramlayout.node.CNode bean = new nc.ui.uif2.tangramlayout.node.CNode();
-  context.put("nc.ui.uif2.tangramlayout.node.CNode#1fe9eed",bean);
+  context.put("nc.ui.uif2.tangramlayout.node.CNode#1f8464e",bean);
   bean.setComponent(getBillFormEditor());
 setBeanFacotryIfBeanFacatoryAware(bean);
 invokeInitializingBean(bean);

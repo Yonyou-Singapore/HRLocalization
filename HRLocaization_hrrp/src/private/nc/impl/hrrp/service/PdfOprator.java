@@ -205,7 +205,7 @@ public class PdfOprator implements IPdfOprator {
 		rp.setPagenum(rp.getPagenum() == null ? 1 : rp.getPagenum());
 		pageTotal = (lstData.size() + rp.getPagenum() - 1) / rp.getPagenum();// 
 		int count = pageTotal;
-		// 瀛椾綋澶у皬 fontsize add by weiningc start
+		//fontsize add by weiningc start
 		float textSize = 0.0f;
 		// end
 		if (Constant.BOOL.NO.equals(rp.getIspage()))// 
@@ -280,44 +280,64 @@ public class PdfOprator implements IPdfOprator {
 			outTemp.close();
 			in.close();
 		}
-		// 闂佸憡鑹鹃悧鍡涙嚐閻戠F
+		// copy page处理
 		Document doc = new Document();
 		FileOutputStream out = new FileOutputStream(new File(tarPath + ".pdf"));
 		PdfCopy pdfc = new PdfCopy(doc, new FileOutputStream(tarPath + ".pdf"));
 		int i = 1;
 		doc.open();
-
-		for (String str : lstTemp) {
-			File fTemp = new File(str);
-			FileInputStream inTemp = new FileInputStream(fTemp);
-			PdfReader pdfr = new PdfReader(inTemp);
-			// 婵＄偑鍊濆褔鏁撻敓锟�?
-			rp.setCopypageno(rp.getCopypageno() == null ? 1 : rp
-					.getCopypageno());
-			if (i == 1) {
-				for (int j = 1, cnt = rp.getCopypageno(); j < cnt; j++) {
-					pdfc.addPage(pdfc.getImportedPage(pdfr, j));
+		//add by weiningc 20191021 支持copypage 多张配置,比如允许2，3张分别重复 start
+		List<Integer> copypagenos = new ArrayList<Integer>();
+		if(rp.getCopypageno() == null) {
+			copypagenos.add(Integer.valueOf(1));
+		} else {
+			//转字符,再按照char分割,转数字
+			String copypageno = String.valueOf(rp.getCopypageno());
+			for(int k=0; k<copypageno.length(); k++) {
+				copypagenos.add(Integer.valueOf(String.valueOf(copypageno.charAt(k))));
+			}
+		}
+		
+		for(int k=0; k<copypagenos.size(); k++) {
+			Integer copypage = copypagenos.get(k);
+			for (String str : lstTemp) {
+				File fTemp = new File(str);
+				FileInputStream inTemp = new FileInputStream(fTemp);
+				PdfReader pdfr = new PdfReader(inTemp);
+				rp.setCopypageno(copypage == null ? 1 : copypage);
+				//merge 重复前的几页
+				if (i == 1 && k == 0 && str.equalsIgnoreCase(lstTemp.get(k))) {//第一次的时候才加
+					for (int j = 1, cnt = copypage; j < cnt; j++) {
+						pdfc.addPage(pdfc.getImportedPage(pdfr, j));
+					}
+				}
+				//merge copypage no
+				PdfImportedPage ppage = pdfc.getImportedPage(pdfr,
+						copypage);
+				pdfc.addPage(ppage);
+				// merge最后页
+				if (i == lstTemp.size()) {
+					for (int j = copypage + 1, cnt = pdfr
+							.getNumberOfPages() + 1; j < cnt; j++) {
+						pdfc.addPage(pdfc.getImportedPage(pdfr, j));
+					}
+				}
+				//最后次的时候才close和计数
+				if(k == copypagenos.size() - 1) {
+					pdfr.close();
+					inTemp.close();
+					i++;
+					fTemp.delete();
 				}
 			}
-			// 闂佸憡甯掑Λ婵嬪Υ婢舵劕绀冮柛娑卞弾閸燂拷
-			PdfImportedPage ppage = pdfc.getImportedPage(pdfr,
-					rp.getCopypageno());
-			pdfc.addPage(ppage);
-			// 婵＄偑鍊濆褔鏁撻敓锟�?
-			if (i == lstTemp.size()) {
-				for (int j = rp.getCopypageno() + 1, cnt = pdfr
-						.getNumberOfPages() + 1; j < cnt; j++) {
-					pdfc.addPage(pdfc.getImportedPage(pdfr, j));
-				}
-			}
-			pdfr.close();
-			inTemp.close();
-			i++;
-			fTemp.delete();
 		}
 		// in.close();
-		out.close();
-		doc.close();
+		if(out != null) {
+			out.close();
+		}
+		if(doc != null) {
+			doc.close();
+		}
 		File fret = new File(tarPath + ".pdf");
 		FileInputStream is = new FileInputStream(fret);
 		byte[] bts = new byte[is.available()];
@@ -328,7 +348,7 @@ public class PdfOprator implements IPdfOprator {
 	}
 
 	/**
-	 * 鑾峰彇鍓嶄竴椤�
+	 * 前一页
 	 * 
 	 * @param i
 	 * @return
@@ -340,40 +360,19 @@ public class PdfOprator implements IPdfOprator {
 		return i - 1;
 	}
 
-	/**
-	 * 榛樿瀛椾綋澶у皬 font size
-	 * 
-	 * @return
-	 */
-	private float qryDefaultFontSize() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("select def.memo from bd_defdoc def, bd_defdoclist defl");
-		sb.append(" where def.pk_defdoclist = defl.pk_defdoclist and defl.code = 'pdfformat'");
-		sb.append(" and def.code = '14' and def.enablestate = 2");
-		DataAccessUtils util = new DataAccessUtils();
-		IRowSet rowset = util.query(sb.toString());
-		String frontsize = null;
-		while (rowset.next()) {
-			frontsize = rowset.getString(0);
-		}
-		if (frontsize != null) {
-			return Float.valueOf(frontsize);
-		}
-		return 8L;// 榛樿瀛椾綋澶у皬涓�8
-	}
 
 	/**
 	 * <p>
-	 * 闂佸搫鍊介～澶屾兜閸洖瑙︾�广儱娉﹂悙鐑樻櫖婵繄鍨妉lData
+	 * 填充pdf field
 	 * </p>
 	 * 
 	 * @param field
 	 * @param nowPage
-	 *            褰撳墠椤�
+	 *            当前页
 	 * @param prepage
-	 *            鍓嶄竴椤�
+	 *            前一页
 	 * @param pageCnt
-	 *            鎬婚〉鏁�
+	 *            总页数
 	 * @return
 	 * @author
 	 */
@@ -381,21 +380,20 @@ public class PdfOprator implements IPdfOprator {
 		if (lstData == null || lstData.size() < 1) {
 			return "";
 		}
-		// 鍘熷��
+		// 原值
 		if (HrrpFormat.SRCVALUE.value().equals(field.getFormat())) {
 			return field.getDbfield();
 		}
-//		if (FORMAT.PAGE_NOW.equals(field.getFormat()))// 褰撳墠椤�
+//		if (FORMAT.PAGE_NOW.equals(field.getFormat()))// 瑜版挸澧犳い锟�
 //			return (nowPage + 1) + "";
-//		if (FORMAT.TOTAL.equals(field.getFormat()))// 鎬婚〉鏁�
+//		if (FORMAT.TOTAL.equals(field.getFormat()))// 閹銆夐弫锟�
 //			return pageTotal + "";
 		field.setDbrow(field.getDbrow() == null ? 1 : field.getDbrow());
 		
-		// -1琛ㄧず褰撳墠椤电疮璁�
-		//当前页累计
+		//当前页
 		Logger.info("===TotalType===" + field.getTotaltype());
 		if (TotalRangeEnum.CURRENTPAGE.value().equals(field.getTotaltype())) {
-			Logger.info("===当前页累计===Field: " + field.getName() + " ,DBField: " + field.getDbfield());
+			Logger.info("===当前页===Field: " + field.getName() + " ,DBField: " + field.getDbfield());
 			double sum = 0;
 			for (int i = nowPage * pageCnt; i < Math.min(lstData.size(),
 					(nowPage + 1) * pageCnt); i++) {
@@ -406,17 +404,17 @@ public class PdfOprator implements IPdfOprator {
 					return "0";
 				}
 			}
-			Logger.info("===当前页累计=== SUM: " + sum + " ,Size: " + lstData.size() + " NowPage: " + nowPage);
+			Logger.info("===褰撳墠椤电疮璁�=== SUM: " + sum + " ,Size: " + lstData.size() + " NowPage: " + nowPage);
 			String currentvalue = getNumberFormat(field, sum + "");
-			//绌烘牸鍒嗗壊
+			//空格分割
 			if (HrrpFormat.SPLITSPACE.value().equals(field.getFormat())) {
 				return this.getSplitSpace(currentvalue, field);
 			}
 			return currentvalue;
 		}
-		// -2琛ㄧず鍓嶄竴椤电疮璁″悎璁�
+		// -2前一页
 		if (TotalRangeEnum.BEFOREPAGE.value().equals(field.getTotaltype())) {
-			if (prepage == -1) {// 琛ㄧず绗竴椤�
+			if (prepage == -1) {// 第一页
 				return "0";
 			}
 			double sum = 0;
@@ -430,13 +428,13 @@ public class PdfOprator implements IPdfOprator {
 				}
 			}
 			String currentvalue = getNumberFormat(field, sum + "");
-			//绌烘牸鍒嗗壊
+			//空格分割
 			if (HrrpFormat.SPLITSPACE.value().equals(field.getFormat())) {
 				return this.getSplitSpace(currentvalue, field);
 			}
 			return currentvalue;
 		}
-		// -3琛ㄧず鎬荤疮璁�
+		// -3总合计
 		if (TotalRangeEnum.TOTALPAGE.value().equals(field.getTotaltype())) {
 			double currsum = 0;
 			for (int i = 0; i < Math.min(lstData.size(), (nowPage + 1)
@@ -449,13 +447,13 @@ public class PdfOprator implements IPdfOprator {
 				}
 			}
 			String currentvalue = getNumberFormat(field, currsum + "");
-			//绌烘牸鍒嗗壊
+			//空格分割
 			if (HrrpFormat.SPLITSPACE.value().equals(field.getFormat())) {
 				return this.getSplitSpace(currentvalue, field);
 			}
 			return currentvalue;
 		}
-		//-4总累计合计
+		//-4鎬荤疮璁″悎璁�
 		if (TotalRangeEnum.TOTALNUMBERPAGE.value().equals(field.getTotaltype())) {
 			double totalsum = 0;
 			for (int i = 0; i < Math.min(lstData.size(), (pageTotal + 1)
@@ -468,7 +466,7 @@ public class PdfOprator implements IPdfOprator {
 				}
 			}
 			String currentvalue = getNumberFormat(field, totalsum + "");
-			//绌烘牸鍒嗗壊
+			//缁岀儤鐗搁崚鍡楀
 			if (HrrpFormat.SPLITSPACE.value().equals(field.getFormat())) {
 				return this.getSplitSpace(currentvalue, field);
 			}
@@ -482,11 +480,11 @@ public class PdfOprator implements IPdfOprator {
 		if (row > lstData.size() - 1)
 			return "";
 		if (field.getDbfield() == null) {
-			//褰撳墠椤�
+			//瑜版挸澧犳い锟�
 			if(HrrpFormat.SPLIT_CURRENTPAGE.value().equals(field.getFormat())) {
 				return String.valueOf(nowPage+1);
 			}
-			//鎬婚〉鏁�
+			//閹銆夐弫锟�
 			if(HrrpFormat.SPLIT_TOTALPAGE.value().equals(field.getFormat())) {
 				return String.valueOf(pageTotal);
 			}
@@ -504,21 +502,21 @@ public class PdfOprator implements IPdfOprator {
 		if(issplitblank) {
 			return valStr;
 		}
-		//鏍煎紡鍒嗗壊
+		//閺嶇厧绱￠崚鍡楀
 		if (HrrpFormat.SPLITSEGMENT.value().equals(field.getFormat()))
 		{
 			return this.getSplitSegment(valStr, field);
 			
 		}
-		//绌烘牸鍒嗗壊
+		//缁岀儤鐗搁崚鍡楀
 		else if (HrrpFormat.SPLITSPACE.value().equals(field.getFormat())) {
 			return this.getSplitSpace(valStr, field);
 		}
-		//褰撳墠椤�
+		//瑜版挸澧犳い锟�
 		else if(HrrpFormat.SPLIT_CURRENTPAGE.value().equals(field.getFormat())) {
 			return String.valueOf(nowPage);
 		}
-		//鎬婚〉鏁�
+		//閹銆夐弫锟�
 		else if(HrrpFormat.SPLIT_TOTALPAGE.value().equals(field.getFormat())) {
 			return String.valueOf(pageTotal);
 		}
@@ -532,7 +530,7 @@ public class PdfOprator implements IPdfOprator {
 			return "";
 		}
 		StringBuffer sb = new StringBuffer();
-		// 绌烘牸鍒嗗壊
+		// 缁岀儤鐗搁崚鍡楀
 		char[] charArraySpace = valStr.toCharArray();
 		
 		for (char arr : charArraySpace) {
@@ -550,7 +548,7 @@ public class PdfOprator implements IPdfOprator {
 			return "";
 		}
 		StringBuffer sb = new StringBuffer();
-		// 绌烘牸鍒嗗壊
+		// 缁岀儤鐗搁崚鍡楀
 		char[] charArraySpace = valStr.toCharArray();
 		for (char arr : charArraySpace) {
 			sb.append(arr + field.getSplfmt());
@@ -563,7 +561,7 @@ public class PdfOprator implements IPdfOprator {
 	}
 
 	/**
-	 * 绌烘牸闂磋窛
+	 * 缁岀儤鐗搁梻纾嬬獩
 	 * @param spaces
 	 * @return
 	 */
@@ -576,7 +574,7 @@ public class PdfOprator implements IPdfOprator {
 		try{
 			spacenum = Integer.parseInt(spaces);
 		} catch (NumberFormatException e) {
-			ExceptionUtils.wrappBusinessException("褰撲负绌烘牸鍒嗗壊鐨勬椂鍊欙紝鍒嗗壊鏍煎紡蹇呴』鏄暣鏁�!");
+			ExceptionUtils.wrappBusinessException("瑜版挷璐熺粚鐑樼壐閸掑棗澹婇惃鍕閸婃瑱绱濋崚鍡楀閺嶇厧绱¤箛鍛淬�忛弰顖涙殻閺侊拷!");
 		}
 		for (int x = 0; x < spacenum; x++) {
 			text += " ";
@@ -614,13 +612,13 @@ public class PdfOprator implements IPdfOprator {
 		if (fmt.endsWith("."))
 			fmt = fmt.substring(0, fmt.length() - 1);
 		DecimalFormat df = new DecimalFormat(sbDic.toString());
-		if (field.getDicnum() != null && field.getDicnum() == 2) {// 涓や綅灏忔暟
+		if (field.getDicnum() != null && field.getDicnum() == 2) {// 娑撱倓缍呯亸蹇旀殶
 			return getNumFormat(df.format(dbval));
-		} else if (HrrpFormat.SPLIT_INTEGER.value().equals(field.getFormat())) {// 鏁存暟
+		} else if (HrrpFormat.SPLIT_INTEGER.value().equals(field.getFormat())) {// 閺佸瓨鏆�
 			return getNumFormat(new DecimalFormat("#0").format(dbval)) + "";
-		} /*else if (FORMAT.DECIMAL.equals(field.getFormat())) {// 灏忔暟
+		} /*else if (FORMAT.DECIMAL.equals(field.getFormat())) {// 鐏忓繑鏆�
 			return df.format(dbval).split("\\.")[1];
-		}*/ else if (FORMAT.TAIWEN.equals(field.getFormat())) {// 娉版枃
+		}*/ else if (FORMAT.TAIWEN.equals(field.getFormat())) {// 濞夌増鏋�
 			return getTaiwen(df.format(dbval));// getTaiwen("12345678.91")
 		} else
 			return dbval + "";
@@ -629,10 +627,10 @@ public class PdfOprator implements IPdfOprator {
 
 	/**
 	 * <p>
-	 * 闁哄倽顫夌涵鍫曞触瀹ュ泦鐐烘晬濮濐摣tNumFormat
+	 * 闂佸搫鍊介～澶屾兜閸洖瑙︾�广儱娉﹂悙鐑樻櫖婵繍鎽NumFormat
 	 * </p>
 	 * <p>
-	 * 闁哄倽顫夌涵鍫曞箵韫囨艾鐗氶柨娑欑啲閹凤拷?闁告瑩鏀遍悧绋款嚕韫囨挸鐎婚柛鎾冲级閺嗙喖鏁撻敓锟�?/p>
+	 * 闂佸搫鍊介～澶屾兜閸洖绠甸煫鍥ㄨ壘閻楁岸鏌ㄥ☉娆戝暡闁瑰嚖鎷�?闂佸憡鐟╅弨閬嶆偋缁嬫鍤曢煫鍥ㄦ尭閻庡鏌涢幘鍐茬骇闁哄棛鍠栭弫鎾绘晸閿燂拷?/p>
 	 * 
 	 * @param val
 	 * @return
@@ -696,9 +694,9 @@ public class PdfOprator implements IPdfOprator {
 			}
 		}
 		if (isInt)
-			strRet.append("娉版枃鏁存暟鏍煎紡");
+			strRet.append("濞夌増鏋冮弫瀛樻殶閺嶇厧绱�");
 		else
-			strRet.append("娉版枃灏忔暟鏍煎紡");
+			strRet.append("濞夌増鏋冪亸蹇旀殶閺嶇厧绱�");
 		return strRet.toString();
 	}
 
@@ -732,33 +730,33 @@ public class PdfOprator implements IPdfOprator {
 		switch (len) {
 		case 1:
 			if (large0)
-				strRet = "閸犳梹鐩�鐟曞棗鏋栭敓锟�";
+				strRet = "闁哥姵姊归惄锟介悷鏇炴閺嬫牠鏁撻敓锟�";
 			else
 				strRet = "";
 			break;
 		case 2:
-			strRet = "閸犳棏锟藉灝顦查崰鏃撴嫹";
+			strRet = "闁哥姵妫忛敓钘夌仢椤︽煡宕伴弮鎾村";
 			break;
 		case 3:
-			strRet = "閸犳棑绲哥粻鐔锋灃椤撴瑦涓�";
+			strRet = "闁哥姵妫戠徊鍝ョ不閻旈攱鐏冩い鎾寸懄娑擄拷";
 			break;
 		case 4:
-			strRet = "閸犳梻鍋嬮崜顖氭灃閿燂拷";
+			strRet = "闁哥姵姊婚崑瀣礈椤栨碍鐏冮柨鐕傛嫹";
 			break;
 		case 5:
-			strRet = "閸犳棏鍊藉ù顔兼灃缁亞鐤勯崰鏃撴嫹";
+			strRet = "闁哥姵妫忛崐钘壝归鍏肩亙缂侇噮浜為悿鍕窗閺冩挻瀚�";
 			break;
 		case 6:
-			strRet = "閸犳瑤鐤嗛柌婊冩灃閿燂拷";
+			strRet = "闁哥姵鐟ら悿鍡涙煂濠婂啯鐏冮柨鐕傛嫹";
 			break;
 		case 7:
-			strRet = "閸犳柣鍎粻鐔锋灃娓氀呯懙";
+			strRet = "闁哥姵鏌ｉ崕顒傜不閻旈攱鐏冨〒姘�鍛嚈";
 			break;
 		case 8:
-			strRet = "閸犳棏锟藉灝顦查崰鏃�鐩�瀵鏋℃径鍐洬閸犳棑鎷�";
+			strRet = "闁哥姵妫忛敓钘夌仢椤︽煡宕伴弮锟介惄锟界�殿喗顨呴弸鈩冨緞閸愵収娲柛鐘虫閹凤拷";
 			break;
 		case 9:
-			strRet = "閸犳棑绲哥粻鐔锋灃椤撴瑦涓㈤崰鏂诲劕缁犵喎鏋栨笟褏鐟�";
+			strRet = "闁哥姵妫戠徊鍝ョ不閻旈攱鐏冩い鎾寸懄娑撱垽宕伴弬璇插姇缂佺姷鍠庨弸鏍ㄧ瑹瑜忛悷锟�";
 			break;
 		default:
 			strRet = "";
@@ -776,48 +774,48 @@ public class PdfOprator implements IPdfOprator {
 		switch (c) {
 		case '1':
 			if (last == 1)
-				strRet = "閸犳瑱鎷烽崰鏃戝幍缁犳稑鏋栭敓锟�";
+				strRet = "闁哥姵鐟遍幏鐑藉窗閺冩垵骞嶇紒鐘崇☉閺嬫牠鏁撻敓锟�";
 			else if (last == 2)
 				strRet = "";
 			else
-				strRet = "閸犳棏鍊界粭婵嗘灃婢舵氨鐤勯崰鏃撴嫹";
+				strRet = "闁哥姵妫忛崐鐣岀箔濠靛棙鐏冨鑸垫皑閻ゅ嫰宕伴弮鎾村";
 			break;
 		case '2':
 			if (last == 2)
-				strRet = "閸犳柡鎳呴崒锟�";
+				strRet = "闁哥姵鏌￠幊鍛村磼閿燂拷";
 			else
-				strRet = "閸犳棏锟借儻鍘崰鏃撴嫹";
+				strRet = "闁哥姵妫忛敓鍊熷劵閸橆剟宕伴弮鎾村";
 			break;
 		case '3':
-			strRet = "閸犳棏锟借儻顩崰鏃撴嫹";
+			strRet = "闁哥姵妫忛敓鍊熷劵椤╊偊宕伴弮鎾村";
 			break;
 		case '4':
-			strRet = "閸犳棏锟藉灝鍊曢崰娆欐嫹";
+			strRet = "闁哥姵妫忛敓钘夌仢閸婃洟宕板▎娆愬";
 			break;
 		case '5':
-			strRet = "閸犳棏鍊界粻鐔锋灃閿燂拷";
+			strRet = "闁哥姵妫忛崐鐣岀不閻旈攱鐏冮柨鐕傛嫹";
 			break;
 		case '6':
-			strRet = "閸犳棏鍊界粩锟�";
+			strRet = "闁哥姵妫忛崐鐣岀博閿燂拷";
 			break;
 		case '7':
-			strRet = "閸犳瑱鎷烽崰鏂跨墍缁犳稑鏋栭敓锟�";
+			strRet = "闁哥姵鐟遍幏鐑藉窗閺傝法澧嶇紒鐘崇☉閺嬫牠鏁撻敓锟�";
 			break;
 		case '8':
-			strRet = "閸犳瑤鐤嗙粭鈥虫灃閿燂拷";
+			strRet = "闁哥姵鐟ら悿鍡欑箔閳ヨ櫕鐏冮柨鐕傛嫹";
 			break;
 		case '9':
-			strRet = "閸犳瑱鎷烽崰鏂剧枂缁犵喎鏋栭敓锟�";
+			strRet = "闁哥姵鐟遍幏鐑藉窗閺傚墽鏋傜紒鐘靛枎閺嬫牠鏁撻敓锟�";
 			break;
 		case '0':
 			if (zero)
-				strRet = "閸犳柣鍔嗛懙鐟版灃濞嗗﹥涓㈤崰娆欐嫹";
+				strRet = "闁哥姵鏌ｉ崝鍡涙嚈閻熺増鐏冩繛鍡楋攻娑撱垽宕板▎娆愬";
 			else
 				strRet = "";
 			break;
 		case '.':
 			strRet = "";
-			// strRet = "閸犳柨鐗�閻栬泛鏋栭敓锟�";
+			// strRet = "闁哥姵鏌ㄩ悧锟介柣鏍硾閺嬫牠鏁撻敓锟�";
 			break;
 		default:
 			strRet = c + "";
@@ -827,7 +825,7 @@ public class PdfOprator implements IPdfOprator {
 
 	/**
 	 * <p>
-	 * 闂佸搫鍊介～澶屾兜閸洖瑙︾�广儱娉﹂悙鐑樻櫖婵繍鎽Datas
+	 * 闂備礁鎼崐浠嬶綖婢跺本鍏滈柛顐ｆ礀鐟欙妇锟藉箍鍎卞▔锕傛倷閻戞ɑ娅栧┑顔界箥閹筋柡Datas
 	 * </p>
 	 * 
 	 * @param sqlStr
